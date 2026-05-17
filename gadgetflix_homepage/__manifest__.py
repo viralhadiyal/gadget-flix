@@ -1,6 +1,6 @@
 {
     'name': 'GadgetFlix Responsive Homepage',
-    'version': '16.0.1.0.0',
+    'version': '19.0.0.1',
     'summary': 'Modern responsive GadgetFlix ecommerce homepage for desktop and mobile',
     'category': 'Website/Website',
     'author': 'GadgetFlix',
