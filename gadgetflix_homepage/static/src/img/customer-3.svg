@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="600" height="600" viewBox="0 0 600 600">
-<defs>
-<linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#eeeeee"/></linearGradient>
-<filter id="sh" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="0" dy="18" stdDeviation="20" flood-opacity="0.18"/></filter>
-</defs>
-<rect width="100%" height="100%" fill="url(#g)"/>
-<circle cx="450" cy="290" r="180" fill="#d7f3d2"/><circle cx="450" cy="230" r="70" fill="#333"/><path d="M280 530c40-140 300-140 340 0z" fill="#333"/><circle cx="425" cy="220" r="12" fill="#fff"/><circle cx="475" cy="220" r="12" fill="#fff"/>
-</svg>
