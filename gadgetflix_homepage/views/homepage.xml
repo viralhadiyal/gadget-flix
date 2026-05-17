@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="gadgetflix_homepage_template" name="GadgetFlix Responsive Homepage">
+        <t t-call="website.layout">
+            <div id="wrap" class="oe_structure">
+                <main class="gfx-home">
+                    <div class="gfx-top">
+                        <div class="gfx-wrap gfx-top-in">
+                            <span>🚚 Free Shipping on Orders Above <b>₹499</b></span>
+                            <span>🛡️ 100% Genuine Products From Authorized Dealers</span>
+                            <span>🔁 Easy Returns &amp; Secure Payments</span>
+                        </div>
+                    </div>
+
+                    <header class="gfx-head">
+                        <div class="gfx-wrap gfx-nav">
+                            <a class="gfx-logo" href="/">
+                                <img src="/gadgetflix_homepage/static/src/img/gadgetflix-logo.png" alt="GadgetFlix"/>
+                            </a>
+                            <ul class="gfx-links">
+                                <li><a class="active" href="/">Home</a></li>
+                                <li><a href="/shop">Shop</a></li>
+                                <li><a href="/shop">Categories</a></li>
+                                <li><a href="/shop">Best Sellers</a></li>
+                                <li><a href="/shop">New Arrivals</a></li>
+                                <li><a href="/shop">Offers</a></li>
+                            </ul>
+                            <div class="gfx-actions">
+                                <form action="/shop" method="get" class="gfx-search">
+                                    <span>🔍</span><input name="search" placeholder="Search for products..."/>
+                                </form>
+                                <a class="gfx-ico" href="/shop">♡</a>
+                                <a class="gfx-ico" href="/shop/cart">🛒</a>
+                                <label class="gfx-menu-label" for="gfx_menu_toggle">☰</label>
+                            </div>
+                        </div>
+                        <input type="checkbox" id="gfx_menu_toggle" class="gfx-menu-toggle"/>
+                        <nav class="gfx-mobile-panel">
+                            <a href="/">Home</a><a href="/shop">Shop</a><a href="/shop">Categories</a><a href="/shop">Best Sellers</a><a href="/shop">New Arrivals</a><a href="/shop">Offers</a>
+                        </nav>
+                    </header>
+
+                    <section class="gfx-hero">
+                        <div class="gfx-wrap gfx-hero-grid">
+                            <div>
+                                <div class="gfx-kicker">Style. Protect. Upgrade.</div>
+                                <h1>Your Tech.<br/>Your Style.<br/><span>Everyday.</span></h1>
+                                <p>Trendy mobile cases, fast chargers, durable cables, laptop bags, watch accessories and more — sourced from authorized dealers.</p>
+                                <div class="gfx-btns">
+                                    <a class="gfx-btn gfx-btn-dark" href="/shop">Shop Now →</a>
+                                    <a class="gfx-btn gfx-btn-light" href="/shop">Explore Collection</a>
+                                </div>
+                                <div class="gfx-trust">
+                                    <div class="gfx-trust-card"><em>🛡️</em><div>Authorized Dealer<small>100% Genuine Products</small></div></div>
+                                    <div class="gfx-trust-card"><em>⭐</em><div>Premium Quality<small>Built to Last</small></div></div>
+                                    <div class="gfx-trust-card"><em>🔐</em><div>Secure Payments<small>Safe &amp; Protected</small></div></div>
+                                    <div class="gfx-trust-card"><em>🎧</em><div>Happy Customers<small>10K+ Reviews</small></div></div>
+                                </div>
+                            </div>
+                            <div class="gfx-hero-img">
+                                <img src="/gadgetflix_homepage/static/src/img/hero-accessories.svg" alt="GadgetFlix Tech Accessories"/>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="gfx-section">
+                        <div class="gfx-wrap">
+                            <div class="gfx-section-head">
+                                <div><div class="gfx-sub">Browse Categories</div><h2 class="gfx-title">Shop by Category</h2></div>
+                                <a class="gfx-view" href="/shop">View All Categories →</a>
+                            </div>
+                            <div class="gfx-cat-grid">
+                                <a class="gfx-cat" href="/shop"><img src="/gadgetflix_homepage/static/src/img/category-mobile-cases.svg" alt="Mobile Cases"/><h3>Mobile Cases</h3><p>Stylish Protection</p></a>
+                                <a class="gfx-cat" href="/shop"><img src="/gadgetflix_homepage/static/src/img/category-chargers-cables.svg" alt="Chargers and Cables"/><h3>Chargers &amp; Cables</h3><p>Fast &amp; Reliable</p></a>
+                                <a class="gfx-cat" href="/shop"><img src="/gadgetflix_homepage/static/src/img/category-laptop-bag.svg" alt="Laptop Bags"/><h3>Laptop Bags</h3><p>Work. Travel. Everyday.</p></a>
+                                <a class="gfx-cat" href="/shop"><img src="/gadgetflix_homepage/static/src/img/category-watch-accessories.svg" alt="Watch Accessories"/><h3>Watch Accessories</h3><p>Upgrade Your Style</p></a>
+                                <a class="gfx-cat" href="/shop"><img src="/gadgetflix_homepage/static/src/img/category-tech-essentials.svg" alt="Tech Essentials"/><h3>Tech Essentials</h3><p>Smart &amp; Useful</p></a>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div class="gfx-wrap">
+                            <div class="gfx-strip">
+                                <div class="gfx-strip-item"><em>🛡️</em><div><h4>100% Genuine</h4><p>Sourced from authorized dealers only.</p></div></div>
+                                <div class="gfx-strip-item"><em>⭐</em><div><h4>Premium Quality</h4><p>Durable materials, built to last.</p></div></div>
+                                <div class="gfx-strip-item"><em>💰</em><div><h4>Great Prices</h4><p>Best value for top quality accessories.</p></div></div>
+                                <div class="gfx-strip-item"><em>🔐</em><div><h4>Secure Shopping</h4><p>Safe payments and easy returns.</p></div></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="gfx-section">
+                        <div class="gfx-wrap">
+                            <div class="gfx-section-head">
+                                <div><div class="gfx-sub">Best Sellers</div><h2 class="gfx-title">Our Most Loved Picks</h2></div>
+                                <a class="gfx-view" href="/shop">View All Best Sellers →</a>
+                            </div>
+                            <div class="gfx-product-grid">
+                                <div class="gfx-product"><span class="gfx-heart">♡</span><img src="/gadgetflix_homepage/static/src/img/product-case.svg" alt="MagSafe Case"/><h3>MagSafe Case for iPhone 15 Pro</h3><div class="gfx-price">₹599</div><div class="gfx-stars">★★★★★ <small>(1.2K)</small></div></div>
+                                <div class="gfx-product"><span class="gfx-heart">♡</span><img src="/gadgetflix_homepage/static/src/img/product-charger.svg" alt="Fast Charger"/><h3>20W Fast Charger Type-C</h3><div class="gfx-price">₹499</div><div class="gfx-stars">★★★★★ <small>(980)</small></div></div>
+                                <div class="gfx-product"><span class="gfx-heart">♡</span><img src="/gadgetflix_homepage/static/src/img/product-cable.svg" alt="Type C Cable"/><h3>100W Type-C to Type-C Fast Cable</h3><div class="gfx-price">₹399</div><div class="gfx-stars">★★★★★ <small>(1.1K)</small></div></div>
+                                <div class="gfx-product"><span class="gfx-heart">♡</span><img src="/gadgetflix_homepage/static/src/img/product-laptop-bag.svg" alt="Laptop Bag"/><h3>Premium Laptop Bag 15.6 inch</h3><div class="gfx-price">₹1,299</div><div class="gfx-stars">★★★★★ <small>(870)</small></div></div>
+                                <div class="gfx-product"><span class="gfx-heart">♡</span><img src="/gadgetflix_homepage/static/src/img/product-watch-strap.svg" alt="Watch Strap"/><h3>Silicone Strap for Smart Watch</h3><div class="gfx-price">₹299</div><div class="gfx-stars">★★★★★ <small>(760)</small></div></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section>
+                        <div class="gfx-wrap gfx-banner-grid">
+                            <div class="gfx-banner gfx-banner-dark">
+                                <div><div class="gfx-sub" style="color:#fff;">New Arrivals</div><h2>Fresh Styles.<br/>Latest Tech.</h2><p>Explore the newest accessories handpicked for you.</p><a class="gfx-btn gfx-btn-light" href="/shop">Shop New Arrivals</a></div>
+                                <img src="/gadgetflix_homepage/static/src/img/banner-new-arrivals.svg" alt="New Arrivals"/>
+                            </div>
+                            <div class="gfx-banner gfx-banner-light">
+                                <div><div class="gfx-sub">Exclusive Offers</div><h2>Save More</h2><p>Big offers on your favorite tech accessories.</p><a class="gfx-btn gfx-btn-dark" href="/shop">Shop Offers</a></div>
+                                <div class="gfx-discount">50%<br/><small>OFF</small></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="gfx-section">
+                        <div class="gfx-wrap">
+                            <div class="gfx-section-head"><div><div class="gfx-sub">Customer Stories</div><h2 class="gfx-title">What Our Customers Are Saying</h2></div></div>
+                            <div class="gfx-test-grid">
+                                <div class="gfx-test"><div class="gfx-quote">“</div><p>The phone case quality is amazing. It looks stylish and fits perfectly.</p><div class="gfx-stars">★★★★★</div><div class="gfx-person"><img src="/gadgetflix_homepage/static/src/img/customer-1.svg" alt="Riya Patel"/>Riya Patel</div></div>
+                                <div class="gfx-test"><div class="gfx-quote">“</div><p>I ordered a charger and cable. Both are working perfectly and feel premium.</p><div class="gfx-stars">★★★★★</div><div class="gfx-person"><img src="/gadgetflix_homepage/static/src/img/customer-2.svg" alt="Karan Shah"/>Karan Shah</div></div>
+                                <div class="gfx-test"><div class="gfx-quote">“</div><p>Best place for genuine accessories. Highly recommended!</p><div class="gfx-stars">★★★★★</div><div class="gfx-person"><img src="/gadgetflix_homepage/static/src/img/customer-3.svg" alt="Neha Mehta"/>Neha Mehta</div></div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <div class="gfx-wrap gfx-service-row">
+                        <div class="gfx-service"><em>🚚</em>Free Shipping<small>On orders above ₹499</small></div>
+                        <div class="gfx-service"><em>🔁</em>Easy Returns<small>Hassle-free returns</small></div>
+                        <div class="gfx-service"><em>🎧</em>24/7 Support<small>We’re here to help</small></div>
+                        <div class="gfx-service"><em>🔐</em>Secure Payments<small>100% safe &amp; secure</small></div>
+                    </div>
+
+                    <footer class="gfx-footer">
+                        <div class="gfx-wrap">
+                            <div class="gfx-footer-grid">
+                                <div><h3>GADGET FLIX</h3><p>Your one-stop destination for stylish and reliable tech accessories. All products are sourced from authorized dealers.</p><div class="gfx-social"><span>f</span><span>◎</span><span>▶</span><span>𝕏</span></div></div>
+                                <div><h4>Shop</h4><ul><li><a href="/shop">All Products</a></li><li><a href="/shop">Mobile Cases</a></li><li><a href="/shop">Chargers &amp; Cables</a></li><li><a href="/shop">Laptop Bags</a></li><li><a href="/shop">Watch Accessories</a></li></ul></div>
+                                <div><h4>Company</h4><ul><li><a href="/contactus">Contact Us</a></li><li><a href="/shop">Track Order</a></li><li><a href="/terms">Returns &amp; Refunds</a></li><li><a href="/privacy">Privacy Policy</a></li><li><a href="/terms">Terms &amp; Conditions</a></li></ul></div>
+                                <div><h4>Subscribe &amp; Get 10% Off</h4><p>Stay updated with new arrivals and exclusive offers.</p><form class="gfx-news" action="/website_mass_mailing/subscribe" method="post"><input type="email" name="email" placeholder="Enter your email"/><button type="submit">→</button></form><div class="gfx-pay"><span>VISA</span><span>Master</span><span>UPI</span><span>Paytm</span></div></div>
+                            </div>
+                            <div class="gfx-copy">© 2024 GADGET FLIX. All Rights Reserved.</div>
+                        </div>
+                    </footer>
+                </main>
+            </div>
+        </t>
+    </template>
+
+    <record id="gadgetflix_homepage_page" model="website.page">
+        <field name="name">GadgetFlix Homepage</field>
+        <field name="url">/gadgetflix-homepage</field>
+        <field name="view_id" ref="gadgetflix_homepage_template"/>
+        <field name="is_published">True</field>
+    </record>
+</odoo>
