@@ -551,7 +551,7 @@
                             <h2>New arrivals</h2>
                             <p>Explore the latest accessories added to our store — fresh designs, upgraded protection, and smart tech essentials for your everyday use.</p>
                         </div>
-                        <a href="/shop" class="gf-button gf-button--light">Shop new arrivals <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                        <a href="/shop" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     <div t-if="new_arrival_products" class="gf-scroll-area">
                         <div class="gf-scroll-controls" aria-label="Scroll new arrivals">
@@ -701,10 +701,20 @@
                         </div>
                         <a href="/shop" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                     </div>
-                    <div t-if="about_products" class="gf-product-grid">
-                        <t t-foreach="about_products" t-as="product">
-                            <t t-call="gadgetflix_website.gadgetflix_product_card"/>
-                        </t>
+                    <div t-if="about_products" class="gf-scroll-area">
+                        <div class="gf-scroll-controls" aria-label="Scroll accessories">
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="prev" aria-label="Previous accessories">
+                                <i class="fa fa-angle-left" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="next" aria-label="Next accessories">
+                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="gf-product-rail" data-gf-scroll-target="1">
+                            <t t-foreach="about_products" t-as="product">
+                                <t t-call="gadgetflix_website.gadgetflix_product_card"/>
+                            </t>
+                        </div>
                     </div>
                     <p t-else="" class="gf-empty">Select accessories for the About page from each product's Website Sections settings.</p>
                 </div>
@@ -771,10 +781,20 @@
                         </div>
                         <a href="/shop" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                     </div>
-                    <div t-if="about_products" class="gf-product-grid">
-                        <t t-foreach="about_products" t-as="product">
-                            <t t-call="gadgetflix_website.gadgetflix_product_card"/>
-                        </t>
+                    <div t-if="about_products" class="gf-scroll-area">
+                        <div class="gf-scroll-controls" aria-label="Scroll accessories">
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="prev" aria-label="Previous accessories">
+                                <i class="fa fa-angle-left" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="next" aria-label="Next accessories">
+                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="gf-product-rail" data-gf-scroll-target="1">
+                            <t t-foreach="about_products" t-as="product">
+                                <t t-call="gadgetflix_website.gadgetflix_product_card"/>
+                            </t>
+                        </div>
                     </div>
                     <p t-else="" class="gf-empty">Select accessories for the About page from each product's Website Sections settings.</p>
                 </div>

@@ -1070,16 +1070,12 @@
 }
 
 .gf-section {
-    padding: 64px 0;
+    padding: 32px 0;
 }
 
-.gf-section + .gf-section {
-    padding-top: 0;
-}
 
-.gf-categories {
-    padding-top: 64px;
-}
+
+
 
 .gf-section__heading {
     max-width: 680px;
@@ -1089,7 +1085,7 @@
 .gf-section__heading--split {
     max-width: none;
     display: flex;
-    align-items: flex-end;
+    align-items: center;
     justify-content: space-between;
     gap: 24px;
 }
@@ -1478,11 +1474,11 @@
     background: var(--gf-white);
 }
 .gf-featured {
-    padding: 64px 0;
+    padding: 32px 0;
 }
 
 .gf-newsletter {
-    padding: 64px 0 88px;
+    padding: 32px 0 64px;
 }
 
 .gf-newsletter__panel {
@@ -1811,7 +1807,7 @@
 }
 
 .gf-page-hero {
-    padding: 64px 0;
+    padding: 32px 0;
     background: var(--gf-white);
 }
 
@@ -1852,7 +1848,7 @@
 /* ── Warranty section ─────────────────────────────── */
 
 .gf-warranty {
-    padding: 64px 0 0;
+    padding: 32px 0 0;
 }
 
 .gf-warranty__card {
