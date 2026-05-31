@@ -1073,6 +1073,10 @@
     padding: 64px 0;
 }
 
+.gf-section + .gf-section {
+    padding-top: 0;
+}
+
 .gf-categories {
     padding-top: 64px;
 }
@@ -4298,4 +4302,13 @@
 
 .gf-shop-page .oe_product_cart .oe_product_image_link .oe_product_image_img {
     object-fit: contain !important;
+}
+
+.gf-anti-layer-card .gf-product-card__image {
+    padding: 0;
+}
+
+.gf-anti-layer-card .gf-product-card__image img {
+    object-fit: cover;
+    border-radius: 36px;
 }

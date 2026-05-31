@@ -80,13 +80,23 @@ class WebsiteSaleShop(WebsiteSale):
             limit=12,
             order='website_sequence asc, id desc',
         )
+        anti_yellow_best_selling_products = Product.search(
+            product_domain & Domain('gadgetflix_show_anti_yellow_best_selling', '=', True),
+            limit=12,
+            order='website_sequence asc, id desc',
+        )
         about_products = Product.search(
             product_domain & Domain('gadgetflix_show_about_page', '=', True),
             limit=12,
             order='website_sequence asc, id desc',
         )
         priced_products = (
-            products | featured_products | new_arrival_products | anti_yellow_products | about_products
+            products
+            | featured_products
+            | new_arrival_products
+            | anti_yellow_products
+            | anti_yellow_best_selling_products
+            | about_products
         )
         category_domain = (
             Domain('parent_id', '=', False)
@@ -99,6 +109,7 @@ class WebsiteSaleShop(WebsiteSale):
             'featured_products': featured_products,
             'new_arrival_products': new_arrival_products,
             'anti_yellow_products': anti_yellow_products,
+            'anti_yellow_best_selling_products': anti_yellow_best_selling_products,
             'about_products': about_products,
             'products': products,
             'product_prices': priced_products._get_sales_prices(website) if priced_products else {},

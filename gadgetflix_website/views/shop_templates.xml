@@ -578,48 +578,74 @@
 
     <template id="anti_yellow_cases" name="Gadgetflix Anti Yellow Cases">
         <t t-call="gadgetflix_website.gadgetflix_page_layout">
-            <section class="gf-anti-offer-section" aria-label="Anti yellow sale offer">
-                <a href="/shop?search=Anti%20Yellow%20Case" class="gf-anti-offer" aria-label="Shop anti yellow case sale offer">
-                    <picture>
-                        <source media="(max-width: 767px)" srcset="/gadgetflix_website/static/src/img/anti_yellow_offer_mobile_20260530.png"/>
-                        <img src="/gadgetflix_website/static/src/img/anti_yellow_offer_desktop_20260530.png"
-                             alt="GadgetFlix anti yellow case sale offer"
-                             loading="eager"/>
-                    </picture>
-                </a>
-            </section>
-            <section class="gf-page-hero gf-anti-hero">
-                <div class="gf-container gf-about-hero__grid">
-                    <div>
-                        <span class="gf-eyebrow">Anti Yellow</span>
-                        <h1>The last clear case you'll ever need to buy.</h1>
-                        <p>Other cases promise clarity. Gadgetflix delivers it — forever. Our UV Shield Technology blocks the science behind yellowing, so your case looks as fresh on day 365 as it did on day one.</p>
-                        <a href="#anti-yellow-products" class="gf-button">View cases <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+            <div class="gf-anti-yellow-page">
+                <section class="gf-anti-offer-section" aria-label="Anti yellow sale offer">
+                    <a href="/shop?search=Anti%20Yellow%20Case" class="gf-anti-offer" aria-label="Shop anti yellow case sale offer">
+                        <picture>
+                            <source media="(max-width: 767px)" srcset="/gadgetflix_website/static/src/img/anti_yellow_offer_mobile_20260530.png"/>
+                            <img src="/gadgetflix_website/static/src/img/anti_yellow_offer_desktop_20260530.png"
+                                 alt="GadgetFlix anti yellow case sale offer"
+                                 loading="eager"/>
+                        </picture>
+                    </a>
+                </section>
+                
+                <!-- NEW: 5 Layers of Anti-Yellow Technology -->
+                <section class="gf-section gf-anti-gallery-section">
+                    <div class="gf-container">
+                        <div class="gf-section__heading" style="max-width: 100%;">
+                            <h2>Ultimate Clarity. Uncompromising Protection.</h2>
+                            <p style="max-width: 800px;">Discover the 5 layers of advanced anti-yellow technology designed to keep your phone looking brand new for longer.</p>
+                        </div>
+                        
+                        <div class="gf-scroll-area mt-4">
+                            <div class="gf-scroll-controls" aria-label="Scroll anti-yellow layers">
+                                <button type="button" class="gf-scroll-button" data-gf-scroll="prev" aria-label="Previous layer">
+                                    <i class="fa fa-angle-left" aria-hidden="true"></i>
+                                </button>
+                                <button type="button" class="gf-scroll-button" data-gf-scroll="next" aria-label="Next layer">
+                                    <i class="fa fa-angle-right" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <div class="gf-product-rail" data-gf-scroll-target="1">
+                                <div class="gf-product-card gf-anti-layer-card" style="pointer-events: none;">
+                                    <span class="gf-product-card__image">
+                                        <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_1.png" alt="Anti Yellow Layer 1" loading="lazy" decoding="async"/>
+                                    </span>
+                                </div>
+                                <div class="gf-product-card gf-anti-layer-card" style="pointer-events: none;">
+                                    <span class="gf-product-card__image">
+                                        <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_2.png" alt="Anti Yellow Layer 2" loading="lazy" decoding="async"/>
+                                    </span>
+                                </div>
+                                <div class="gf-product-card gf-anti-layer-card" style="pointer-events: none;">
+                                    <span class="gf-product-card__image">
+                                        <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_3.png" alt="Anti Yellow Layer 3" loading="lazy" decoding="async"/>
+                                    </span>
+                                </div>
+                                <div class="gf-product-card gf-anti-layer-card" style="pointer-events: none;">
+                                    <span class="gf-product-card__image">
+                                        <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_4.png" alt="Anti Yellow Layer 4" loading="lazy" decoding="async"/>
+                                    </span>
+                                </div>
+                                <div class="gf-product-card gf-anti-layer-card" style="pointer-events: none;">
+                                    <span class="gf-product-card__image">
+                                        <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_5.png" alt="Anti Yellow Layer 5" loading="lazy" decoding="async"/>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="gf-anti-panel">
-                        <div>
-                            <strong>UV Shield Technology</strong>
-                            <span>Our material absorbs UV rays before they can break down the polycarbonate — the only real fix for yellowing.</span>
-                        </div>
-                        <div>
-                            <strong>Optical-grade clarity</strong>
-                            <span>Premium polycarbonate with 99% light transmission. Your phone's colour, texture, and finish — unchanged.</span>
-                        </div>
-                        <div>
-                            <strong>MagSafe Ready</strong>
-                            <span>Magnets snap perfectly to all MagSafe chargers, wallets, and mounts — every single time.</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-            <section id="anti-yellow-products" class="gf-section">
+                </section>
+
+                <section id="anti-yellow-products" class="gf-section">
                 <div class="gf-container">
                     <div class="gf-section__heading gf-section__heading--split">
                         <div>
                             <h2>Anti-yellow cases</h2>
                             <p>Explore anti-yellow cases chosen for clear looks, protection, and daily reliability.</p>
                         </div>
-                        <a href="/shop/category/anty-yellow-cases-12" class="gf-button gf-button--light">Shop<i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                        <a href="/shop/category/anty-yellow-cases-12" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     <div t-if="anti_yellow_products" class="gf-scroll-area">
                         <div class="gf-scroll-controls" aria-label="Scroll anti-yellow products">
@@ -639,27 +665,53 @@
                     <p t-else="" class="gf-empty">No anti-yellow cases are selected yet.</p>
                 </div>
             </section>
-            <section class="gf-section gf-about-band">
-                <div class="gf-container gf-anti-spec-grid">
-                    <article>
-                        <span class="gf-story-icon"><i class="fa fa-sun-o" aria-hidden="true"></i></span>
-                        <h2>Anti-yellow finish</h2>
-                        <p>Clear cases selected for materials and finishes that help preserve transparency through regular use.</p>
-                    </article>
-                    <article>
-                        <span class="gf-story-icon"><i class="fa fa-mobile" aria-hidden="true"></i></span>
-                        <h2>Model-wise fit</h2>
-                        <p>Browse by phone model and category so you can find a compatible case without confusion.</p>
-                    </article>
-                    <article>
-                        <span class="gf-story-icon"><i class="fa fa-shield" aria-hidden="true"></i></span>
-                        <h2>Everyday confidence</h2>
-                        <p>Choose clear covers focused on grip, scratch resistance, drop protection, and clean daily handling.</p>
-                    </article>
+            <section class="gf-section gf-anti-best-selling">
+                <div class="gf-container">
+                    <div class="gf-section__heading gf-section__heading--split">
+                        <div>
+                            <h2>Best selling products</h2>
+                            <p>Popular anti-yellow picks selected from the product settings.</p>
+                        </div>
+                        <a href="/shop/category/anty-yellow-cases-12" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                    <div t-if="anti_yellow_best_selling_products" class="gf-scroll-area">
+                        <div class="gf-scroll-controls" aria-label="Scroll best selling products">
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="prev" aria-label="Previous best selling products">
+                                <i class="fa fa-angle-left" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="next" aria-label="Next best selling products">
+                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="gf-product-rail" data-gf-scroll-target="1">
+                            <t t-foreach="anti_yellow_best_selling_products" t-as="product">
+                                <t t-call="gadgetflix_website.gadgetflix_product_card"/>
+                            </t>
+                        </div>
+                    </div>
+                    <p t-else="" class="gf-empty">No best selling products are selected yet.</p>
+                </div>
+            </section>
+            <section class="gf-section">
+                <div class="gf-container">
+                    <div class="gf-section__heading gf-section__heading--split">
+                        <div>
+                            <h2>Selected accessories</h2>
+                            <p>A quick preview of cases, chargers, bags, wallets, and protection accessories from the current collection.</p>
+                        </div>
+                        <a href="/shop" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                    <div t-if="about_products" class="gf-product-grid">
+                        <t t-foreach="about_products" t-as="product">
+                            <t t-call="gadgetflix_website.gadgetflix_product_card"/>
+                        </t>
+                    </div>
+                    <p t-else="" class="gf-empty">Select accessories for the About page from each product's Website Sections settings.</p>
                 </div>
             </section>
             <t t-call="gadgetflix_website.gadgetflix_warranty"/>
             <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
+            </div>
         </t>
     </template>
 
