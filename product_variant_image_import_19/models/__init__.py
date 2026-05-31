@@ -1,1 +1,0 @@
-from . import product_variant_image_import_wizard
