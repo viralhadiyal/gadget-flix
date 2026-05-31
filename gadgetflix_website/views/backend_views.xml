@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_form_gadgetflix_flags" model="ir.ui.view">
+        <field name="name">product.template.form.gadgetflix.flags</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="website_sale.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='sales']//group[@name='extra_info']//field[@name='website_ribbon_id']" position="after">
+                <separator string="Website Sections"/>
+                <field name="gadgetflix_show_featured_home" widget="boolean_toggle"/>
+                <field name="gadgetflix_show_new_arrival_home" widget="boolean_toggle"/>
+                <field name="gadgetflix_show_anti_yellow" widget="boolean_toggle"/>
+                <field name="gadgetflix_show_about_page" widget="boolean_toggle"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="product_public_category_form_gadgetflix_flags" model="ir.ui.view">
+        <field name="name">product.public.category.form.gadgetflix.flags</field>
+        <field name="model">product.public.category</field>
+        <field name="inherit_id" ref="website_sale.product_public_category_form_view"/>
+        <field name="arch" type="xml">
+            <field name="cover_image" position="after">
+                <field name="gadgetflix_show_home" widget="boolean_toggle"/>
+                <field name="gadgetflix_show_accessories_menu" widget="boolean_toggle"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="product_public_category_list_gadgetflix_flags" model="ir.ui.view">
+        <field name="name">product.public.category.list.gadgetflix.flags</field>
+        <field name="model">product.public.category</field>
+        <field name="inherit_id" ref="website_sale.product_public_category_tree_view"/>
+        <field name="arch" type="xml">
+            <field name="display_name" position="after">
+                <field name="gadgetflix_show_home" widget="boolean_toggle" optional="show"/>
+                <field name="gadgetflix_show_accessories_menu" widget="boolean_toggle" optional="show"/>
+            </field>
+        </field>
+    </record>
+</odoo>

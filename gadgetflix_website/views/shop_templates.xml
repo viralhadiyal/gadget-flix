@@ -1,0 +1,914 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="gadgetflix_filter_color_attributes" inherit_id="website_sale.filter_color_attributes"
+              name="Gadgetflix Color attributes in Filter">
+        <xpath expr="//t[@t-foreach='a.value_ids']" position="attributes">
+            <attribute name="t-foreach">a.value_ids.filtered(lambda value: value.id in available_value_ids_by_attribute.get(a.id, avialable_value_ids or []))</attribute>
+        </xpath>
+    </template>
+
+    <template id="gadgetflix_filter_image_attributes" inherit_id="website_sale.filter_image_attributes"
+              name="Gadgetflix Image attributes in Filter">
+        <xpath expr="//t[@t-foreach='a.value_ids']" position="attributes">
+            <attribute name="t-foreach">a.value_ids.filtered(lambda value: value.id in available_value_ids_by_attribute.get(a.id, avialable_value_ids or []))</attribute>
+        </xpath>
+    </template>
+
+    <template id="gadgetflix_filter_select_attributes" inherit_id="website_sale.filter_select_attributes"
+              name="Gadgetflix Select attributes in Filter">
+        <xpath expr="//t[@t-foreach='a.value_ids']" position="attributes">
+            <attribute name="t-foreach">a.value_ids.filtered(lambda value: value.id in available_value_ids_by_attribute.get(a.id, avialable_value_ids or []))</attribute>
+        </xpath>
+    </template>
+
+    <template id="gadgetflix_filter_radio_and_multi_attributes" inherit_id="website_sale.filter_radio_and_multi_attributes"
+              name="Gadgetflix Radio and Multi attributes in Filter">
+        <xpath expr="//t[@t-set='sorted_values']" position="attributes">
+            <attribute name="t-value">sorted(a.value_ids.filtered(lambda value: value.id in available_value_ids_by_attribute.get(a.id, avialable_value_ids or [])), key=lambda v: v.id not in attrib_set)</attribute>
+        </xpath>
+    </template>
+
+    <template id="gadgetflix_filter_pills_attributes" inherit_id="website_sale.filter_pills_attributes"
+              name="Gadgetflix Pills attributes in Filter">
+        <xpath expr="//t[@t-foreach='a.value_ids']" position="attributes">
+            <attribute name="t-foreach">a.value_ids.filtered(lambda value: value.id in available_value_ids_by_attribute.get(a.id, avialable_value_ids or []))</attribute>
+        </xpath>
+    </template>
+
+    <template id="gadgetflix_logo" name="Gadgetflix Dynamic Logo">
+        <t t-set="logo_name" t-value="website.name or website.company_id.name"/>
+        <span t-if="website.logo"
+              class="gf-logo-image"
+              t-field="website.logo"
+              t-options="{'widget': 'image', 'width': 180, 'height': 64}"
+              role="img"
+              t-att-aria-label="'Logo of %s' % logo_name"
+              t-att-title="logo_name"/>
+        <span t-else="" class="gf-logo-text" t-out="logo_name"/>
+    </template>
+
+    <template id="gadgetflix_accessories_menu_links" name="Gadgetflix Accessories Menu Links">
+        <t t-foreach="accessory_categories" t-as="accessory_category">
+            <a t-attf-href="/shop/category/#{slug(accessory_category)}" t-out="accessory_category.name"/>
+        </t>
+    </template>
+
+    <template id="gadgetflix_header_search_without_categories" inherit_id="website.header_search_box_input" name="Gadgetflix Header Search Without Categories">
+        <xpath expr="//t[@t-call='website.website_search_box_input']" position="attributes">
+            <attribute name="display_description.f">false</attribute>
+            <attribute name="display_extra_link.f">false</attribute>
+        </xpath>
+    </template>
+
+    <template id="gadgetflix_header" name="Gadgetflix Header">
+        <t t-set="cart_qty" t-value="(request.session['website_sale_cart_quantity'] if 'website_sale_cart_quantity' in request.session else request.cart.cart_quantity) or 0"/>
+        <t t-set="cart_lines" t-value="request.cart.order_line.filtered(lambda line: not line.display_type and line.product_id and line.product_uom_qty) if cart_qty else []"/>
+        <t t-set="cart_total" t-value="request.cart.amount_total if cart_qty else 0"/>
+        <t t-set="accessory_categories"
+           t-value="request.env['product.public.category'].sudo().search([('gadgetflix_show_accessories_menu', '=', True), ('has_published_products', '=', True)], order='sequence, id')"/>
+        <header id="top" class="gf-header" data-anchor="true">
+            <div class="gf-container gf-header__inner">
+                <button type="button" class="gf-icon-button gf-menu-button" data-gf-menu-toggle="1" aria-label="Open menu" aria-expanded="false">
+                    <i class="fa fa-bars" aria-hidden="true"></i>
+                </button>
+                <a href="/" class="gf-brand" aria-label="Home">
+                    <t t-call="gadgetflix_website.gadgetflix_logo"/>
+                </a>
+                <nav class="gf-nav" aria-label="Main navigation">
+                    <a href="/home">Home</a>
+                    <a href="/shop">Shop</a>
+                    <a href="/anti-yellow">Anti-Yellow</a>
+                    <div t-if="accessory_categories" class="gf-nav-dropdown" data-gf-accessories-menu="1">
+                        <button type="button"
+                                class="gf-nav-menu-button"
+                                data-gf-accessories-toggle="1"
+                                aria-expanded="false"
+                                aria-haspopup="true"
+                                aria-controls="gf_accessories_menu">
+                            <span>Accessories</span>
+                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                        </button>
+                        <div id="gf_accessories_menu"
+                             class="gf-nav-menu-panel"
+                             data-gf-accessories-panel="1"
+                             aria-hidden="true">
+                            <t t-call="gadgetflix_website.gadgetflix_accessories_menu_links"/>
+                        </div>
+                    </div>
+                    <a href="/about">About us</a>
+                    <a href="/contact">Contact</a>
+                </nav>
+                <div class="gf-header__actions">
+                    <ul class="gf-header-search" aria-label="Search">
+                        <t t-call="website.placeholder_header_search_box"
+                           _layout.f="modal"
+                           _item_class.f="gf-header-search__item"
+                           _button_classes.f="gf-icon-button gf-search-button"
+                           _input_classes.f="border-0 p-3"
+                           _submit_classes.f="px-4"
+                           limit.f="5"/>
+                    </ul>
+                    <div class="gf-cart-menu" data-gf-cart-preview="1">
+                        <li class="o_wsale_my_cart" style="list-style:none;padding:0;margin:0;">
+                        <a href="/shop/cart"
+                           class="gf-icon-button gf-cart-link"
+                           aria-label="Cart"
+                           aria-haspopup="dialog"
+                           aria-expanded="false">
+                            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                            <sup t-attf-class="my_cart_quantity gf-cart-count #{'d-none' if cart_qty == 0 else ''}" t-out="cart_qty"/>
+                        </a>
+                        </li>
+                        <div class="gf-cart-preview" data-gf-cart-preview-panel="1" role="dialog" aria-label="Cart details">
+                            <div class="gf-cart-preview__header">
+                                <strong>Cart details</strong>
+                            </div>
+                            <div class="gf-cart-preview__lines" data-gf-cart-preview-lines="1">
+                                <t t-if="cart_lines">
+                                    <t t-foreach="cart_lines" t-as="line">
+                                        <a class="gf-cart-preview__line" t-att-href="line.product_id.product_tmpl_id.website_url or '/shop/cart'">
+                                            <span class="gf-cart-preview__image">
+                                                <img t-att-src="'/web/image/product.product/%s/image_128' % line.product_id.id" t-att-alt="line.product_id.display_name" loading="lazy" decoding="async"/>
+                                            </span>
+                                            <span class="gf-cart-preview__info">
+                                                <span class="gf-cart-preview__name" t-out="line.product_id.display_name"/>
+                                                <span class="gf-cart-preview__meta">
+                                                    <span>Qty <t t-out="line.product_uom_qty"/></span>
+                                                    <span t-out="line.price_total" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                </span>
+                                            </span>
+                                        </a>
+                                    </t>
+                                </t>
+                                <p t-else="" class="gf-cart-preview__empty">Your cart is empty.</p>
+                            </div>
+                            <div class="gf-cart-preview__footer">
+                                <span>Total</span>
+                                <strong data-gf-cart-preview-total="1" t-out="cart_total" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                            </div>
+                            <div class="gf-cart-preview__actions">
+                                <a href="/shop/cart">View Cart</a>
+                                <a href="/shop/checkout">Checkout</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-if="request.env.user._is_public()" class="gf-profile-menu" data-gf-profile-menu="1">
+                        <button type="button"
+                                class="gf-icon-button gf-profile-link"
+                                data-gf-profile-toggle="1"
+                                aria-label="Account"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-controls="gf_profile_panel">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </button>
+                        <div id="gf_profile_panel" class="gf-profile-panel" data-gf-profile-panel="1" role="menu" aria-label="Account menu">
+                            <div class="gf-profile-panel__header">
+                                <strong>Welcome</strong>
+                                <span>Access your GadgetFlix account</span>
+                            </div>
+                            <a href="/web/login" role="menuitem"><i class="fa fa-sign-in" aria-hidden="true"></i><span>Sign in</span></a>
+                            <a href="/web/signup" role="menuitem"><i class="fa fa-user-plus" aria-hidden="true"></i><span>Sign up</span></a>
+                        </div>
+                    </div>
+                    <div t-else="" class="gf-profile-menu" data-gf-profile-menu="1">
+                        <button type="button"
+                                class="gf-icon-button gf-profile-link"
+                                data-gf-profile-toggle="1"
+                                aria-label="Profile"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-controls="gf_profile_panel">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </button>
+                        <div id="gf_profile_panel" class="gf-profile-panel" data-gf-profile-panel="1" role="menu" aria-label="Account menu">
+                            <div class="gf-profile-panel__header">
+                                <strong t-out="request.env.user.name"/>
+                                <span t-if="request.env.user.partner_id.email" t-out="request.env.user.partner_id.email"/>
+                            </div>
+                            <a href="/my/account" role="menuitem"><i class="fa fa-user" aria-hidden="true"></i><span>Profile</span></a>
+                            <a href="/my/orders" role="menuitem"><i class="fa fa-shopping-bag" aria-hidden="true"></i><span>Orders</span></a>
+                            <a href="/my/invoices?filterby=invoices" role="menuitem"><i class="fa fa-file-text-o" aria-hidden="true"></i><span>Invoices</span></a>
+                            <a href="/my/addresses" role="menuitem"><i class="fa fa-map-marker" aria-hidden="true"></i><span>Addresses</span></a>
+                            <a href="/my/security" role="menuitem"><i class="fa fa-lock" aria-hidden="true"></i><span>Security</span></a>
+                            <a href="/web/session/logout?redirect=/" role="menuitem"><i class="fa fa-sign-out" aria-hidden="true"></i><span>Sign out</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="gf-mobile-panel" data-gf-mobile-menu="1" hidden="hidden">
+                <div class="gf-container gf-mobile-panel__inner">
+                    <a href="/home">Home</a>
+                    <a href="/shop">Shop</a>
+                    <a href="/anti-yellow">Anti-Yellow Cases</a>
+                    <div t-if="accessory_categories" class="gf-mobile-accessories" data-gf-mobile-accessories-menu="1">
+                        <button type="button"
+                                class="gf-mobile-accessories__toggle"
+                                data-gf-mobile-accessories-toggle="1"
+                                aria-expanded="false">
+                            <span>Accessories</span>
+                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                        </button>
+                        <div class="gf-mobile-accessories__panel"
+                             data-gf-mobile-accessories-panel="1"
+                             hidden="hidden">
+                            <t t-call="gadgetflix_website.gadgetflix_accessories_menu_links"/>
+                        </div>
+                    </div>
+                    <a href="/about">About us</a>
+                    <a href="/contact">Contact</a>
+                </div>
+            </div>
+        </header>
+    </template>
+
+    <template id="gadgetflix_footer" name="Gadgetflix Footer">
+        <footer id="bottom" class="gf-footer" data-anchor="true">
+            <div class="gf-container">
+                <div class="gf-footer__panel">
+                    <div class="gf-footer__brand">
+                        <a href="/" class="gf-brand gf-footer__logo" aria-label="Home">
+                            <t t-call="gadgetflix_website.gadgetflix_logo"/>
+                        </a>
+                        <p>Mobile accessories for protection, charging, storage, and everyday use across India.</p>
+                        <div class="gf-socials" aria-label="Social links">
+                            <a t-att-href="website.company_id.social_facebook or '#'" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
+                            <a t-att-href="website.company_id.social_instagram or '#'" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
+                            <a t-att-href="website.company_id.social_linkedin or '#'" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+                            <a t-att-href="website.company_id.social_twitter or '#'" target="_blank" rel="noopener" aria-label="X"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+                        </div>
+                    </div>
+                    <div class="gf-footer__links">
+                        <div>
+                            <h3>Pages</h3>
+                            <a href="/home">Home</a>
+                            <a href="/shop">Shop</a>
+                            <a href="/anti-yellow">Anti Yellow</a>
+                            <a href="/about">About</a>
+                            <a href="/contact">Contact</a>
+                        </div>
+                        <div>
+                            <h3>Support</h3>
+                            <a href="/contact">Contact</a>
+                            <a href="/shop">Accessories</a>
+                        </div>
+                    </div>
+                    <div class="gf-footer-map" aria-label="Location map for New Ranip">
+                        <iframe title="New Ranip Ahmedabad map"
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                src="https://maps.google.com/maps?q=New%20Ranip%2C%20Ahmedabad%2C%20Gujarat&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=&amp;output=embed"></iframe>
+                        <span class="gf-footer-map__pin"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                        <span class="gf-footer-map__label">New Ranip, Ahmedabad</span>
+                    </div>
+                </div>
+                <div class="gf-footer__bottom float-end">
+                    <div>
+                        <a href="/shipping-policy">Shipping policy</a>
+                        <a href="/privacy-policy">Privacy policy</a>
+                        <a href="/return-refund-policy">Return &amp; refund policy</a>
+                        <a href="/terms">Terms &amp; conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </template>
+
+    <template id="gadgetflix_global_layout" inherit_id="website.layout" name="Gadgetflix Global Header Footer" priority="90">
+        <xpath expr="//header" position="replace">
+            <t t-if="not no_header" t-call="gadgetflix_website.gadgetflix_header"/>
+        </xpath>
+        <xpath expr="//footer[@id='bottom']" position="replace">
+            <t t-if="not no_footer" t-call="gadgetflix_website.gadgetflix_footer"/>
+        </xpath>
+    </template>
+
+    <template id="gadgetflix_page_layout" name="Gadgetflix Page Layout">
+        <t t-call="website.layout">
+            <div class="gf-page">
+                <div class="gf-page-content">
+                    <t t-out="0"/>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="gadgetflix_product_card" name="Gadgetflix Product Card">
+        <t t-set="price_value" t-value="(product_prices.get(product.id, {}) or {'price_reduce': product.list_price}).get('price_reduce') if product_prices else product.list_price"/>
+        <a class="gf-product-card" t-att-href="product.website_url" t-att-title="product.name">
+            <span class="gf-product-card__image">
+                <img t-if="product.image_1920" t-att-src="'/web/image/product.template/%s/image_512' % product.id" t-att-alt="product.name" loading="lazy" decoding="async"/>
+                <img t-else="" src="/gadgetflix_website/static/src/img/category_dummy.svg" t-att-alt="product.name" loading="lazy" decoding="async"/>
+            </span>
+            <span class="gf-product-card__meta">
+                <span class="gf-product-card__title" t-field="product.name"/>
+                <span class="gf-product-card__price" t-out="price_value" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+            </span>
+        </a>
+    </template>
+
+    <template id="gadgetflix_category_card" name="Gadgetflix Category Card">
+        <a class="gf-category-card" t-attf-href="/shop/category/#{slug(category)}" t-att-title="category.name">
+            <span class="gf-category-card__image">
+                <img t-if="category.cover_image" t-att-src="'/web/image/product.public.category/%s/cover_image' % category.id" t-att-alt="category.name" loading="lazy" decoding="async"/>
+                <img t-elif="category.image_1920" t-att-src="'/web/image/product.public.category/%s/image_1024' % category.id" t-att-alt="category.name" loading="lazy" decoding="async"/>
+                <img t-else="" src="/gadgetflix_website/static/src/img/category_dummy.svg" t-att-alt="category.name" loading="lazy" decoding="async"/>
+            </span>
+            <span class="gf-category-card__content">
+                <span class="gf-category-card__title" t-field="category.name"/>
+                <span class="gf-category-card__description" t-if="category.website_description" t-field="category.website_description"/>
+                <span class="gf-category-card__description" t-else="">Shop practical accessories for phones, watches, laptops, and daily carry.</span>
+            </span>
+        </a>
+    </template>
+
+    <template id="gadgetflix_newsletter" name="Gadgetflix Newsletter">
+        <section id="newsletter" class="gf-newsletter">
+            <div class="gf-container">
+                <div class="gf-newsletter__panel">
+                    <div>
+                        <h2>Get new accessory drops and offers</h2>
+                        <p>Subscribe for updates on mobile cases, anti-yellow covers, screen protectors, chargers, cables, laptop bags, wallets, and watch accessories.</p>
+                    </div>
+                    <div class="gf-newsletter__form s_newsletter_subscribe_form s_newsletter_list js_subscribe"
+                         data-vxml="001"
+                         data-name="Newsletter Form"
+                         t-att-data-list-id="request.env.ref('gadgetflix_website.gadgetflix_newsletter_list').id">
+                        <div class="js_subscribed_wrap d-none gf-newsletter__thanks">
+                            <i class="fa fa-check-circle-o" role="img" aria-label="Subscribed"></i>
+                            Thanks for registering!
+                        </div>
+                        <div class="js_subscribe_wrap">
+                            <label class="visually-hidden" for="gf_newsletter_email">Email</label>
+                            <input id="gf_newsletter_email" class="s_newsletter_subscribe_form_input js_subscribe_value form-control" type="email" name="email" placeholder="Email address"/>
+                            <a role="button" href="#" class="js_subscribe_btn o_submit">Subscribe</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+    <template id="gadgetflix_shop_page" inherit_id="website_sale.products" name="Gadgetflix Shop Page">
+        <xpath expr="//div[@id='wrap']" position="attributes">
+            <attribute name="class" add="gf-page gf-shop-page" separator=" "/>
+        </xpath>
+        <xpath expr="//h1[hasclass('o_wsale_shop_title')]" position="replace">
+            <h1 class="mt-3 o_wsale_shop_title gf-shop-title" t-if="not category and not search">Premium Picks</h1>
+            <p class="gf-shop-subtitle" t-if="not category and not search">Explore stylish, durable, and premium mobile accessories made for protection, performance, and everyday convenience.</p>
+        </xpath>
+        <xpath expr="//div[contains(@t-attf-class, 'o_wsale_products_header_search_form_container')]" position="replace"/>
+        <xpath expr="//a[@data-bs-target='#o_wsale_search_modal']" position="replace"/>
+        <xpath expr="//div[@id='o_wsale_search_modal']" position="replace"/>
+        <xpath expr="//t[@t-call='website_sale.pricelist_list']" position="replace"/>
+        <xpath expr="//t[@t-call='website_sale.sort']" position="before">
+            <div class="gf-shop-searchbar">
+                <t t-set="placeholder" t-value="category and ('Search in %s' % category.name) or 'Search products'"/>
+                <t t-call="website.website_search_box_input">
+                    <t t-set="_form_classes" t-valuef="o_wsale_products_searchbar_form me-auto flex-grow-1"/>
+                    <t t-set="_submit_classes" t-valuef="btn btn-{{navClass}}"/>
+                    <t t-set="_input_classes" t-valuef="border-0 text-bg-{{navClass}}"/>
+                    <t t-set="search_type" t-valuef="products"/>
+                    <t t-set="action" t-value="keep(search=0)"/>
+                    <t t-set="search" t-value="original_search or search"/>
+                    <t t-set="display_image" t-valuef="true"/>
+                    <t t-set="display_description" t-valuef="false"/>
+                    <t t-set="display_extra_link" t-valuef="false"/>
+                    <t t-set="display_detail" t-valuef="true"/>
+                </t>
+            </div>
+        </xpath>
+        <xpath expr="//t[@t-call='website_sale.filmstrip_categories']" position="replace">
+            <div t-if="category_entries" class="gf-scroll-area gf-scroll-area--tabs">
+                <nav class="gf-shop-tabs" aria-label="Product categories" data-gf-scroll-target="1">
+                    <a t-att-href="keep(shop_path)" t-attf-class="gf-shop-tab #{not category and 'active' or ''}">
+                        <span class="gf-shop-tab__image gf-shop-tab__image--all">
+                            <i class="fa fa-th-large" aria-hidden="true"></i>
+                        </span>
+                        <span>Shop</span>
+                    </a>
+                    <t t-foreach="category_entries" t-as="c">
+                        <a t-att-href="keep('%s/category/%s' % (shop_path, slug(c)))"
+                           t-attf-class="gf-shop-tab #{category and c.id == category.id and 'active' or ''}"
+                           t-att-aria-label="c.name">
+                            <span class="gf-shop-tab__image">
+                                <img t-if="c.cover_image" t-att-src="'/web/image/product.public.category/%s/cover_image' % c.id" t-att-alt="c.name" loading="lazy" decoding="async"/>
+                                <img t-elif="c.image_1920" t-att-src="'/web/image/product.public.category/%s/image_256' % c.id" t-att-alt="c.name" loading="lazy" decoding="async"/>
+                                <img t-else="" src="/gadgetflix_website/static/src/img/category_dummy.svg" t-att-alt="c.name" loading="lazy" decoding="async"/>
+                            </span>
+                            <span t-field="c.name"/>
+                        </a>
+                    </t>
+                </nav>
+            </div>
+        </xpath>
+        <xpath expr="//div[@id='wrap']" position="after">
+            <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
+        </xpath>
+    </template>
+
+    <template id="gadgetflix_product_description" inherit_id="website_sale.product_title" name="Gadgetflix Product Description">
+        <xpath expr="//div[@t-field='product.description_ecommerce']" position="replace">
+            <div class="gf-product-description" data-gf-product-description="1">
+                <div
+                    t-field="product.description_ecommerce"
+                    class="oe_structure mb-2 text-muted gf-product-description__content is-collapsed"
+                    data-gf-product-description-content="1"
+                    placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."
+                />
+                <button
+                    type="button"
+                    class="gf-product-description__toggle"
+                    data-gf-product-description-toggle="1"
+                    hidden="hidden"
+                    aria-expanded="false"
+                    data-more-label="See more"
+                    data-less-label="See less"
+                >See more</button>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="homepage" name="Gadgetflix Homepage">
+        <t t-call="gadgetflix_website.gadgetflix_page_layout">
+            <section class="gf-hero">
+                <div class="gf-container">
+                    <div class="gf-hero__copy">
+                        <h1>Shop Smart. Protect Better. Look Premium.</h1>
+                        <div class="row">
+                            <div class="col-lg-6 col-12">
+                                <p>Discover modern mobile accessories made for daily protection and stylish use — including anti-yellow cases, tempered glass, chargers, cables, power banks, laptop bags, wallets, and watch accessories for every gadget lover.
+                                </p>
+                            </div>
+                            <div class="col-lg-6 col-12 align-content-end">
+                                <a href="/shop" class="gf-button">Browse Products
+                                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="gf-featured">
+                <div class="gf-container">
+                    <div class="gf-section__heading">
+                        <h2>Featured Products</h2>
+                        <p>Stay ahead with our latest and most popular tech accessories, built for modern lifestyles.</p>
+                    </div>
+                    <div t-if="featured_products" class="gf-scroll-area">
+                        <div class="gf-scroll-controls" aria-label="Scroll featured products">
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="prev" aria-label="Previous featured products">
+                                <i class="fa fa-angle-left" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="next" aria-label="Next featured products">
+                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="gf-product-rail" data-gf-scroll-target="1">
+                            <t t-foreach="featured_products" t-as="product">
+                                <t t-call="gadgetflix_website.gadgetflix_product_card"/>
+                            </t>
+                        </div>
+                    </div>
+                    <p t-else="" class="gf-empty">No accessories are available yet.</p>
+                </div>
+            </section>
+
+            <section class="gf-section gf-categories">
+                <div class="gf-container">
+                    <div class="gf-section__heading">
+                        <h2>Shop by Your Need</h2>
+                        <p>Discover categories made to help you quickly choose the best accessories for protection, style, charging, and everyday use.</p>
+                    </div>
+                    <div class="gf-category-layout">
+                        <article class="gf-category-intro gf-products-motion-card">
+                            <div class="gf-products-motion-card__bg" aria-hidden="true"></div>
+                            <div class="gf-products-motion-card__noise" aria-hidden="true"></div>
+                            <div class="gf-category-intro__header">
+                                <span class="gf-category-intro__eyebrow">Complete Store</span>
+                                <h3 class="gf-products-title" aria-label="All Products">
+                                    <span class="gf-products-title__line">
+                                        <span>All</span>
+                                    </span>
+                                    <span class="gf-products-title__line gf-products-title__line--serif">
+                                        <span>Products.</span>
+                                    </span>
+                                </h3>
+                                <p>Explore protection, charging, carry, and watch essentials in one place.</p>
+                            </div>
+                            <div class="gf-category-intro__matrix" role="list" aria-label="Popular product groups">
+                                <span class="gf-category-intro__item gf-category-intro__item--case" role="listitem">
+                                    <i class="fa fa-mobile" aria-hidden="true"></i>
+                                    <span>Cases</span>
+                                </span>
+                                <span class="gf-category-intro__item gf-category-intro__item--glass" role="listitem">
+                                    <i class="fa fa-shield" aria-hidden="true"></i>
+                                    <span>Glass</span>
+                                </span>
+                                <span class="gf-category-intro__item gf-category-intro__item--power" role="listitem">
+                                    <i class="fa fa-bolt" aria-hidden="true"></i>
+                                    <span>Chargers</span>
+                                </span>
+                                <span class="gf-category-intro__item gf-category-intro__item--cable" role="listitem">
+                                    <i class="fa fa-plug" aria-hidden="true"></i>
+                                    <span>Cables</span>
+                                </span>
+                                <span class="gf-category-intro__item gf-category-intro__item--carry" role="listitem">
+                                    <i class="fa fa-briefcase" aria-hidden="true"></i>
+                                    <span>Bags</span>
+                                </span>
+                                <span class="gf-category-intro__item gf-category-intro__item--watch" role="listitem">
+                                    <i class="fa fa-clock-o" aria-hidden="true"></i>
+                                    <span>Watch</span>
+                                </span>
+                            </div>
+                            <div class="gf-category-intro__footer">
+                                <span class="gf-products-motion-card__line" aria-hidden="true">
+                                    <span></span>
+                                </span>
+                                <span class="gf-category-intro__note">
+                                    <strong>Shop faster</strong>
+                                    <span>Find every product type from the main catalog.</span>
+                                </span>
+                                <a href="/shop" class="gf-button gf-button--light">Browse Products <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            </div>
+                        </article>
+                        <div t-if="website_categories" class="gf-category-grid">
+                            <t t-foreach="website_categories[:5]" t-as="category">
+                                <t t-call="gadgetflix_website.gadgetflix_category_card"/>
+                            </t>
+                        </div>
+                        <p t-else="" class="gf-empty">No public categories are available yet.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="gf-section gf-new-arrivals">
+                <div class="gf-container">
+                    <div class="gf-section__heading gf-section__heading--split">
+                        <div>
+                            <h2>New arrivals</h2>
+                            <p>Explore the latest accessories added to our store — fresh designs, upgraded protection, and smart tech essentials for your everyday use.</p>
+                        </div>
+                        <a href="/shop" class="gf-button gf-button--light">Shop new arrivals <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                    <div t-if="new_arrival_products" class="gf-scroll-area">
+                        <div class="gf-scroll-controls" aria-label="Scroll new arrivals">
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="prev" aria-label="Previous new arrivals">
+                                <i class="fa fa-angle-left" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="next" aria-label="Next new arrivals">
+                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="gf-product-rail gf-product-rail--compact" data-gf-scroll-target="1">
+                            <t t-foreach="new_arrival_products" t-as="product">
+                                <t t-call="gadgetflix_website.gadgetflix_product_card"/>
+                            </t>
+                        </div>
+                    </div>
+                    <p t-else="" class="gf-empty">Add more accessories to show this section.</p>
+                </div>
+            </section>
+
+            <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
+        </t>
+    </template>
+
+    <template id="anti_yellow_cases" name="Gadgetflix Anti Yellow Cases">
+        <t t-call="gadgetflix_website.gadgetflix_page_layout">
+            <section class="gf-anti-offer-section" aria-label="Anti yellow sale offer">
+                <a href="/shop?search=Anti%20Yellow%20Case" class="gf-anti-offer" aria-label="Shop anti yellow case sale offer">
+                    <picture>
+                        <source media="(max-width: 767px)" srcset="/gadgetflix_website/static/src/img/anti_yellow_offer_mobile_20260530.png"/>
+                        <img src="/gadgetflix_website/static/src/img/anti_yellow_offer_desktop_20260530.png"
+                             alt="GadgetFlix anti yellow case sale offer"
+                             loading="eager"/>
+                    </picture>
+                </a>
+            </section>
+            <section class="gf-page-hero gf-anti-hero">
+                <div class="gf-container gf-about-hero__grid">
+                    <div>
+                        <span class="gf-eyebrow">Anti Yellow</span>
+                        <h1>The last clear case you'll ever need to buy.</h1>
+                        <p>Other cases promise clarity. Gadgetflix delivers it — forever. Our UV Shield Technology blocks the science behind yellowing, so your case looks as fresh on day 365 as it did on day one.</p>
+                        <a href="#anti-yellow-products" class="gf-button">View cases <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="gf-anti-panel">
+                        <div>
+                            <strong>UV Shield Technology</strong>
+                            <span>Our material absorbs UV rays before they can break down the polycarbonate — the only real fix for yellowing.</span>
+                        </div>
+                        <div>
+                            <strong>Optical-grade clarity</strong>
+                            <span>Premium polycarbonate with 99% light transmission. Your phone's colour, texture, and finish — unchanged.</span>
+                        </div>
+                        <div>
+                            <strong>MagSafe Ready</strong>
+                            <span>Magnets snap perfectly to all MagSafe chargers, wallets, and mounts — every single time.</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="anti-yellow-products" class="gf-section">
+                <div class="gf-container">
+                    <div class="gf-section__heading gf-section__heading--split">
+                        <div>
+                            <h2>Anti-yellow cases</h2>
+                            <p>Explore anti-yellow cases chosen for clear looks, protection, and daily reliability.</p>
+                        </div>
+                        <a href="/shop/category/anty-yellow-cases-12" class="gf-button gf-button--light">Shop<i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                    <div t-if="anti_yellow_products" class="gf-scroll-area">
+                        <div class="gf-scroll-controls" aria-label="Scroll anti-yellow products">
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="prev" aria-label="Previous anti-yellow products">
+                                <i class="fa fa-angle-left" aria-hidden="true"></i>
+                            </button>
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="next" aria-label="Next anti-yellow products">
+                                <i class="fa fa-angle-right" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                        <div class="gf-product-rail" data-gf-scroll-target="1">
+                            <t t-foreach="anti_yellow_products" t-as="product">
+                                <t t-call="gadgetflix_website.gadgetflix_product_card"/>
+                            </t>
+                        </div>
+                    </div>
+                    <p t-else="" class="gf-empty">No anti-yellow cases are selected yet.</p>
+                </div>
+            </section>
+            <section class="gf-section gf-about-band">
+                <div class="gf-container gf-anti-spec-grid">
+                    <article>
+                        <span class="gf-story-icon"><i class="fa fa-sun-o" aria-hidden="true"></i></span>
+                        <h2>Anti-yellow finish</h2>
+                        <p>Clear cases selected for materials and finishes that help preserve transparency through regular use.</p>
+                    </article>
+                    <article>
+                        <span class="gf-story-icon"><i class="fa fa-mobile" aria-hidden="true"></i></span>
+                        <h2>Model-wise fit</h2>
+                        <p>Browse by phone model and category so you can find a compatible case without confusion.</p>
+                    </article>
+                    <article>
+                        <span class="gf-story-icon"><i class="fa fa-shield" aria-hidden="true"></i></span>
+                        <h2>Everyday confidence</h2>
+                        <p>Choose clear covers focused on grip, scratch resistance, drop protection, and clean daily handling.</p>
+                    </article>
+                </div>
+            </section>
+            <t t-call="gadgetflix_website.gadgetflix_warranty"/>
+            <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
+        </t>
+    </template>
+
+    <template id="about_page" name="Gadgetflix About Page">
+        <t t-call="gadgetflix_website.gadgetflix_page_layout">
+            <section class="gf-page-hero gf-about-hero">
+                <div class="gf-container gf-about-hero__grid">
+                    <div>
+                        <span class="gf-eyebrow">About us</span>
+                        <h1>Accessories that protect, charge, and travel with you.</h1>
+                        <p>Gadgetflix brings practical mobile accessories to shoppers across India, with accessories selected for daily use, device protection, charging, and carry needs.</p>
+                        <a href="/shop" class="gf-button">Explore Products <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                    <div class="gf-about-snapshot">
+                        <div>
+                            <strong>India</strong>
+                            <span>Mobile accessory shopping</span>
+                        </div>
+                        <div>
+                            <strong>Protect</strong>
+                            <span>Cases, glass, and screen guards</span>
+                        </div>
+                        <div>
+                            <strong>Charge</strong>
+                            <span>Adapters, cables, and daily essentials</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="gf-section gf-about-band">
+                <div class="gf-container">
+                    <div class="gf-about-story">
+                        <article>
+                            <span class="gf-story-icon"><i class="fa fa-cube" aria-hidden="true"></i></span>
+                            <h2>Carefully organized</h2>
+                            <p>Cases, screen protectors, chargers, cables, bags, wallets, and watch accessories are arranged so customers can shop faster.</p>
+                        </article>
+                        <article>
+                            <span class="gf-story-icon"><i class="fa fa-shield" aria-hidden="true"></i></span>
+                            <h2>Practical selection</h2>
+                            <p>Every product category is focused on accessories people use every day: protection, power, storage, and style.</p>
+                        </article>
+                        <article>
+                            <span class="gf-story-icon"><i class="fa fa-refresh" aria-hidden="true"></i></span>
+                            <h2>Fresh experience</h2>
+                            <p>New arrivals and featured picks keep the store updated with current phone models, useful accessories, and seasonal demand.</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+            <section class="gf-section">
+                <div class="gf-container">
+                    <div class="gf-section__heading gf-section__heading--split">
+                        <div>
+                            <h2>Selected accessories</h2>
+                            <p>A quick preview of cases, chargers, bags, wallets, and protection accessories from the current collection.</p>
+                        </div>
+                        <a href="/shop" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                    <div t-if="about_products" class="gf-product-grid">
+                        <t t-foreach="about_products" t-as="product">
+                            <t t-call="gadgetflix_website.gadgetflix_product_card"/>
+                        </t>
+                    </div>
+                    <p t-else="" class="gf-empty">Select accessories for the About page from each product's Website Sections settings.</p>
+                </div>
+            </section>
+            <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
+        </t>
+    </template>
+
+    <template id="contact_page" name="Gadgetflix Contact Page">
+        <t t-call="gadgetflix_website.gadgetflix_page_layout">
+            <t t-set="company" t-value="website.company_id"/>
+            <section class="gf-page-hero gf-contact-hero">
+                <div class="gf-container gf-contact-hero__grid">
+                    <div>
+                        <span class="gf-eyebrow">Contact us</span>
+                        <h1>Talk to our accessory team.</h1>
+                        <p>Reach us for product fit, order support, bulk requirements, partnerships, or store information.</p>
+                        <div class="gf-contact-actions">
+                            <a href="/contactus" class="gf-button">Send message <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="/shop" class="gf-button gf-button--light">Browse Products</a>
+                        </div>
+                    </div>
+                    <div class="gf-contact-card">
+                        <h2>Contact details</h2>
+                        <a t-if="company.phone" t-att-href="'tel:%s' % company.phone.replace(' ', '').replace('-', '')">
+                            <i class="fa fa-phone" aria-hidden="true"></i>
+                            <span t-field="company.phone"/>
+                        </a>
+                        <a t-if="company.email" t-att-href="'mailto:%s' % company.email">
+                            <i class="fa fa-envelope" aria-hidden="true"></i>
+                            <span t-field="company.email"/>
+                        </a>
+                        <address>
+                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            <span t-if="company.street or company.street2 or company.city or company.state_id or company.zip or company.country_id">
+                                <span t-if="company.street" t-field="company.street"/>
+                                <span t-if="company.street2" t-field="company.street2"/>
+                                <span>
+                                    <t t-if="company.city" t-out="company.city"/>
+                                    <t t-if="company.state_id">, <t t-out="company.state_id.name"/></t>
+                                    <t t-if="company.zip"> <t t-out="company.zip"/></t>
+                                </span>
+                                <span t-if="company.country_id" t-field="company.country_id.name"/>
+                            </span>
+                            <span t-else="">New Ranip</span>
+                        </address>
+                    </div>
+                </div>
+            </section>
+
+            <section class="gf-section gf-contact-band">
+                <div class="gf-container gf-contact-grid">
+                    <article>
+                        <span class="gf-story-icon"><i class="fa fa-shopping-bag" aria-hidden="true"></i></span>
+                        <h2>Accessory support</h2>
+                        <p>Ask about phone model fit, case compatibility, screen protector options, charger type, cable length, or watch strap sizing.</p>
+                    </article>
+                    <article>
+                        <span class="gf-story-icon"><i class="fa fa-truck" aria-hidden="true"></i></span>
+                        <h2>Order assistance</h2>
+                        <p>Get help with cart, checkout, delivery questions, invoices, returns, refunds, and post-purchase communication.</p>
+                    </article>
+                    <article>
+                        <span class="gf-story-icon"><i class="fa fa-handshake-o" aria-hidden="true"></i></span>
+                        <h2>Business inquiries</h2>
+                        <p>Connect with the team for collaborations, bulk accessory requirements, reseller inquiries, or custom catalog discussions.</p>
+                    </article>
+                </div>
+            </section>
+
+            <section class="gf-section gf-contact-map-section">
+                <div class="gf-container gf-contact-map-grid">
+                    <div class="gf-contact-map">
+                        <iframe title="New Ranip Ahmedabad map"
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                                src="https://maps.google.com/maps?q=New%20Ranip%2C%20Ahmedabad%2C%20Gujarat&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=&amp;output=embed"></iframe>
+                        <span class="gf-footer-map__pin"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                        <span class="gf-footer-map__label">New Ranip, Ahmedabad</span>
+                    </div>
+                    <div class="gf-contact-note">
+                        <h2>Visit or message us</h2>
+                        <p>Find us around New Ranip, Ahmedabad, or use the contact form for accessory recommendations, order help, and business inquiries.</p>
+                        <a href="/contactus" class="gf-button gf-button--light">Open contact form <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                    </div>
+                </div>
+            </section>
+
+            <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
+        </t>
+    </template>
+
+    <template id="gadgetflix_warranty" name="Gadgetflix Warranty Section">
+        <section class="gf-section gf-warranty">
+            <div class="gf-container">
+                <div class="gf-warranty__card">
+                    <div class="gf-warranty__badge-row">
+                        <svg class="gf-warranty__brand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                            <path d="M7 15.5c-1.5 0-2.7-1.2-2.7-2.7S5.5 10 7 10h10c1.5 0 2.7 1.2 2.7 2.8s-1.2 2.7-2.7 2.7H7Z" stroke="currentColor" stroke-width="1.5"/>
+                            <path d="M8 10c.2-2.2 1.9-4 4-4s3.8 1.8 4 4M9 16l-2 3M15 16l2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        <span>Gadgetflix Official Warranty</span>
+                    </div>
+
+                    <div class="gf-warranty__hero">
+                        <div class="gf-warranty__copy">
+                            <h2>Full lifetime warranty<br/>for <span class="gf-warranty__accent">yellowing.</span></h2>
+                            <p>We back every Gadgetflix anti-yellow case with a full lifetime warranty
+                                against yellowing. If your case ever yellows — on day 30, day 300, or
+                                day 3000 — you get a one-time free replacement, shipped to your door.
+                                No forms, no receipts, no questions.</p>
+                        </div>
+                        <div class="gf-warranty__seal" aria-label="Lifetime Warranty">
+                            <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
+                                <path d="M32 8c7 6 14 7 22 7v14c0 13-8.5 22-22 27C18.5 51 10 42 10 29V15c8 0 15-1 22-7Z" stroke="currentColor" stroke-width="4" stroke-linejoin="round"/>
+                                <path d="M23 31c2 4 5.5 6.5 10 6.5 4.8 0 8-2.8 10-6.5" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                            </svg>
+                            <span class="gf-warranty__seal-text">Lifetime<br/>Warranty</span>
+                        </div>
+                    </div>
+
+                    <div class="gf-warranty__grid">
+                        <div class="gf-warranty__feature">
+                            <span class="gf-warranty__feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M8.5 12c0-2.1 1.4-3.5 3.5-3.5s3.5 1.4 3.5 3.5-1.4 3.5-3.5 3.5S8.5 14.1 8.5 12Z" stroke="currentColor" stroke-width="1.7"/>
+                                    <path d="M4 12c2.1-2.8 4.2-4.2 6.4-4.2M20 12c-2.1 2.8-4.2 4.2-6.4 4.2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <strong>One-time free replacement</strong>
+                                <span>If your anti-yellow case ever yellows, we replace it once — free</span>
+                            </div>
+                        </div>
+                        <div class="gf-warranty__feature">
+                            <span class="gf-warranty__feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M12 3 20 7.5v9L12 21 4 16.5v-9L12 3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                                    <path d="M4.5 7.8 12 12l7.5-4.2M12 12v8.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <strong>Yellowing only</strong>
+                                <span>Covers yellowing of anti-yellow cases — not scratches, drops, or damage</span>
+                            </div>
+                        </div>
+                        <div class="gf-warranty__feature">
+                            <span class="gf-warranty__feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <path d="M7 3h7l4 4v14H7V3Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+                                    <path d="M14 3v5h5M5 5l14 14" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <strong>No paperwork required</strong>
+                                <span>Just message us — no forms, no receipts needed</span>
+                            </div>
+                        </div>
+                        <div class="gf-warranty__feature">
+                            <span class="gf-warranty__feature-icon">
+                                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                    <circle cx="12" cy="12" r="7" stroke="currentColor" stroke-width="1.7"/>
+                                    <path d="M9.2 12.3c.6.7 1.5 1.1 2.8 1.1s2.2-.4 2.8-1.1M9 10h.1M15 10h.1" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+                                </svg>
+                            </span>
+                            <div>
+                                <strong>No tampering, no misuse</strong>
+                                <span>Void if the case is physically damaged, altered, or tampered with</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="gf-warranty__note">
+                        <p>This warranty applies exclusively to Gadgetflix anti-yellow cases and covers yellowing only.
+                            Physical damage, scratches, cracks, or any form of tampering voids the warranty.
+                            One free replacement per purchase.</p>
+                    </div>
+
+                    <div class="gf-warranty__quote">
+                        <span class="gf-warranty__quote-mark">&#8220;</span>
+                        <p>UV Shield Technology is baked into the material itself — it cannot wear off,
+                            wash off, or fade. This warranty exists as proof that we mean it.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </template>
+
+</odoo>

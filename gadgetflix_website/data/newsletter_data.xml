@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="gadgetflix_newsletter_list" model="mailing.list">
+        <field name="name">Gadgetflix Newsletter</field>
+        <field name="is_public">True</field>
+    </record>
+</odoo>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gadgetflix_mix_match_offer_tree" model="ir.ui.view">
+        <field name="name">gadgetflix.mix.match.offer.tree</field>
+        <field name="model">gadgetflix.mix.match.offer</field>
+        <field name="arch" type="xml">
+            <list string="Mix &amp; Match Offers">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="apply_discount_on"/>
+                <field name="split_method"/>
+                <field name="is_published" widget="boolean_toggle"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gadgetflix_mix_match_offer_form" model="ir.ui.view">
+        <field name="name">gadgetflix.mix.match.offer.form</field>
+        <field name="model">gadgetflix.mix.match.offer</field>
+        <field name="arch" type="xml">
+            <form string="Mix &amp; Match Offer">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Offer Name"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group string="Basic Configuration">
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="is_published" widget="boolean_toggle"/>
+                            <field name="sequence"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="currency_id" invisible="1"/>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                        </group>
+                        <group string="Application Scope">
+                            <field name="apply_in_backend" widget="boolean_toggle"/>
+                            <field name="apply_on_website" widget="boolean_toggle"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Condition &amp; Discount" name="condition_discount">
+                            <group>
+                                <group string="Eligibility Condition">
+                                    <field name="apply_discount_on"/>
+                                    
+                                    <field name="internal_category_ids" widget="many2many_tags" 
+                                           invisible="apply_discount_on != 'internal_category'"
+                                           required="apply_discount_on == 'internal_category'"/>
+                                    
+                                    <field name="website_category_ids" widget="many2many_tags" 
+                                           invisible="apply_discount_on != 'website_category'"
+                                           required="apply_discount_on == 'website_category'"/>
+                                           
+                                    <field name="product_tmpl_ids" widget="many2many_tags" 
+                                           invisible="apply_discount_on != 'product_template'"
+                                           required="apply_discount_on == 'product_template'"/>
+                                           
+                                    <field name="product_variant_ids" widget="many2many_tags" 
+                                           invisible="apply_discount_on != 'product_variant'"
+                                           required="apply_discount_on == 'product_variant'"/>
+                                           
+                                    <field name="product_tag_ids" widget="many2many_tags" 
+                                           invisible="apply_discount_on != 'product_tag'"
+                                           required="apply_discount_on == 'product_tag'"/>
+                                           
+                                    <field name="attribute_ids" widget="many2many_tags" 
+                                           invisible="apply_discount_on != 'product_attribute'"
+                                           required="apply_discount_on == 'product_attribute'"/>
+                                           
+                                    <field name="attribute_value_ids" widget="many2many_tags" 
+                                           invisible="apply_discount_on != 'product_attribute_value'"
+                                           required="apply_discount_on == 'product_attribute_value'"/>
+                                           
+                                    <field name="custom_domain" 
+                                           invisible="apply_discount_on != 'custom_domain'"
+                                           required="apply_discount_on == 'custom_domain'"/>
+                                </group>
+                                <group string="Discount Strategy">
+                                    <field name="split_method"/>
+                                    <field name="conflict_strategy"/>
+                                </group>
+                            </group>
+                            
+                            <separator string="Slabs Configuration"/>
+                            <field name="slab_ids">
+                                <list editable="bottom">
+                                    <field name="quantity"/>
+                                    <field name="fixed_price"/>
+                                    <field name="currency_id" column_invisible="True"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_gadgetflix_mix_match_offer" model="ir.actions.act_window">
+        <field name="name">Mix &amp; Match Offers</field>
+        <field name="res_model">gadgetflix.mix.match.offer</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Create your first Mix &amp; Match Offer!
+          </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_gadgetflix_mix_match_offer"
+              name="Mix &amp; Match Offers"
+              parent="website.menu_website_global_configuration"
+              action="action_gadgetflix_mix_match_offer"
+              sequence="50"/>
+</odoo>
