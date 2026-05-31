@@ -6,8 +6,9 @@ from odoo.exceptions import ValidationError
 class MixMatchOfferSlab(models.Model):
     _name = 'gadgetflix.mix.match.offer.slab'
     _description = 'Mix & Match Offer Slab'
-    _order = 'quantity desc'
+    _order = 'sequence, quantity desc'
 
+    sequence = fields.Integer(string="Sequence", default=10)
     offer_id = fields.Many2one('gadgetflix.mix.match.offer', string="Offer", required=True, ondelete='cascade')
     quantity = fields.Integer(string="Quantity", required=True, default=1)
     fixed_price = fields.Monetary(string="Fixed Price", required=True)

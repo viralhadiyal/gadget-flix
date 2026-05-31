@@ -90,6 +90,7 @@
                             <separator string="Slabs Configuration"/>
                             <field name="slab_ids">
                                 <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
                                     <field name="quantity"/>
                                     <field name="fixed_price"/>
                                     <field name="currency_id" column_invisible="True"/>

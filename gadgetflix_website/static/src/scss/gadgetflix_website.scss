@@ -770,6 +770,34 @@
     color: var(--gf-black) !important;
 }
 
+.o_wsale_product_page .o_wsale_breadcrumb,
+.gf-shop-page .breadcrumb {
+    padding: 24px 0 16px 0 !important;
+    margin-bottom: 0 !important;
+    background: transparent !important;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--gf-muted) !important;
+}
+
+.o_wsale_product_page .o_wsale_breadcrumb a,
+.gf-shop-page .breadcrumb a {
+    color: var(--gf-muted);
+    text-decoration: none;
+    transition: color 160ms ease;
+}
+
+.o_wsale_product_page .o_wsale_breadcrumb a:hover,
+.gf-shop-page .breadcrumb a:hover {
+    color: var(--gf-black);
+}
+
+.o_wsale_product_page .o_wsale_breadcrumb .active,
+.gf-shop-page .breadcrumb .active {
+    color: var(--gf-black) !important;
+    font-weight: 600;
+}
+
 .o_wsale_product_page .gf-product-description {
     margin-bottom: 18px;
 }
@@ -4260,4 +4288,13 @@
 .o_portal_addresses .form-check:has(#use_delivery_as_billing),
 .o_portal_addresses .d-flex:has(.o_add_billing_address_btn) {
     display: none !important;
+}
+
+/* Fix for Shop Page Product Images */
+.gf-shop-page {
+    --o-wsale-card-thumb-fill-mode: contain;
+}
+
+.gf-shop-page .oe_product_cart .oe_product_image_link .oe_product_image_img {
+    object-fit: contain !important;
 }

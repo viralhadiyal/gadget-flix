@@ -393,7 +393,7 @@
                            t-att-aria-label="c.name">
                             <span class="gf-shop-tab__image">
                                 <img t-if="c.cover_image" t-att-src="'/web/image/product.public.category/%s/cover_image' % c.id" t-att-alt="c.name" loading="lazy" decoding="async"/>
-                                <img t-elif="c.image_1920" t-att-src="'/web/image/product.public.category/%s/image_256' % c.id" t-att-alt="c.name" loading="lazy" decoding="async"/>
+                                <img t-elif="c.image_1920" t-att-src="'/web/image/product.public.category/%s/image_128' % c.id" t-att-alt="c.name" loading="lazy" decoding="async"/>
                                 <img t-else="" src="/gadgetflix_website/static/src/img/category_dummy.svg" t-att-alt="c.name" loading="lazy" decoding="async"/>
                             </span>
                             <span t-field="c.name"/>

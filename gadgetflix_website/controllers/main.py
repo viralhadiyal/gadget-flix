@@ -77,12 +77,12 @@ class WebsiteSaleShop(WebsiteSale):
         )
         anti_yellow_products = Product.search(
             product_domain & Domain('gadgetflix_show_anti_yellow', '=', True),
-            limit=18,
+            limit=12,
             order='website_sequence asc, id desc',
         )
         about_products = Product.search(
             product_domain & Domain('gadgetflix_show_about_page', '=', True),
-            limit=4,
+            limit=12,
             order='website_sequence asc, id desc',
         )
         priced_products = (
