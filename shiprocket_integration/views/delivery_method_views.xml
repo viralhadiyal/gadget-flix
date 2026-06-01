@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="sr_integration_delivery_carrier_form" model="ir.ui.view">
+        <field name="name">delivery.carrier.form.shiprocket.integration</field>
+        <field name="model">delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='destination']" position="after">
+                <page string="Shiprocket Integration" name="sr_integration_options" invisible="delivery_type != 'shiprocket_integration'">
+                    <div class="alert alert-warning" role="status" invisible="delivery_type != 'shiprocket_integration' or prod_environment">
+                        Test mode cancels booked shipments after label creation so freight charges are not kept.
+                    </div>
+                    <group string="Connection">
+                        <group>
+                            <field name="sr_integration_login_email" required="delivery_type == 'shiprocket_integration'"/>
+                            <field name="sr_integration_secret_key" password="1" required="delivery_type == 'shiprocket_integration'"/>
+                            <button name="action_sr_integration_ping" string="Validate Credentials" type="object" class="btn btn-secondary"/>
+                        </group>
+                        <group>
+                            <field name="sr_integration_request_pickup"/>
+                            <field name="sr_integration_generate_manifest"/>
+                            <field name="sr_integration_package_type_id"
+                                   context="{'default_package_carrier_type': 'shiprocket_integration'}"
+                                   domain="[('package_carrier_type', '=', 'shiprocket_integration')]"
+                                   required="delivery_type == 'shiprocket_integration'"/>
+                        </group>
+                    </group>
+                    <group string="Routing">
+                        <group>
+                            <label for="sr_integration_channel_id"/>
+                            <div class="o_row">
+                                <field name="sr_integration_channel_id"
+                                       options="{'no_create': True, 'no_quick_create': True, 'no_open': True}"/>
+                                <button name="action_sr_integration_import_channels"
+                                        title="Refresh sales channels"
+                                        class="fa fa-refresh oe_link"
+                                        type="object"/>
+                            </div>
+                        </group>
+                        <group>
+                            <label for="sr_integration_courier_ids"/>
+                            <div class="o_row">
+                                <field name="sr_integration_courier_ids"
+                                       widget="many2many_tags"
+                                       options="{'no_create': True, 'no_quick_create': True, 'no_open': True}"/>
+                                <button name="action_sr_integration_import_couriers"
+                                        title="Refresh courier services"
+                                        class="fa fa-refresh oe_link"
+                                        type="object"/>
+                            </div>
+                        </group>
+                    </group>
+                    <group string="Setup Notes">
+                        <ul>
+                            <li>Create or open the API user in the Shiprocket seller panel, then enter its email and password here.</li>
+                            <li>Refresh channels after adding a manual sales channel in Shiprocket.</li>
+                            <li>Leave Allowed Couriers empty to let Shiprocket choose the recommended courier during rate lookup.</li>
+                        </ul>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
