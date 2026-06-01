@@ -121,6 +121,10 @@
             }
 
             const setOpen = function (open) {
+                if (open) {
+                    closeDesktopMenus();
+                }
+
                 menu.classList.toggle("is-open", open);
                 button.setAttribute("aria-expanded", open ? "true" : "false");
                 panel.setAttribute("aria-hidden", open ? "false" : "true");
@@ -154,6 +158,44 @@
             };
 
             button.addEventListener("click", function () {
+                setOpen(panel.hidden);
+            });
+        });
+
+        const mobileDeviceGroups = document.querySelectorAll("[data-gf-mobile-device-group]");
+
+        mobileDeviceGroups.forEach(function (group) {
+            const button = group.querySelector("[data-gf-mobile-device-toggle]");
+            const panel = group.querySelector("[data-gf-mobile-device-panel]");
+
+            if (!button || !panel) {
+                return;
+            }
+
+            const setOpen = function (open) {
+                button.setAttribute("aria-expanded", open ? "true" : "false");
+                panel.hidden = !open;
+            };
+
+            button.addEventListener("click", function () {
+                const parentPanel = group.closest("[data-gf-mobile-accessories-panel]");
+
+                if (panel.hidden && parentPanel) {
+                    parentPanel.querySelectorAll("[data-gf-mobile-device-group]").forEach(function (otherGroup) {
+                        if (otherGroup === group) {
+                            return;
+                        }
+
+                        const otherButton = otherGroup.querySelector("[data-gf-mobile-device-toggle]");
+                        const otherPanel = otherGroup.querySelector("[data-gf-mobile-device-panel]");
+
+                        if (otherButton && otherPanel) {
+                            otherButton.setAttribute("aria-expanded", "false");
+                            otherPanel.hidden = true;
+                        }
+                    });
+                }
+
                 setOpen(panel.hidden);
             });
         });

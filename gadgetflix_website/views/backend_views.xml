@@ -39,4 +39,21 @@
             </field>
         </field>
     </record>
+
+    <record id="website_form_gadgetflix_llms_txt" model="ir.ui.view">
+        <field name="name">website.form.gadgetflix.llms.txt</field>
+        <field name="model">website</field>
+        <field name="inherit_id" ref="website.view_website_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="LLMS.txt" name="gadgetflix_llms_txt">
+                    <group>
+                        <field name="gadgetflix_llms_txt_content"
+                               nolabel="1"
+                               placeholder="# GadgetFlix&#10;&#10;&gt; Short website summary for AI assistants.&#10;&#10;## Useful links&#10;- [Shop](/shop)"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
 </odoo>

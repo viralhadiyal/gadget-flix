@@ -164,8 +164,8 @@
 }
 
 .gf-nav-menu-panel {
-    position: absolute;
-    top: calc(100% + 18px);
+    position: fixed;
+    top: 76px;
     left: 50%;
     z-index: 45;
     width: calc(100vw - 48px);
@@ -191,7 +191,7 @@
     right: 0;
     bottom: 100%;
     left: 0;
-    height: 18px;
+    height: 24px;
 }
 
 .gf-nav-dropdown:hover .gf-nav-menu-panel,
@@ -217,6 +217,35 @@
 .gf-nav-menu-panel a:hover {
     background: var(--gf-panel);
     color: var(--gf-black);
+}
+
+.gf-nav-menu-panel--devices {
+    max-width: 620px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 8px;
+    padding: 12px;
+    align-items: start;
+}
+
+.gf-nav-menu-group {
+    min-width: 0;
+    display: grid;
+    gap: 4px;
+}
+
+.gf-nav-menu-group strong {
+    display: block;
+    padding: 0 8px 5px;
+    color: var(--gf-black);
+    font-size: 13px;
+    line-height: 1.2;
+    font-weight: 900;
+}
+
+.gf-nav-menu-panel--devices .gf-nav-menu-group a {
+    min-height: 34px;
+    padding: 0 8px;
+    font-size: 13px;
 }
 
 .gf-header__actions {
@@ -738,6 +767,59 @@
     padding: 0 10px;
     color: var(--gf-soft);
     font-size: 14px;
+}
+
+.gf-mobile-accessories__panel--devices {
+    gap: 10px;
+}
+
+.gf-mobile-menu-group {
+    display: grid;
+    gap: 2px;
+}
+
+.gf-mobile-menu-group__toggle {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: var(--gf-radius-sm);
+    background: transparent;
+    color: var(--gf-black);
+    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1;
+    font-weight: 900;
+    text-align: left;
+    cursor: pointer;
+}
+
+.gf-mobile-menu-group__toggle:hover,
+.gf-mobile-menu-group__toggle[aria-expanded="true"] {
+    background: var(--gf-panel);
+}
+
+.gf-mobile-menu-group__toggle i {
+    color: var(--gf-muted);
+    font-size: 13px;
+    transition: transform 160ms ease;
+}
+
+.gf-mobile-menu-group__toggle[aria-expanded="true"] i {
+    transform: rotate(180deg);
+}
+
+.gf-mobile-menu-group__links {
+    display: grid;
+    gap: 2px;
+    padding: 2px 0 8px 10px;
+}
+
+.gf-mobile-menu-group__links[hidden] {
+    display: none !important;
 }
 
 .gf-button {

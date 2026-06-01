@@ -185,6 +185,21 @@ class WebsiteSaleShop(WebsiteSale):
     def gadgetflix_accessories(self, **kwargs):
         return request.redirect('/shop?search=Accessories')
 
+    @route('/llms.txt', type='http', auth='public', website=True, sitemap=False)
+    def gadgetflix_llms_txt(self, **kwargs):
+        content = (request.website.sudo().gadgetflix_llms_txt_content or '').strip()
+        if not content:
+            raise NotFound()
+
+        body = content if content.endswith('\n') else f'{content}\n'
+        return request.make_response(
+            body,
+            headers=[
+                ('Content-Type', 'text/plain; charset=utf-8'),
+                ('Cache-Control', 'public, max-age=3600'),
+            ],
+        )
+
     @route(
         [
             SHOP_PATH,

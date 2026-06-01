@@ -18,6 +18,7 @@
         "security/ir.model.access.csv",
         "data/newsletter_data.xml",
         "views/backend_views.xml",
+        "views/shop_by_device_menu_views.xml",
         "views/shop_templates.xml",
         "views/address_templates.xml",
         "views/portal_templates.xml",

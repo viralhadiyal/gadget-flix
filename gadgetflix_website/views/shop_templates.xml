@@ -53,6 +53,40 @@
         </t>
     </template>
 
+    <template id="gadgetflix_shop_by_device_menu_groups" name="Gadgetflix Shop By Device Menu Groups">
+        <t t-foreach="shop_by_device_menus" t-as="device_menu">
+            <div class="gf-nav-menu-group">
+                <strong t-out="device_menu.name"/>
+                <t t-foreach="device_menu.link_ids.filtered(lambda link: link.active)" t-as="device_link">
+                    <a t-att-href="device_link.url" t-out="device_link.name"/>
+                </t>
+            </div>
+        </t>
+    </template>
+
+    <template id="gadgetflix_shop_by_device_mobile_groups" name="Gadgetflix Shop By Device Mobile Groups">
+        <t t-foreach="shop_by_device_menus" t-as="device_menu">
+            <div class="gf-mobile-menu-group" data-gf-mobile-device-group="1">
+                <button type="button"
+                        class="gf-mobile-menu-group__toggle"
+                        data-gf-mobile-device-toggle="1"
+                        aria-expanded="false"
+                        t-attf-aria-controls="gf_mobile_device_menu_#{device_menu.id}">
+                    <span t-out="device_menu.name"/>
+                    <i class="fa fa-angle-down" aria-hidden="true"></i>
+                </button>
+                <div t-attf-id="gf_mobile_device_menu_#{device_menu.id}"
+                     class="gf-mobile-menu-group__links"
+                     data-gf-mobile-device-panel="1"
+                     hidden="hidden">
+                    <t t-foreach="device_menu.link_ids.filtered(lambda link: link.active)" t-as="device_link">
+                        <a t-att-href="device_link.url" t-out="device_link.name"/>
+                    </t>
+                </div>
+            </div>
+        </t>
+    </template>
+
     <template id="gadgetflix_header_search_without_categories" inherit_id="website.header_search_box_input" name="Gadgetflix Header Search Without Categories">
         <xpath expr="//t[@t-call='website.website_search_box_input']" position="attributes">
             <attribute name="display_description.f">false</attribute>
@@ -66,6 +100,8 @@
         <t t-set="cart_total" t-value="request.cart.amount_total if cart_qty else 0"/>
         <t t-set="accessory_categories"
            t-value="request.env['product.public.category'].sudo().search([('gadgetflix_show_accessories_menu', '=', True), ('has_published_products', '=', True)], order='sequence, id')"/>
+        <t t-set="shop_by_device_menus"
+           t-value="request.env['gadgetflix.shop.by.device.menu'].sudo().search(['&amp;', ('active', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website.id)], order='sequence, id').filtered(lambda menu: menu.link_ids.filtered(lambda link: link.active))"/>
         <header id="top" class="gf-header" data-anchor="true">
             <div class="gf-container gf-header__inner">
                 <button type="button" class="gf-icon-button gf-menu-button" data-gf-menu-toggle="1" aria-label="Open menu" aria-expanded="false">
@@ -76,8 +112,23 @@
                 </a>
                 <nav class="gf-nav" aria-label="Main navigation">
                     <a href="/home">Home</a>
-                    <a href="/shop">Shop</a>
-                    <a href="/anti-yellow">Anti-Yellow</a>
+                    <div t-if="shop_by_device_menus" class="gf-nav-dropdown gf-nav-dropdown--devices" data-gf-accessories-menu="1">
+                        <button type="button"
+                                class="gf-nav-menu-button"
+                                data-gf-accessories-toggle="1"
+                                aria-expanded="false"
+                                aria-haspopup="true"
+                                aria-controls="gf_shop_by_device_menu">
+                            <span>Shop by device</span>
+                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                        </button>
+                        <div id="gf_shop_by_device_menu"
+                             class="gf-nav-menu-panel gf-nav-menu-panel--devices"
+                             data-gf-accessories-panel="1"
+                             aria-hidden="true">
+                            <t t-call="gadgetflix_website.gadgetflix_shop_by_device_menu_groups"/>
+                        </div>
+                    </div>
                     <div t-if="accessory_categories" class="gf-nav-dropdown" data-gf-accessories-menu="1">
                         <button type="button"
                                 class="gf-nav-menu-button"
@@ -95,8 +146,8 @@
                             <t t-call="gadgetflix_website.gadgetflix_accessories_menu_links"/>
                         </div>
                     </div>
-                    <a href="/about">About us</a>
-                    <a href="/contact">Contact</a>
+                    <a href="/anti-yellow">Anti-Yellow</a>
+                    <a href="/shop">All Product</a>
                 </nav>
                 <div class="gf-header__actions">
                     <ul class="gf-header-search" aria-label="Search">
@@ -199,8 +250,20 @@
             <div class="gf-mobile-panel" data-gf-mobile-menu="1" hidden="hidden">
                 <div class="gf-container gf-mobile-panel__inner">
                     <a href="/home">Home</a>
-                    <a href="/shop">Shop</a>
-                    <a href="/anti-yellow">Anti-Yellow Cases</a>
+                    <div t-if="shop_by_device_menus" class="gf-mobile-accessories gf-mobile-devices" data-gf-mobile-accessories-menu="1">
+                        <button type="button"
+                                class="gf-mobile-accessories__toggle"
+                                data-gf-mobile-accessories-toggle="1"
+                                aria-expanded="false">
+                            <span>Shop by device</span>
+                            <i class="fa fa-angle-down" aria-hidden="true"></i>
+                        </button>
+                        <div class="gf-mobile-accessories__panel gf-mobile-accessories__panel--devices"
+                             data-gf-mobile-accessories-panel="1"
+                             hidden="hidden">
+                            <t t-call="gadgetflix_website.gadgetflix_shop_by_device_mobile_groups"/>
+                        </div>
+                    </div>
                     <div t-if="accessory_categories" class="gf-mobile-accessories" data-gf-mobile-accessories-menu="1">
                         <button type="button"
                                 class="gf-mobile-accessories__toggle"
@@ -215,8 +278,8 @@
                             <t t-call="gadgetflix_website.gadgetflix_accessories_menu_links"/>
                         </div>
                     </div>
-                    <a href="/about">About us</a>
-                    <a href="/contact">Contact</a>
+                    <a href="/anti-yellow">Anti-Yellow Cases</a>
+                    <a href="/shop">All Product</a>
                 </div>
             </div>
         </header>
@@ -242,15 +305,10 @@
                         <div>
                             <h3>Pages</h3>
                             <a href="/home">Home</a>
-                            <a href="/shop">Shop</a>
+                            <a href="/shop">All Product</a>
                             <a href="/anti-yellow">Anti Yellow</a>
-                            <a href="/about">About</a>
+                            <a href="/about">About us</a>
                             <a href="/contact">Contact</a>
-                        </div>
-                        <div>
-                            <h3>Support</h3>
-                            <a href="/contact">Contact</a>
-                            <a href="/shop">Accessories</a>
                         </div>
                     </div>
                     <div class="gf-footer-map" aria-label="Location map for New Ranip">
