@@ -147,7 +147,7 @@
                         </div>
                     </div>
                     <a href="/anti-yellow">Anti-Yellow</a>
-                    <a href="/shop">All Product</a>
+                    <a href="/shop">All Products</a>
                 </nav>
                 <div class="gf-header__actions">
                     <ul class="gf-header-search" aria-label="Search">
@@ -279,7 +279,7 @@
                         </div>
                     </div>
                     <a href="/anti-yellow">Anti-Yellow Cases</a>
-                    <a href="/shop">All Product</a>
+                    <a href="/shop">All Products</a>
                 </div>
             </div>
         </header>
@@ -305,7 +305,7 @@
                         <div>
                             <h3>Pages</h3>
                             <a href="/home">Home</a>
-                            <a href="/shop">All Product</a>
+                            <a href="/shop">All Products</a>
                             <a href="/anti-yellow">Anti Yellow</a>
                             <a href="/about">About us</a>
                             <a href="/contact">Contact</a>
