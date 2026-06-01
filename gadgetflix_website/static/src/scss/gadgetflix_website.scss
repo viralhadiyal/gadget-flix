@@ -223,14 +223,14 @@
     max-width: 620px;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 8px;
-    padding: 12px;
+    padding: 10px;
     align-items: start;
 }
 
 .gf-nav-menu-group {
     min-width: 0;
     display: grid;
-    gap: 4px;
+    gap: 1px;
 }
 
 .gf-nav-menu-group strong {
@@ -243,7 +243,7 @@
 }
 
 .gf-nav-menu-panel--devices .gf-nav-menu-group a {
-    min-height: 34px;
+    min-height: 28px;
     padding: 0 8px;
     font-size: 13px;
 }

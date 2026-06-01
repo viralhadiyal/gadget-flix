@@ -115,6 +115,7 @@
         desktopMenus.forEach(function (menu) {
             const button = menu.querySelector("[data-gf-accessories-toggle]");
             const panel = menu.querySelector("[data-gf-accessories-panel]");
+            let closeTimer = null;
 
             if (!button || !panel) {
                 return;
@@ -130,13 +131,38 @@
                 panel.setAttribute("aria-hidden", open ? "false" : "true");
             };
 
+            const openMenu = function () {
+                clearTimeout(closeTimer);
+                setOpen(true);
+            };
+
+            const scheduleClose = function () {
+                clearTimeout(closeTimer);
+                closeTimer = setTimeout(function () {
+                    if (!menu.matches(":hover") && !panel.matches(":hover") && !menu.contains(document.activeElement) && !panel.contains(document.activeElement)) {
+                        setOpen(false);
+                    }
+                }, 180);
+            };
+
+            menu.addEventListener("mouseenter", openMenu);
+            menu.addEventListener("mouseleave", scheduleClose);
+            panel.addEventListener("mouseenter", openMenu);
+            panel.addEventListener("mouseleave", scheduleClose);
+
             button.addEventListener("click", function (event) {
                 event.preventDefault();
                 setOpen(!menu.classList.contains("is-open"));
             });
 
             menu.addEventListener("focusout", function (event) {
-                if (!menu.contains(event.relatedTarget)) {
+                if (!menu.contains(event.relatedTarget) && !panel.contains(event.relatedTarget)) {
+                    setOpen(false);
+                }
+            });
+
+            panel.addEventListener("focusout", function (event) {
+                if (!panel.contains(event.relatedTarget) && !menu.contains(event.relatedTarget)) {
                     setOpen(false);
                 }
             });
