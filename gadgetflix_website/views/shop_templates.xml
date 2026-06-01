@@ -580,7 +580,7 @@
         <t t-call="gadgetflix_website.gadgetflix_page_layout">
             <div class="gf-anti-yellow-page">
                 <section class="gf-anti-offer-section" aria-label="Anti yellow sale offer">
-                    <a href="/shop?search=Anti%20Yellow%20Case" class="gf-anti-offer" aria-label="Shop anti yellow case sale offer">
+                    <a href="/shop/category/phone-cases-anti-yellow-cases-12" class="gf-anti-offer" aria-label="Shop anti yellow case sale offer">
                         <picture>
                             <source media="(max-width: 767px)" srcset="/gadgetflix_website/static/src/img/anti_yellow_offer_mobile_20260530.png"/>
                             <img src="/gadgetflix_website/static/src/img/anti_yellow_offer_desktop_20260530.png"

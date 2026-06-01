@@ -798,6 +798,51 @@
     font-weight: 600;
 }
 
+.o_wsale_product_page #product_detail>.o_wsale_content_contained {
+    padding-top: 12px !important;
+    padding-bottom: 10px !important;
+}
+
+.o_wsale_product_page #o-carousel-product {
+    margin-bottom: 10px !important;
+}
+
+@media (max-width: 991px) {
+    .o_wsale_product_page #product_detail {
+        margin-top: 0 !important;
+        margin-bottom: 32px !important;
+    }
+
+    .o_wsale_product_page #product_detail>.o_wsale_content_contained {
+        padding-top: 8px !important;
+        padding-bottom: 6px !important;
+    }
+
+    .o_wsale_product_page .o_wsale_breadcrumb {
+        padding: 8px 0 !important;
+    }
+
+    .o_wsale_product_page #o-carousel-product {
+        margin-bottom: 4px !important;
+    }
+
+    .o_wsale_product_page #product_details {
+        padding-top: 2px !important;
+    }
+
+    .o_wsale_product_page .o_wsale_product_details_content_section_title {
+        margin-bottom: 8px !important;
+    }
+
+    .o_wsale_product_page #product_details h1 {
+        margin-bottom: 8px !important;
+    }
+
+    .o_wsale_product_page .o_product_page_reviews_link {
+        margin-bottom: 6px !important;
+    }
+}
+
 .o_wsale_product_page .gf-product-description {
     margin-bottom: 18px;
 }
@@ -2434,11 +2479,12 @@
 
 .gf-shop-page #o_wsale_products_header {
     gap: 0 !important;
+    margin-top: 18px;
     padding: 0 !important;
 }
 
 .gf-shop-title,
-.gf-shop-page .o_wsale_category_title {
+.gf-shop-page .o_wsale_category_title:not(.o_wsale_category_title_is_search) {
     margin: 0;
     color: var(--gf-black);
     font-size: 56px !important;
@@ -2448,6 +2494,65 @@
         font-size: 24px !important;
         margin: 24px 0px 16px 0px;
     }
+}
+
+.gf-shop-page .o_wsale_category_title_is_search {
+    max-width: 100%;
+    flex-wrap: wrap;
+    gap: 8px !important;
+    margin: 0;
+    color: var(--gf-muted);
+    font-size: 16px !important;
+    line-height: 1.35 !important;
+    font-weight: 700;
+}
+
+.gf-shop-page .o_wsale_category_title_is_search>span {
+    margin: 0 !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+}
+
+.gf-shop-page .o_wsale_category_title_is_search>.text-muted {
+    color: var(--gf-muted) !important;
+}
+
+.gf-shop-page .o_wsale_category_title_is_search .badge {
+    min-height: 32px;
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    max-width: 100%;
+    padding: 0 12px;
+    border: 1px solid var(--gf-line);
+    border-radius: 999px;
+    background: var(--gf-white) !important;
+    color: var(--gf-black) !important;
+    font-size: 15px !important;
+    line-height: 1 !important;
+    font-weight: 700 !important;
+}
+
+.gf-shop-page .o_wsale_category_title_is_search .badge.text-bg-info {
+    border-color: #1ea9c3;
+    background: #effcff !important;
+    color: #08798b !important;
+}
+
+.gf-shop-page .o_wsale_category_title_is_search .badge a {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: currentColor !important;
+    text-decoration: none;
+}
+
+.gf-shop-page .o_wsale_category_title_is_search .badge i {
+    font-size: 13px;
+    line-height: 1;
 }
 
 .gf-shop-subtitle {
@@ -2471,7 +2576,7 @@
 }
 
 .gf-scroll-area--tabs .gf-shop-tabs {
-    margin-top: 0;
+    margin-top: 12px;
 }
 
 .gf-shop-tab {
@@ -3206,7 +3311,7 @@
     }
 
     .gf-shop-title,
-    .gf-shop-page .o_wsale_category_title {
+    .gf-shop-page .o_wsale_category_title:not(.o_wsale_category_title_is_search) {
         font-size: 56px !important;
     }
 
@@ -3476,7 +3581,7 @@
     }
 
     .gf-shop-title,
-    .gf-shop-page .o_wsale_category_title {
+    .gf-shop-page .o_wsale_category_title:not(.o_wsale_category_title_is_search) {
         font-size: 42px !important;
         line-height: 1.02 !important;
         overflow-wrap: anywhere;
@@ -3484,6 +3589,17 @@
             font-size: 16px !important;
             margin: 24px 0px 16px 0px;
         }
+    }
+
+    .gf-shop-page .o_wsale_category_title_is_search {
+        gap: 6px !important;
+        font-size: 14px !important;
+    }
+
+    .gf-shop-page .o_wsale_category_title_is_search .badge {
+        min-height: 30px;
+        padding: 0 10px;
+        font-size: 14px !important;
     }
 
     .gf-hero p,
@@ -3620,6 +3736,7 @@
     }
 
     .gf-shop-page #o_wsale_products_header {
+        margin-top: 14px;
         padding: 0 0 24px !important;
     }
 
