@@ -299,7 +299,7 @@ class RocketDeliveryGateway:
             "request_pickup": self.carrier.sr_integration_request_pickup,
             "generate_manifest": self.carrier.sr_integration_generate_manifest,
             "print_label": True,
-            "weight": self.carrier._sr_integration_weight_kg(package.weight),
+            "weight": picking.shipping_weight if picking and picking.shipping_weight > 0 else self.carrier._sr_integration_weight_kg(package.weight),
             "height": dimensions.get("height"),
             "breadth": dimensions.get("width"),
             "length": dimensions.get("length"),
