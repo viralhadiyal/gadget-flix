@@ -730,7 +730,7 @@
                             <h2>Best selling products</h2>
                             <p>Popular anti-yellow picks selected from the product settings.</p>
                         </div>
-                        <a href="/shop/category/anty-yellow-cases-12" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                        <a href="/shop/category/phone-cases-2" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     <div t-if="anti_yellow_best_selling_products" class="gf-scroll-area">
                         <div class="gf-scroll-controls" aria-label="Scroll best selling products">
@@ -757,7 +757,7 @@
                             <h2>Selected accessories</h2>
                             <p>A quick preview of cases, chargers, bags, wallets, and protection accessories from the current collection.</p>
                         </div>
-                        <a href="/shop" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                        <a href="/shop/category/chargers-cables-9" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     <div t-if="about_products" class="gf-scroll-area">
                         <div class="gf-scroll-controls" aria-label="Scroll accessories">
