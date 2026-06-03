@@ -2,7 +2,6 @@
 
 from odoo import fields, models, api
 from odoo.tools.safe_eval import safe_eval
-from odoo.osv import expression
 
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
