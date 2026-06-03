@@ -5,6 +5,7 @@
     "category": "Shipping Connectors",
     "sequence": 318,
     "version": "19.0.0.1",
+    "author": "GadgetFlix",
     "application": True,
     "depends": ["stock_delivery", "mail"],
     "data": [
