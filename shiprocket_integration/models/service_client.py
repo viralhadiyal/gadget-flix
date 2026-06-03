@@ -275,7 +275,6 @@ class RocketDeliveryGateway:
         return moves
 
     def booking_payload(self, picking, package, courier_code=False, shipping_charge=0.0, sequence=1):
-        database_uuid = picking.env["ir.config_parameter"].sudo().get_param("database.uuid") or "local"
         order_name = picking.name
         customer = picking.partner_id
         invoice_partner = customer.child_ids.filtered(lambda partner: partner.type == "invoice")[:1] or customer
@@ -293,7 +292,7 @@ class RocketDeliveryGateway:
             order_date = order_date.date()
 
         return {
-            "order_id": "%s#%s-%s" % (order_name, sequence, database_uuid[:5]),
+            "order_id": order_name,
             "channel_id": self.carrier.sr_integration_channel_id.external_channel_id,
             "order_date": order_date.strftime("%Y-%m-%d"),
             "request_pickup": self.carrier.sr_integration_request_pickup,
