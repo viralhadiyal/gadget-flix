@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Inject "Bulk Images & Weights" stat button into Product Template form -->
+    <record id="product_template_form_inherit_bulk_image"
+            model="ir.ui.view">
+        <field name="name">product.template.bulk.image.button</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_only_form_view"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
+                <button name="%(website_product_enhancement.action_product_image_bulk_wizard)d"
+                        string="Bulk Images &amp; Weights"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-images"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
