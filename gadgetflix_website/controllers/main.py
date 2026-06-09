@@ -94,6 +94,7 @@ class WebsiteSaleShop(Delivery):
     def shop_payment(self, **post):
         """Redirect /shop/payment back to the combined checkout page."""
         return request.redirect('/shop/checkout')
+
     @route('/shop/cart/mini', type='http', auth="public", website=True, sitemap=False)
     def cart_mini(self, **post):
         order = request.cart
@@ -106,6 +107,8 @@ class WebsiteSaleShop(Delivery):
             'suggested_products': [],
         }
         if order:
+            order._update_programs_and_rewards()
+            order._auto_apply_rewards()
             values['suggested_products'] = order._cart_accessories()
         return request.render("gadgetflix_website.cart_offcanvas_content", values)
 
@@ -684,9 +687,8 @@ class AntiYellowController(http.Controller):
 
         # Find the anti-yellow category by name
         ay_category = request.env['product.public.category'].sudo().search([
-            ('name', 'ilike', 'Anti-Yellow Cases')
+            ('name', 'ilike', 'Desks')
         ], limit=1)
-
         # Fetch all published products in that category
         domain = [('website_published', '=', True)]
         if ay_category:
@@ -731,7 +733,7 @@ class AntiYellowController(http.Controller):
 
         # Default selection: first brand
         default_brand = brands[0] if brands else None
-        
+
         default_product = request.env['product.template'].sudo().browse(default_brand['product_id']) if default_brand else None
 
         return request.render('gadgetflix_website.anti_yellow_case_page', {
@@ -787,64 +789,3 @@ class AntiYellowController(http.Controller):
             })
 
         return result
-
-    @http.route('/gadgetflix/anti-yellow/get_combination', type='jsonrpc', auth='public', csrf=False)
-    def gf_get_combination(self, product_id, model_value_id):
-        """Return full variant info for a brand product + model attribute value combo."""
-        product = request.env['product.template'].sudo().browse(int(product_id))
-        if not product.exists():
-            return {}
-
-        variant = product.product_variant_ids.filtered(
-            lambda v: int(model_value_id) in v.product_template_attribute_value_ids.mapped(
-                'product_attribute_value_id'
-            ).ids
-        )[:1]
-
-        if not variant:
-            return {}
-
-        currency = request.website.currency_id
-        price = variant.lst_price
-
-        return {
-            'variant_id': variant.id,
-            'price': price,
-            'price_formatted': f'{currency.symbol}{price:,.2f}' if currency.position == 'before' else f'{price:,.2f} {currency.symbol}',
-            'image_url': f'/web/image/product.product/{variant.id}/image_512',
-            'is_available': variant.qty_available >= 0,
-            'display_name': variant.display_name,
-        }
-
-    # ── Legacy endpoints (kept for backward compatibility) ────────────
-
-    @http.route('/get_models', type='jsonrpc', auth='public', csrf=False)
-    def get_models(self, brand_value_id):
-        variants = request.env['product.product'].sudo().search([
-            ('product_template_attribute_value_ids.product_attribute_value_id', '=', int(brand_value_id))
-        ])
-        products = variants.mapped('product_tmpl_id')
-        result = []
-        for product in products:
-            model_line = product.attribute_line_ids.filtered(
-                lambda l: l.attribute_id.name.lower() == 'model'
-            )
-            for v in model_line.value_ids:
-                result.append({'id': v.id, 'name': v.name, 'product_id': product.id})
-        return result
-
-    @http.route('/get_combination', type='jsonrpc', auth='public', csrf=False)
-    def get_combination(self, product_id, model_value_id):
-        product = request.env['product.template'].sudo().browse(int(product_id))
-        variant = product.product_variant_ids.filtered(
-            lambda v: model_value_id in v.product_template_attribute_value_ids.mapped(
-                'product_attribute_value_id'
-            ).ids
-        )[:1]
-        if not variant:
-            return {}
-        return {
-            'variant_id': variant.id,
-            'price': variant.lst_price,
-            'image_url': f'/web/image/product.product/{variant.id}/image_512',
-        }

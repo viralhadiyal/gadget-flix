@@ -877,22 +877,18 @@
     };
 
     const updateHeroImage = function (url) {
-        let imgEl = document.querySelector("#o-carousel-product .carousel-item.active img") || document.getElementById("gf-ayc-hero-img");
-        if (!imgEl || !url) return;
-        imgEl.style.opacity = "0.35";
-        imgEl.style.transform = "scale(0.96)";
-        const tmp = new Image();
-        tmp.onload = function () {
-            imgEl.src = url;
-            imgEl.style.opacity = "";
-            imgEl.style.transform = "";
-        };
-        tmp.onerror = function () {
-            imgEl.style.opacity = "";
-            imgEl.style.transform = "";
-        };
-        tmp.src = url;
+    const imgEl = document.getElementById("gf-ayc-hero-img");
+    if (!imgEl || !url) return;
+
+    imgEl.style.opacity = "0.3";
+
+    const tmp = new Image();
+    tmp.onload = function () {
+        imgEl.src = url;
+        imgEl.style.opacity = "1";
     };
+    tmp.src = url;
+};
 
     const setHint = function (msg) {
         if (hintEl) hintEl.textContent = msg;

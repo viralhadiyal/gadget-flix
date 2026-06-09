@@ -23,7 +23,13 @@
                         <!-- ── LEFT: Product image ──────────────────── -->
                         <div class="gf-ayc-pdp__image-col">
                             <div class="gf-ayc-pdp__image-wrap">
-                                <t t-call="website_sale.shop_product_images"/>
+                                <div class="gf-ayc-hero">
+    <img id="gf-ayc-hero-img"
+         t-att-src="'/web/image/product.template/%s/image_512' % product.id"
+         alt="Product Image"/>
+</div>
+
+<div class="gf-ayc-pdp__thumbs" id="gf-ayc-thumbs"></div>
                                 <div class="gf-ayc-pdp__thumbs" id="gf-ayc-thumbs"></div>
                             </div>
                         </div>
@@ -262,7 +268,7 @@
                                     <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_3.png" alt="Clear Case 3" loading="lazy"/>
                                 </div>
                             </div>
-                            
+
                             <!-- Second Row: 2 Images -->
                             <div class="col-12 col-md-5">
                                 <div class="gf-ayc-showcase__item">

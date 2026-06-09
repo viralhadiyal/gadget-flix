@@ -1259,8 +1259,8 @@
                     <span>Subtotal</span>
                     <span t-field="website_sale_order.amount_untaxed" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                 </div>
-                <a href="/shop/checkout" class="btn w-100 mb-2 py-2 fw-bold text-uppercase shadow-sm" style="background-color: #000; color: #fff; border-radius: 8px;">Checkout</a>
-                <button type="button" class="btn w-100 py-2 text-uppercase fw-bold" style="background-color: #fff; color: #000; border: 1px solid #000; border-radius: 8px;" data-bs-dismiss="offcanvas">Continue Shopping</button>
+                <a href="/shop/checkout" class="btn w-100 mb-2 py-2 fw-bold shadow-sm" style="background-color: #000; color: #fff; border-radius: 8px;">Checkout</a>
+                <button type="button" class="btn w-100 py-2 fw-bold" style="background-color: #fff; color: #000; border: 1px solid #000; border-radius: 8px;" data-bs-dismiss="offcanvas">Continue Shopping</button>
             </div>
             </div>
         </div>
