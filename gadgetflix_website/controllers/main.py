@@ -687,7 +687,7 @@ class AntiYellowController(http.Controller):
 
         # Find the anti-yellow category by name
         ay_category = request.env['product.public.category'].sudo().search([
-            ('name', 'ilike', 'Desks')
+            ('name', 'ilike', 'Anti-Yellow Cases')
         ], limit=1)
         # Fetch all published products in that category
         domain = [('website_published', '=', True)]
