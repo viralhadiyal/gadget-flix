@@ -562,6 +562,173 @@
         });
     };
 
+    const initAutoDeliveryFetcher = function () {
+        const checkoutDiv = document.getElementById("shop_checkout");
+        if (!checkoutDiv) {
+            return;
+        }
+
+        const codCarrierId = parseInt(checkoutDiv.dataset.codCarrierId, 10);
+        const prepaidCarrierId = parseInt(checkoutDiv.dataset.prepaidCarrierId, 10);
+        let currentCarrierId = parseInt(checkoutDiv.dataset.currentCarrierId, 10);
+
+        if (!codCarrierId || !prepaidCarrierId) {
+            return;
+        }
+
+        // Helper: send JSONRPC call (Odoo 19 JSON-RPC format)
+        const jsonrpc = function (url, method, params) {
+            return window.fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    jsonrpc: "2.0",
+                    method: "call",
+                    id: Math.random(),
+                    params: params || {},
+                }),
+            }).then(function (response) {
+                return response.json();
+            });
+        };
+
+        const updateCartSummary = function (result, targetEl) {
+            const amountDelivery = targetEl.querySelector('tr[name="o_order_delivery"] .monetary_field');
+            const amountUntaxed = targetEl.querySelector('tr[name="o_order_total_untaxed"] .monetary_field');
+            const amountTax = targetEl.querySelector('tr[name="o_order_total_taxes"] .monetary_field');
+            const amountTotal = targetEl.parentElement.querySelectorAll(
+                'tr[name="o_order_total"] .monetary_field, #amount_total_summary.monetary_field'
+            );
+
+            if (amountDelivery) {
+                if (amountDelivery.classList.contains('d-none')) {
+                    amountDelivery.querySelector('span[name="o_message_no_dm_set"]')?.classList.add('d-none');
+                    amountDelivery.classList.remove('d-none');
+                }
+                amountDelivery.innerHTML = result.amount_delivery;
+            }
+            if (amountUntaxed) amountUntaxed.innerHTML = result.amount_untaxed;
+            if (amountTax) amountTax.innerHTML = result.amount_tax;
+            amountTotal.forEach(total => total.innerHTML = result.amount_total);
+        };
+
+        const updateCartSummaries = function (result) {
+            const parentElements = document.querySelectorAll(
+                '#o_cart_summary_offcanvas, div.o_total_card'
+            );
+            parentElements.forEach(el => updateCartSummary(result, el));
+
+            // Sync the payment form dataset and interaction context with the updated raw amount_total
+            const paymentFormEl = document.getElementById('o_payment_form');
+            if (paymentFormEl && result.amount_total_raw !== undefined) {
+                const amountVal = parseFloat(result.amount_total_raw);
+                paymentFormEl.dataset.amount = amountVal;
+
+                try {
+                    const { Component } = odoo.loader.modules.get("@odoo/owl");
+                    const env = Component && Component.env;
+                    if (env && env.services && env.services["public.interactions"]) {
+                        const interactions = env.services["public.interactions"].interactions || [];
+                        const paymentFormColibri = interactions.find(function (i) {
+                            return i.interaction && i.interaction.el && i.interaction.el.id === 'o_payment_form';
+                        });
+                        if (paymentFormColibri && paymentFormColibri.interaction.paymentContext) {
+                            paymentFormColibri.interaction.paymentContext.amount = amountVal;
+                            if (paymentFormColibri.interaction.paymentContext.minorAmount !== undefined) {
+                                paymentFormColibri.interaction.paymentContext.minorAmount = Math.round(amountVal * 100);
+                            }
+                        }
+                    }
+                } catch (err) {
+                    console.error("Failed to sync payment interaction amount:", err);
+                }
+            }
+        };
+
+        const updateCarrierIfNeeded = function (selectedRadio) {
+            if (!selectedRadio) {
+                return;
+            }
+            const pmCode = selectedRadio.dataset.paymentMethodCode;
+            const optionType = selectedRadio.dataset.paymentOptionType;
+
+            const isCOD = (optionType === "payment_method" && pmCode === "cash_on_delivery");
+            const targetCarrierId = isCOD ? codCarrierId : prepaidCarrierId;
+
+            // Safe guard: only perform update if we have valid carrier IDs
+            if (!targetCarrierId || isNaN(targetCarrierId) || !currentCarrierId || isNaN(currentCarrierId)) {
+                return;
+            }
+
+            if (currentCarrierId !== targetCarrierId) {
+                // Set the carrier on the backend and update cart totals inline
+                jsonrpc("/shop/set_delivery_method", "call", {
+                    dm_id: targetCarrierId,
+                }).then(function (result) {
+                    if (result && result.result && result.result.success) {
+                        currentCarrierId = targetCarrierId;
+                        updateCartSummaries(result.result);
+                    }
+                }).catch(function (err) {
+                    console.error("Failed to set delivery method:", err);
+                });
+            }
+        };
+
+        // 1. Restore previous selection from sessionStorage if available
+        const savedCode = sessionStorage.getItem('gf_selected_payment_code');
+        let checkedRadio = null;
+
+        if (savedCode) {
+            const radio = document.querySelector(`input[name="o_payment_radio"][data-payment-method-code="${savedCode}"]`);
+            if (radio) {
+                radio.checked = true;
+                checkedRadio = radio;
+                // Wait for Odoo's payment form JS to register, then trigger change
+                setTimeout(function () {
+                    radio.dispatchEvent(new Event("change", { bubbles: true }));
+                }, 50);
+            }
+        }
+
+        if (!checkedRadio) {
+            checkedRadio = document.querySelector('input[name="o_payment_radio"]:checked');
+        }
+
+        if (!checkedRadio) {
+            // If none checked, check the first available option
+            const firstRadio = document.querySelector('input[name="o_payment_radio"]');
+            if (firstRadio) {
+                firstRadio.checked = true;
+                checkedRadio = firstRadio;
+                setTimeout(function () {
+                    firstRadio.dispatchEvent(new Event("change", { bubbles: true }));
+                }, 50);
+            }
+        }
+
+        // 2. Initial alignment check
+        if (checkedRadio) {
+            updateCarrierIfNeeded(checkedRadio);
+        }
+
+        // 3. Listen to future user changes
+        document.addEventListener("change", function (event) {
+            const radio = event.target;
+            if (radio && radio.name === "o_payment_radio" && radio.checked) {
+                const pmCode = radio.dataset.paymentMethodCode;
+                if (pmCode) {
+                    sessionStorage.setItem('gf_selected_payment_code', pmCode);
+                    updateCarrierIfNeeded(radio);
+                }
+            }
+        });
+    };
+
     const init = function () {
         initMobileMenu();
         initAccessoriesMenus();
@@ -571,6 +738,7 @@
         initCartPreview();
         initAddressToggleCleanup();
         initAddressCountryCleanup();
+        initAutoDeliveryFetcher();
     };
 
     if (document.readyState === "loading") {

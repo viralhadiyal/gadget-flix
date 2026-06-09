@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo.addons.website_sale.controllers.main import WebsiteSale, TableCompute
+from odoo.addons.website_sale.controllers.delivery import Delivery
 import itertools
 import json
 from datetime import datetime
@@ -25,7 +26,82 @@ from odoo.addons.website_sale.models.website import (
 
 _lt = LazyTranslate(__name__)
 
-class WebsiteSaleShop(WebsiteSale):
+
+class WebsiteSaleShop(Delivery):
+    # =========================================================
+    # 2-Step Checkout Override
+    # Step 1 → /shop/cart   (Order Summary)
+    # Step 2 → /shop/checkout  (Address + Delivery + Payment)
+    #
+    # Delivery method options:
+    #   • COD     – Cash on Delivery
+    #   • Prepaid – Prepaid (paid online via payment provider)
+    # =========================================================
+
+    @route(
+        '/shop/checkout', type='http', methods=['GET'], auth='public', website=True, sitemap=False, list_as_website_content=_lt("Shop Checkout")
+    )
+    def shop_checkout(self, try_skip_step=None, **query_params):
+        """Override: combine address/delivery + payment onto /shop/checkout."""
+        try_skip_step = str2bool(try_skip_step or 'false')
+        order_sudo = request.cart
+        request.session['sale_last_order_id'] = order_sudo.id
+
+        if redirection := self._check_cart_and_addresses(order_sudo):
+            return redirection
+
+        checkout_page_values = self._prepare_checkout_page_values(order_sudo, **query_params)
+
+        can_skip_delivery = True
+        if order_sudo._has_deliverable_products():
+            can_skip_delivery = False
+            available_dms = order_sudo._get_delivery_methods()
+            checkout_page_values['delivery_methods'] = available_dms
+            if delivery_method := order_sudo._get_preferred_delivery_method(available_dms):
+                rate = delivery_method.rate_shipment(order_sudo)
+                if (
+                    not order_sudo.carrier_id
+                    or not rate.get('success')
+                    or order_sudo.amount_delivery != rate['price']
+                ):
+                    order_sudo._set_delivery_method(delivery_method, rate=rate)
+
+        # Find COD and Prepaid carriers dynamically
+        Carrier = request.env['delivery.carrier'].sudo()
+        cod_carrier = Carrier.search([('allow_cash_on_delivery', '=', True), ('is_published', '=', True)], limit=1)
+        prepaid_carrier = Carrier.search([('allow_cash_on_delivery', '=', False), ('is_published', '=', True)], limit=1)
+
+        checkout_page_values['gf_cod_carrier_id'] = cod_carrier.id
+        checkout_page_values['gf_prepaid_carrier_id'] = prepaid_carrier.id
+
+        # Merge payment form values so the payment widget renders inline
+        order_sudo._recompute_cart()
+        request.update_context(gf_show_all_payment_methods=True)
+        payment_values = self._get_shop_payment_values(order_sudo, **query_params)
+        checkout_page_values.update(payment_values)
+        checkout_page_values['gf_combined_checkout'] = True  # flag for template
+        checkout_page_values['display_submit_button'] = True  # Force inline submit button to show
+
+        checkout_page_values.update(request.website._get_checkout_step_values())
+
+        if try_skip_step and can_skip_delivery:
+            return request.redirect(checkout_page_values['next_website_checkout_step_href'])
+
+        return request.render('website_sale.checkout', checkout_page_values)
+
+
+    @route('/shop/payment', type='http', auth='public', website=True, sitemap=False)
+    def shop_payment(self, **post):
+        """Redirect /shop/payment back to the combined checkout page."""
+        return request.redirect('/shop/checkout')
+
+
+    def _order_summary_values(self, order, **kwargs):
+        """Extend to include raw float value for frontend JS update."""
+        values = super()._order_summary_values(order, **kwargs)
+        values['amount_total_raw'] = order.amount_total
+        return values
+
 
     def _get_available_attribute_value_ids(
         self, search, category, attribute_value_dict, attributes

@@ -35,6 +35,47 @@
         </xpath>
     </template>
 
+    <!-- =========================================================
+         Product Detail Page – Attribute Ordering
+         Single-value attributes shown first (as read-only info),
+         then multi-value (interactive) attributes below.
+
+         Strategy: Two targeted xpaths on website_sale.variants:
+           1. Sort the t-foreach: single-value attrs bubble to top,
+              multi-value attrs retain their configured sequence.
+           2. Change the li class: single-value attrs get
+              gf-single-value-attr (visible), not d-none.
+    ========================================================= -->
+    <template id="gadgetflix_variants" inherit_id="website_sale.variants"
+              name="Gadgetflix – Single-value attributes first">
+
+        <!-- XPath 1: Sort loop so single-value attrs render first.
+             sorted() preserves the original sequence within each group
+             because Python's sort is stable.
+             key returns False(0) for single-value → sorts first.
+             key returns True(1) for multi-value  → sorts after.
+             NOTE: must be a single line – QWeb compiles t-foreach values
+             directly into Python; newlines/indentation cause IndentationError. -->
+        <xpath expr="//t[@t-foreach='product.valid_product_template_attribute_line_ids']"
+               position="attributes">
+            <attribute name="t-foreach">sorted(product.valid_product_template_attribute_line_ids, key=lambda ptal: not (len(ptal.product_template_value_ids._only_active()) == 1 and not ptal.product_template_value_ids._only_active()[0].is_custom and ptal.attribute_id.display_type != 'multi'))</attribute>
+        </xpath>
+
+        <!-- XPath 2: For the outer <li>, replace the t-attf-class so that:
+             - single-value non-custom non-multi attrs → visible + gf-single-value-attr
+             - everything else → no extra class (always visible, original interactive) -->
+        <xpath expr="//li[@name='variant_attribute']" position="attributes">
+            <attribute name="t-attf-class">variant_attribute #{
+                'gf-single-value-attr' if (
+                    single
+                    and not ptavs[0].is_custom
+                    and attribute.display_type != 'multi'
+                ) else ''
+            }</attribute>
+        </xpath>
+
+    </template>
+
     <template id="gadgetflix_logo" name="Gadgetflix Dynamic Logo">
         <t t-set="logo_name" t-value="website.name or website.company_id.name"/>
         <span t-if="website.logo"
@@ -1039,6 +1080,106 @@
                 </div>
             </div>
         </section>
+    </template>
+
+    <!-- =========================================================
+         2-Step Checkout: Combined Address + Delivery + Payment
+         Overrides website_sale.checkout to embed the payment
+         widget inline — so users never navigate to /shop/payment.
+         Delivery methods are shown as a prominent radio selector:
+           • COD     – Cash on Delivery (no online payment needed)
+           • Prepaid – Prepaid online via a payment provider
+    ========================================================= -->
+
+    <!-- Step 2 heading in the wizard breadcrumb:
+         Hide the separate "Payment" step; keep only Cart + Checkout -->
+    <template id="gf_wizard_checkout_2step" inherit_id="website_sale.wizard_checkout" name="Gadgetflix – 2-step checkout wizard">
+        <!-- Replace the step iterator with a filtered 2-step view:
+             only show steps with sequence <= 250 (Cart=0, Checkout=250).
+             The Payment step (sequence=999) is absorbed into Checkout. -->
+        <xpath expr="//t[@t-set='wizard_step']" position="attributes">
+            <attribute name="t-value">website._get_checkout_steps().filtered(lambda s: s.sequence &lt;= 250)</attribute>
+        </xpath>
+    </template>
+
+    <!-- Checkout page: inject data attributes on #shop_checkout and render payment widget inline -->
+    <template id="gf_checkout_combined" inherit_id="website_sale.checkout" name="Gadgetflix – Combined checkout page">
+
+        <!-- Add data attributes to shop_checkout container -->
+        <xpath expr="//div[@id='shop_checkout']" position="attributes">
+            <attribute name="t-att-data-cod-carrier-id">gf_cod_carrier_id</attribute>
+            <attribute name="t-att-data-prepaid-carrier-id">gf_prepaid_carrier_id</attribute>
+            <attribute name="t-att-data-current-carrier-id">order.carrier_id.id</attribute>
+        </xpath>
+
+        <!-- After the address/delivery block, inject payment form when gf_combined_checkout flag is set -->
+        <xpath expr="//div[@id='shop_checkout']" position="after">
+            <t t-if="gf_combined_checkout">
+                <!-- Hide standard checkout next-step navigation button on this page only -->
+                <style>
+                    a[name="website_sale_main_button"] {
+                        display: none !important;
+                    }
+                    .position-relative.d-none.d-lg-flex.w-100.justify-content-center.align-items-center {
+                        display: none !important;
+                    }
+                </style>
+
+                <!-- ── Payment form (inline) ───────────────────── -->
+                <div id="gf_payment_section" class="mb-4 mt-4">
+                    <t t-if="errors">
+                        <t t-foreach="errors" t-as="error">
+                            <div class="alert alert-danger" t-if="error" role="alert">
+                                <h6><t t-out="error[0]"/></h6>
+                                <t t-out="error[1]"/>
+                            </div>
+                        </t>
+                    </t>
+
+                    <t t-if="not errors">
+                        <t t-if="website_sale_order and website_sale_order.amount_total">
+                            <h5 class="mb-3">Payment</h5>
+                            <div id="payment_method" class="o_not_editable">
+                                <t t-call="payment.form"/>
+                            </div>
+                        </t>
+                        <t t-else="">
+                            <h5 class="mb-3">Confirm order</h5>
+                            <div name="o_website_sale_free_cart">
+                                <form name="o_wsale_confirm_order"
+                                      class="d-flex flex-column"
+                                      target="_self"
+                                      action="/shop/payment/validate"
+                                      method="post">
+                                    <input type="hidden"
+                                           name="csrf_token"
+                                           t-att-value="request.csrf_token()"/>
+                                    <button name="o_payment_submit_button"
+                                            type="submit"
+                                            class="btn btn-primary w-100 py-3 mt-2 fw-semibold">
+                                        Confirm Order
+                                    </button>
+                                </form>
+                            </div>
+                        </t>
+                    </t>
+                </div>
+
+            </t>
+        </xpath>
+    </template>
+
+    <!-- Step wizard: rename the checkout step from "Address" to "Payment" -->
+    <template id="gf_step_wizard_payment_rename" inherit_id="website.step_wizard" name="Gadgetflix – Rename checkout step to Payment">
+        <xpath expr="//div[@name='step_name']//span[@t-field='step.name']" position="replace">
+            <t t-out="'Payment' if step.step_href == '/shop/checkout' else step.name"/>
+        </xpath>
+        <xpath expr="//a//span[@t-field='step.name']" position="replace">
+            <t t-out="'Payment' if step.step_href == '/shop/checkout' else step.name"/>
+        </xpath>
+        <xpath expr="//a" position="attributes">
+            <attribute name="t-att-title">'Payment' if step.step_href == '/shop/checkout' else step.name</attribute>
+        </xpath>
     </template>
 
 </odoo>
