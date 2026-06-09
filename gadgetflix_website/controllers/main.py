@@ -45,6 +45,7 @@ class WebsiteSaleShop(Delivery):
         """Override: combine address/delivery + payment onto /shop/checkout."""
         try_skip_step = str2bool(try_skip_step or 'false')
         order_sudo = request.cart
+        order_sudo.carrier_id = False
         request.session['sale_last_order_id'] = order_sudo.id
 
         if redirection := self._check_cart_and_addresses(order_sudo):
