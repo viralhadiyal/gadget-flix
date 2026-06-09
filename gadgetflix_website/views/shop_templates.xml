@@ -1239,7 +1239,7 @@
             </div>
             <div t-else="" class="d-flex flex-column flex-grow-1 overflow-hidden">
                 <div class="flex-grow-1 overflow-auto p-3">
-                <t t-foreach="website_sale_order.website_order_line.filtered(lambda l: not l.is_reward_line)" t-as="line">
+                <t t-foreach="website_sale_order.website_order_line" t-as="line">
                     <div class="d-flex mb-3 border-bottom pb-3">
                         <span t-field="line.product_id.image_128" t-options="{'widget': 'image', 'class': 'rounded border', 'style': 'width: 80px; height: 80px; object-fit: contain;'}"/>
                         <div class="ms-3 flex-grow-1">

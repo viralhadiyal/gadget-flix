@@ -107,8 +107,6 @@ class WebsiteSaleShop(Delivery):
             'suggested_products': [],
         }
         if order:
-            order._update_programs_and_rewards()
-            order._auto_apply_rewards()
             values['suggested_products'] = order._cart_accessories()
         return request.render("gadgetflix_website.cart_offcanvas_content", values)
 
@@ -728,7 +726,7 @@ class AntiYellowController(http.Controller):
                 'product_name': product.name,
                 'first_variant_id': first_variant.id if first_variant else 0,
                 'first_price': first_variant.lst_price if first_variant else product.list_price,
-                'first_image_url': f'/web/image/product.template/{product.id}/image_512',
+                'first_image_url': f'/web/image/product.template/{product.id}/image_1024',
             })
 
         # Default selection: first brand
@@ -772,10 +770,10 @@ class AntiYellowController(http.Controller):
             extra_images = []
             if variant:
                 # Always put the main variant image first
-                extra_images.append(f'/web/image/product.product/{variant.id}/image_512')
+                extra_images.append(f'/web/image/product.product/{variant.id}/image_1024')
                 for img in product.product_template_image_ids:
                     if not img.product_variant_id or variant.id == img.product_variant_id.id:
-                        extra_images.append(f'/web/image/product.image/{img.id}/image_512')
+                        extra_images.append(f'/web/image/product.image/{img.id}/image_1024')
 
             result.append({
                 'id': attr_val.id,
@@ -783,7 +781,7 @@ class AntiYellowController(http.Controller):
                 'product_id': product.id,
                 'variant_id': variant.id if variant else 0,
                 'price': variant.lst_price if variant else product.list_price,
-                'image_url': f'/web/image/product.product/{variant.id}/image_512' if variant else '',
+                'image_url': f'/web/image/product.product/{variant.id}/image_1024' if variant else '',
                 'extra_image_urls': extra_images,
                 'is_available': variant.qty_available >= 0 if variant else True,
             })

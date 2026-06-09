@@ -877,50 +877,49 @@
     };
 
     const updateHeroImage = function (url) {
-    const imgEl = document.getElementById("gf-ayc-hero-img");
-    if (!imgEl || !url) return;
-
-    imgEl.style.opacity = "0.3";
-
-    const tmp = new Image();
-    tmp.onload = function () {
-        imgEl.src = url;
-        imgEl.style.opacity = "1";
+        const heroContainer = document.querySelector(".gf-ayc-hero");
+        if (!heroContainer || !url) return;
+        
+        let imgEl = heroContainer.querySelector("img#gf-ayc-hero-img");
+        if (!imgEl) {
+            heroContainer.innerHTML = "";
+            imgEl = document.createElement("img");
+            imgEl.id = "gf-ayc-hero-img";
+            imgEl.className = "img img-fluid w-100";
+            imgEl.style.objectFit = "contain";
+            imgEl.style.maxHeight = "600px";
+            heroContainer.appendChild(imgEl);
+        }
+        
+        imgEl.style.opacity = "0.5";
+        const tmp = new Image();
+        tmp.onload = function () {
+            imgEl.src = url;
+            imgEl.style.opacity = "1";
+        };
+        tmp.src = url;
     };
-    tmp.src = url;
-};
 
     const setHint = function (msg) {
         if (hintEl) hintEl.textContent = msg;
     };
 
-    // ── Thumbnail strip ────────────────────────────────────────────────────
-    if (thumbsEl) {
-        thumbsEl.addEventListener("click", function (e) {
-            const thumb = e.target.closest(".gf-ayc-thumb");
-            if (!thumb) return;
-            thumbsEl.querySelectorAll(".gf-ayc-thumb").forEach(t => t.classList.remove("gf-ayc-thumb--active"));
-            thumb.classList.add("gf-ayc-thumb--active");
-            updateHeroImage(thumb.dataset.img);
-        });
-    }
-
     const updateThumbnails = function (urls) {
         if (!urls || !urls.length) return;
         updateHeroImage(urls[0]); // Always update main image
+        
+        const thumbsEl = document.getElementById("gf-ayc-thumbs");
         if (!thumbsEl) return;
-        
-        const odooIndicators = document.querySelector("#o-carousel-product .carousel-indicators") || 
-                               document.querySelector(".o_carousel_product_indicators");
-        if (odooIndicators) odooIndicators.style.display = "none";
-        
+        thumbsEl.style.display = "flex";
         thumbsEl.innerHTML = "";
+        
         urls.forEach(function (url, idx) {
             const btn = document.createElement("button");
             btn.type = "button";
             btn.className = "gf-ayc-thumb" + (idx === 0 ? " gf-ayc-thumb--active" : "");
             btn.dataset.img = url;
             btn.setAttribute("aria-label", "Image " + (idx + 1));
+            
             const img = document.createElement("img");
             img.src = url;
             img.alt = "";
@@ -928,6 +927,18 @@
             thumbsEl.appendChild(btn);
         });
     };
+
+    // ── Thumbnail strip click handler ─────────────────────────────────────────
+    document.addEventListener("click", function (e) {
+        const thumb = e.target.closest(".gf-ayc-thumb");
+        if (!thumb) return;
+        const thumbsEl = document.getElementById("gf-ayc-thumbs");
+        if (!thumbsEl) return;
+        
+        thumbsEl.querySelectorAll(".gf-ayc-thumb").forEach(t => t.classList.remove("gf-ayc-thumb--active"));
+        thumb.classList.add("gf-ayc-thumb--active");
+        updateHeroImage(thumb.dataset.img);
+    });
 
     // ── Custom Dropdown helper ─────────────────────────────────────────────
     function makeDropdown(dropdownEl, triggerEl, panelEl, searchEl, listEl) {

@@ -23,14 +23,14 @@
                         <!-- ── LEFT: Product image ──────────────────── -->
                         <div class="gf-ayc-pdp__image-col">
                             <div class="gf-ayc-pdp__image-wrap">
-                                <div class="gf-ayc-hero">
-    <img id="gf-ayc-hero-img"
-         t-att-src="'/web/image/product.template/%s/image_512' % product.id"
-         alt="Product Image"/>
-</div>
-
-<div class="gf-ayc-pdp__thumbs" id="gf-ayc-thumbs"></div>
-                                <div class="gf-ayc-pdp__thumbs" id="gf-ayc-thumbs"></div>
+                                <div class="gf-ayc-hero text-center mb-3" style="display: flex; align-items: center; justify-content: center;">
+                                    <img id="gf-ayc-hero-img"
+                                         class="img img-fluid w-100"
+                                         style="object-fit: contain; max-height: 600px;"
+                                         t-att-src="'/web/image/product.template/%s/image_1024' % product.id"
+                                         alt="Product Image"/>
+                                </div>
+                                <div class="gf-ayc-pdp__thumbs" id="gf-ayc-thumbs" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px;"></div>
                             </div>
                         </div>
 
