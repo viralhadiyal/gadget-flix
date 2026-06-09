@@ -7,8 +7,8 @@ import json
 from datetime import datetime
 from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
-from odoo import fields
 from odoo.fields import Command, Domain
+from odoo import http, fields, tools
 from odoo.http import request, route
 from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
 from odoo.tools.translate import LazyTranslate, _
@@ -94,7 +94,20 @@ class WebsiteSaleShop(Delivery):
     def shop_payment(self, **post):
         """Redirect /shop/payment back to the combined checkout page."""
         return request.redirect('/shop/checkout')
-
+    @route('/shop/cart/mini', type='http', auth="public", website=True, sitemap=False)
+    def cart_mini(self, **post):
+        order = request.cart
+        if order and order.state != 'draft':
+            request.session['sale_order_id'] = None
+            order = request.cart
+        values = {
+            'website_sale_order': order,
+            'date': fields.Date.today(),
+            'suggested_products': [],
+        }
+        if order:
+            values['suggested_products'] = order._cart_accessories()
+        return request.render("gadgetflix_website.cart_offcanvas_content", values)
 
     def _order_summary_values(self, order, **kwargs):
         """Extend to include raw float value for frontend JS update."""
@@ -563,3 +576,275 @@ class WebsiteSaleShop(Delivery):
 
         values.update(self._get_additional_shop_values(values, **post))
         return request.render("website_sale.products", values)
+
+    @route('/gadgetflix/cart/apply_promo', type='http', auth='public', methods=['GET', 'POST'], csrf=False, website=True)
+    def apply_promo(self, **kwargs):
+        is_json = request.httprequest.headers.get('Content-Type') == 'application/json' or request.httprequest.is_json
+        if not is_json:
+            return request.redirect('/shop/checkout')
+
+        try:
+            data = json.loads(request.httprequest.data.decode('utf-8'))
+            params = data.get('params', {})
+        except Exception:
+            params = {}
+
+        promo = params.get('promo', '').strip()
+        order_sudo = request.cart
+        if not order_sudo:
+            payload = {'result': {'success': False, 'error': _("No active cart found.")}}
+            return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
+
+        if not promo:
+            payload = {'result': {'success': False, 'error': _("Please enter a valid promo code.")}}
+            return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
+
+        coupon_status = order_sudo._try_apply_code(promo)
+        if coupon_status.get('not_found'):
+            pricelist_sudo = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
+            if pricelist_sudo and request.website.is_pricelist_available(pricelist_sudo.id):
+                order_sudo._apply_pricelist(pricelist=pricelist_sudo)
+                payload = {'result': {'success': True}}
+                return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
+            else:
+                payload = {'result': {'success': False, 'error': _("Invalid or expired promo code.")}}
+                return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
+        elif coupon_status.get('error'):
+            payload = {'result': {'success': False, 'error': coupon_status['error']}}
+            return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
+
+        if len(coupon_status) == 1:
+            coupon, rewards = next(iter(coupon_status.items()))
+            if len(rewards) == 1:
+                reward = rewards
+            else:
+                reward = rewards[0]
+            if reward and (not reward.multi_product or request.env.context.get('product_id')):
+                try:
+                    reward_status = order_sudo._apply_program_reward(reward, coupon)
+                    if 'error' in reward_status:
+                        payload = {'result': {'success': False, 'error': reward_status['error']}}
+                        return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
+                except Exception as e:
+                    payload = {'result': {'success': False, 'error': str(e)}}
+                    return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
+
+                order_sudo._update_programs_and_rewards()
+                if order_sudo.carrier_id.free_over and not reward.program_id.is_payment_program:
+                    res = order_sudo.carrier_id.rate_shipment(order_sudo)
+                    if res.get('success'):
+                        order_sudo.set_delivery_line(order_sudo.carrier_id, res['price'])
+                    else:
+                        order_sudo._remove_delivery_line()
+
+        payload = {'result': {'success': True}}
+        return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
+
+    @route('/gadgetflix/cart/summary_html', type='http', auth='public', methods=['GET', 'POST'], csrf=False, website=True)
+    def cart_summary_html(self, **kwargs):
+        is_json = request.httprequest.headers.get('Content-Type') == 'application/json' or request.httprequest.is_json
+        if not is_json:
+            return request.redirect('/shop/checkout')
+
+        order_sudo = request.cart
+        if not order_sudo:
+            payload = {'result': {'success': False, 'cart_summary_content': '', 'total': ''}}
+            return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
+
+        values = {
+            'website_sale_order': order_sudo,
+            'date': fields.Date.today(),
+            'suggested_products': [],
+        }
+        values.update(request.website._get_checkout_step_values())
+        
+        cart_summary_content = request.env['ir.ui.view']._render_template('website_sale.cart_summary_content', values)
+        total_content = request.env['ir.ui.view']._render_template('website_sale.total', values)
+        
+        payload = {
+            'result': {
+                'success': True,
+                'cart_summary_content': cart_summary_content.decode('utf-8') if isinstance(cart_summary_content, bytes) else cart_summary_content,
+                'total': total_content.decode('utf-8') if isinstance(total_content, bytes) else total_content,
+            }
+        }
+        return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
+
+
+class AntiYellowController(http.Controller):
+
+    @http.route('/anti-yellow-case', type='http', auth='public', website=True, sitemap=True)
+    def anti_yellow_case_page(self, **kw):
+        """Premium single landing page for Anti-Yellow Clear Cases.
+        Finds all anti-yellow products and extracts their brand/model structure
+        so the frontend can drive a fully dynamic Brand → Model → Add to Cart flow.
+        """
+        website = request.website
+        Product = request.env['product.template'].sudo()
+
+        # Find the anti-yellow category by name
+        ay_category = request.env['product.public.category'].sudo().search([
+            ('name', 'ilike', 'Anti-Yellow Cases')
+        ], limit=1)
+
+        # Fetch all published products in that category
+        domain = [('website_published', '=', True)]
+        if ay_category:
+            domain.append(('public_categ_ids', 'in', ay_category.ids))
+
+        anti_yellow_products = Product.search(
+            domain + website.website_domain(),
+            order='website_sequence asc, id asc'
+        )
+
+
+        # Build brand list: [{brand_value_id, brand_name, product_id, product_name,
+        #                      first_variant_id, first_price, first_image_url}, ...]
+        brands = []
+        seen_brand_ids = set()
+
+        for product in anti_yellow_products:
+            brand_line = product.attribute_line_ids.filtered(
+                lambda l: l.attribute_id.name.lower() == 'brand'
+            )[:1]
+            if not brand_line:
+                continue
+            brand_value = brand_line.product_template_value_ids._only_active()[:1]
+            if not brand_value:
+                brand_value = brand_line.value_ids[:1]
+            if not brand_value or brand_value.id in seen_brand_ids:
+                continue
+            seen_brand_ids.add(brand_value.id)
+
+            # Get first available variant for initial price/image display
+            first_variant = product.product_variant_ids[:1]
+
+            brands.append({
+                'brand_value_id': brand_value.product_attribute_value_id.id if hasattr(brand_value, 'product_attribute_value_id') else brand_value.id,
+                'brand_name': brand_value.name,
+                'product_id': product.id,
+                'product_name': product.name,
+                'first_variant_id': first_variant.id if first_variant else 0,
+                'first_price': first_variant.lst_price if first_variant else product.list_price,
+                'first_image_url': f'/web/image/product.template/{product.id}/image_512',
+            })
+
+        # Default selection: first brand
+        default_brand = brands[0] if brands else None
+        
+        default_product = request.env['product.template'].sudo().browse(default_brand['product_id']) if default_brand else None
+
+        return request.render('gadgetflix_website.anti_yellow_case_page', {
+            'brands': brands,
+            'default_brand': default_brand,
+            'product': default_product,
+            'product_variant': None,
+            'combination_info': None,
+            'page_title': 'Anti-Yellow Clear Cases',
+        })
+
+    @http.route('/gadgetflix/anti-yellow/get_models', type='jsonrpc', auth='public', csrf=False)
+    def gf_get_models(self, product_id):
+        """Return model attribute values for a given product_id.
+        Each entry carries enough data to identify the correct variant.
+        """
+        product = request.env['product.template'].sudo().browse(int(product_id))
+        if not product.exists():
+            return []
+
+        model_line = product.attribute_line_ids.filtered(
+            lambda l: l.attribute_id.name.lower() == 'model'
+        )[:1]
+
+        result = []
+        for ptav in model_line.product_template_value_ids._only_active():
+            attr_val = ptav.product_attribute_value_id
+
+            # Find the variant that carries this model value
+            variant = product.product_variant_ids.filtered(
+                lambda v: attr_val.id in v.product_template_attribute_value_ids.mapped(
+                    'product_attribute_value_id'
+                ).ids
+            )[:1]
+
+            extra_images = []
+            if variant:
+                # Always put the main variant image first
+                extra_images.append(f'/web/image/product.product/{variant.id}/image_512')
+                for img in product.product_template_image_ids:
+                    if not img.product_variant_id or variant.id == img.product_variant_id.id:
+                        extra_images.append(f'/web/image/product.image/{img.id}/image_512')
+
+            result.append({
+                'id': attr_val.id,
+                'name': attr_val.name,
+                'product_id': product.id,
+                'variant_id': variant.id if variant else 0,
+                'price': variant.lst_price if variant else product.list_price,
+                'image_url': f'/web/image/product.product/{variant.id}/image_512' if variant else '',
+                'extra_image_urls': extra_images,
+                'is_available': variant.qty_available >= 0 if variant else True,
+            })
+
+        return result
+
+    @http.route('/gadgetflix/anti-yellow/get_combination', type='jsonrpc', auth='public', csrf=False)
+    def gf_get_combination(self, product_id, model_value_id):
+        """Return full variant info for a brand product + model attribute value combo."""
+        product = request.env['product.template'].sudo().browse(int(product_id))
+        if not product.exists():
+            return {}
+
+        variant = product.product_variant_ids.filtered(
+            lambda v: int(model_value_id) in v.product_template_attribute_value_ids.mapped(
+                'product_attribute_value_id'
+            ).ids
+        )[:1]
+
+        if not variant:
+            return {}
+
+        currency = request.website.currency_id
+        price = variant.lst_price
+
+        return {
+            'variant_id': variant.id,
+            'price': price,
+            'price_formatted': f'{currency.symbol}{price:,.2f}' if currency.position == 'before' else f'{price:,.2f} {currency.symbol}',
+            'image_url': f'/web/image/product.product/{variant.id}/image_512',
+            'is_available': variant.qty_available >= 0,
+            'display_name': variant.display_name,
+        }
+
+    # ── Legacy endpoints (kept for backward compatibility) ────────────
+
+    @http.route('/get_models', type='jsonrpc', auth='public', csrf=False)
+    def get_models(self, brand_value_id):
+        variants = request.env['product.product'].sudo().search([
+            ('product_template_attribute_value_ids.product_attribute_value_id', '=', int(brand_value_id))
+        ])
+        products = variants.mapped('product_tmpl_id')
+        result = []
+        for product in products:
+            model_line = product.attribute_line_ids.filtered(
+                lambda l: l.attribute_id.name.lower() == 'model'
+            )
+            for v in model_line.value_ids:
+                result.append({'id': v.id, 'name': v.name, 'product_id': product.id})
+        return result
+
+    @http.route('/get_combination', type='jsonrpc', auth='public', csrf=False)
+    def get_combination(self, product_id, model_value_id):
+        product = request.env['product.template'].sudo().browse(int(product_id))
+        variant = product.product_variant_ids.filtered(
+            lambda v: model_value_id in v.product_template_attribute_value_ids.mapped(
+                'product_attribute_value_id'
+            ).ids
+        )[:1]
+        if not variant:
+            return {}
+        return {
+            'variant_id': variant.id,
+            'price': variant.lst_price,
+            'image_url': f'/web/image/product.product/{variant.id}/image_512',
+        }

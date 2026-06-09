@@ -7,7 +7,8 @@
                 <section class="gf-account-hero">
                     <div class="gf-account-hero__identity">
                         <span class="gf-account-avatar">
-                            <img t-att-src="'/web/image/res.users/%s/avatar_128' % request.env.user.id" t-att-alt="request.env.user.name"/>
+                            <img t-att-src="'/web/image/res.users/%s/avatar_128' % request.env.user.id"
+                                 t-att-alt="request.env.user.name"/>
                         </span>
                         <div>
                             <p>My Account</p>
@@ -23,35 +24,45 @@
 
                 <section class="gf-account-grid" aria-label="Account sections">
                     <a class="gf-account-card" href="/my/account">
-                        <span><i class="fa fa-user" aria-hidden="true"></i></span>
+                        <span>
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </span>
                         <div>
                             <h2>Profile</h2>
                             <p>Name, mobile number, email, and saved contact details.</p>
                         </div>
                     </a>
                     <a class="gf-account-card" href="/my/orders">
-                        <span><i class="fa fa-shopping-bag" aria-hidden="true"></i></span>
+                        <span>
+                            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                        </span>
                         <div>
                             <h2>Orders</h2>
                             <p>View order history</p>
                         </div>
                     </a>
                     <a class="gf-account-card" href="/my/invoices?filterby=invoices">
-                        <span><i class="fa fa-file-text-o" aria-hidden="true"></i></span>
+                        <span>
+                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                        </span>
                         <div>
                             <h2>Invoices</h2>
                             <p>View invoices, download invoices, and check payment information.</p>
                         </div>
                     </a>
                     <a class="gf-account-card" href="/my/addresses">
-                        <span><i class="fa fa-map-marker" aria-hidden="true"></i></span>
+                        <span>
+                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                        </span>
                         <div>
                             <h2>Addresses</h2>
                             <p>Manage delivery addresses for faster checkout.</p>
                         </div>
                     </a>
                     <a class="gf-account-card" href="/my/security">
-                        <span><i class="fa fa-lock" aria-hidden="true"></i></span>
+                        <span>
+                            <i class="fa fa-lock" aria-hidden="true"></i>
+                        </span>
                         <div>
                             <h2>Security</h2>
                             <p>Password and account access settings.</p>
@@ -67,18 +78,34 @@
             <div t-attf-class="{{'offcanvas-body' if isOffcanvas else 'mt-3 mw-100'}}">
                 <div class="gf-account-side">
                     <div class="gf-account-side__identity">
-                        <img t-att-src="'/web/image/res.users/%s/avatar_128' % request.env.user.id" t-att-alt="request.env.user.name"/>
+                        <img t-att-src="'/web/image/res.users/%s/avatar_128' % request.env.user.id"
+                             t-att-alt="request.env.user.name"/>
                         <div>
                             <strong t-out="request.env.user.name"/>
                             <span t-if="request.env.user.partner_id.email" t-out="request.env.user.partner_id.email"/>
                         </div>
                     </div>
                     <nav class="gf-account-side__nav" aria-label="Account navigation">
-                        <a href="/my/account"><i class="fa fa-user" aria-hidden="true"></i><span>Profile</span></a>
-                        <a href="/my/orders"><i class="fa fa-shopping-bag" aria-hidden="true"></i><span>Orders</span></a>
-                        <a href="/my/invoices?filterby=invoices"><i class="fa fa-file-text-o" aria-hidden="true"></i><span>Invoices</span></a>
-                        <a href="/my/addresses"><i class="fa fa-map-marker" aria-hidden="true"></i><span>Addresses</span></a>
-                        <a href="/my/security"><i class="fa fa-lock" aria-hidden="true"></i><span>Security</span></a>
+                        <a href="/my/account">
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                            <span>Profile</span>
+                        </a>
+                        <a href="/my/orders">
+                            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                            <span>Orders</span>
+                        </a>
+                        <a href="/my/invoices?filterby=invoices">
+                            <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                            <span>Invoices</span>
+                        </a>
+                        <a href="/my/addresses">
+                            <i class="fa fa-map-marker" aria-hidden="true"></i>
+                            <span>Addresses</span>
+                        </a>
+                        <a href="/my/security">
+                            <i class="fa fa-lock" aria-hidden="true"></i>
+                            <span>Security</span>
+                        </a>
                     </nav>
                 </div>
             </div>

@@ -187,7 +187,7 @@
                             <t t-call="gadgetflix_website.gadgetflix_accessories_menu_links"/>
                         </div>
                     </div>
-                    <a href="/anti-yellow">Anti-Yellow</a>
+                    <a href="/anti-yellow-case">Anti-Yellow Case</a>
                     <a href="/shop">All Products</a>
                 </nav>
                 <div class="gf-header__actions">
@@ -319,7 +319,7 @@
                             <t t-call="gadgetflix_website.gadgetflix_accessories_menu_links"/>
                         </div>
                     </div>
-                    <a href="/anti-yellow">Anti-Yellow Cases</a>
+                    <a href="/anti-yellow-case">Anti-Yellow Case</a>
                     <a href="/shop">All Products</a>
                 </div>
             </div>
@@ -347,7 +347,7 @@
                             <h3>Pages</h3>
                             <a href="/home">Home</a>
                             <a href="/shop">All Products</a>
-                            <a href="/anti-yellow">Anti Yellow</a>
+                            <a href="/anti-yellow-case">Anti Yellow Case</a>
                             <a href="/about">About us</a>
                             <a href="/contact">Contact</a>
                         </div>
@@ -679,7 +679,7 @@
         <t t-call="gadgetflix_website.gadgetflix_page_layout">
             <div class="gf-anti-yellow-page">
                 <section class="gf-anti-offer-section" aria-label="Anti yellow sale offer">
-                    <a href="/shop/category/phone-cases-anti-yellow-cases-12" class="gf-anti-offer" aria-label="Shop anti yellow case sale offer">
+                    <a href="/anti-yellow-case" class="gf-anti-offer" aria-label="Shop anti yellow case sale offer">
                         <picture>
                             <source media="(max-width: 767px)" srcset="/gadgetflix_website/static/src/img/anti_yellow_offer_mobile_20260530.png"/>
                             <img src="/gadgetflix_website/static/src/img/anti_yellow_offer_desktop_20260530.png"
@@ -744,7 +744,7 @@
                             <h2>Anti-yellow cases</h2>
                             <p>Explore anti-yellow cases chosen for clear looks, protection, and daily reliability.</p>
                         </div>
-                        <a href="/shop/category/anty-yellow-cases-12" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                        <a href="/anti-yellow-case" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
                     </div>
                     <div t-if="anti_yellow_products" class="gf-scroll-area">
                         <div class="gf-scroll-controls" aria-label="Scroll anti-yellow products">
@@ -1104,7 +1104,6 @@
 
     <!-- Checkout page: inject data attributes on #shop_checkout and render payment widget inline -->
     <template id="gf_checkout_combined" inherit_id="website_sale.checkout" name="Gadgetflix – Combined checkout page">
-
         <!-- Add data attributes to shop_checkout container -->
         <xpath expr="//div[@id='shop_checkout']" position="attributes">
             <attribute name="t-att-data-cod-carrier-id">gf_cod_carrier_id</attribute>
@@ -1115,16 +1114,7 @@
         <!-- After the address/delivery block, inject payment form when gf_combined_checkout flag is set -->
         <xpath expr="//div[@id='shop_checkout']" position="after">
             <t t-if="gf_combined_checkout">
-                <!-- Hide standard checkout next-step navigation button on this page only -->
-                <style>
-                    a[name="website_sale_main_button"] {
-                        display: none !important;
-                    }
-                    .position-relative.d-none.d-lg-flex.w-100.justify-content-center.align-items-center {
-                        display: none !important;
-                    }
-                </style>
-
+                
                 <!-- ── Payment form (inline) ───────────────────── -->
                 <div id="gf_payment_section" class="mb-4 mt-4">
                     <t t-if="errors">
@@ -1139,6 +1129,20 @@
                     <t t-if="not errors">
                         <t t-if="website_sale_order and website_sale_order.amount_total">
                             <h5 class="mb-3">Payment</h5>
+                            
+                            <!-- ── Hide Native Odoo Progression Buttons ──────────────── -->
+                            <style>
+                                /* Hide the native "Confirm >" link buttons in the Order Summary / sticky mobile footer */
+                                a[name="website_sale_main_button"],
+                                .o_cart_summary a.btn-primary[href^="/shop/"],
+                                .o_cart_summary_offcanvas a.btn-primary[href^="/shop/"],
+                                .navigation_buttons a.btn-primary[href^="/shop/"],
+                                .o_website_sale_checkout_layout a.btn-primary[href="/shop/confirm_order"],
+                                .o_website_sale_checkout_layout a.btn-primary[href="/shop/payment"] {
+                                    display: none !important;
+                                }
+                            </style>
+
                             <div id="payment_method" class="o_not_editable">
                                 <t t-call="payment.form"/>
                             </div>
@@ -1180,6 +1184,86 @@
         <xpath expr="//a" position="attributes">
             <attribute name="t-att-title">'Payment' if step.step_href == '/shop/checkout' else step.name</attribute>
         </xpath>
+    </template>
+
+    <!-- Hide promo form on Cart page; show only on Checkout/Payment page -->
+    <template id="gf_hide_promo_on_cart" inherit_id="website_sale.reduction_code" name="Gadgetflix – Hide Promo Code on Cart Page">
+        <xpath expr="//tr[@t-if='not hide_promotions']" position="attributes">
+            <attribute name="t-if">not hide_promotions and not request.httprequest.path.startswith('/shop/cart')</attribute>
+        </xpath>
+    </template>
+
+    <!-- Hide loyalty/gift card forms on Cart page; show only on Checkout/Payment page -->
+    <template id="gf_hide_loyalty_on_cart" inherit_id="website_sale_loyalty.modify_code_form" name="Gadgetflix – Hide Loyalty/Coupon on Cart Page">
+        <xpath expr="//tr[contains(@class, 'oe_website_sale_gift_card')]" position="attributes">
+            <attribute name="t-if">not hide_promotions and not request.httprequest.path.startswith('/shop/cart')</attribute>
+        </xpath>
+    </template>
+
+    <!-- Prevent claim reward button from redirecting to cart page when clicked on Checkout/Payment page -->
+    <template id="gf_claim_reward_redirect" inherit_id="website_sale_loyalty.modify_code_form" name="Gadgetflix – Claim Reward Redirect Fix">
+        <xpath expr="//form[@name='claim_reward']" position="inside">
+            <input type="hidden" name="r" t-att-value="request.httprequest.path"/>
+        </xpath>
+    </template>
+
+    <!-- Global Offcanvas Cart Container -->
+    <template id="layout_cart_offcanvas" inherit_id="website.layout" name="Gadgetflix - Offcanvas Cart">
+        <xpath expr="//div[@id='wrapwrap']" position="after">
+            <div id="gf_cart_offcanvas" class="offcanvas offcanvas-end" tabindex="-1" aria-labelledby="gf_cart_offcanvas_label" style="width: 400px; max-width: 90vw; z-index: 1055;">
+                <!-- Header is rendered dynamically inside the content -->
+                <div class="offcanvas-body p-0 position-relative">
+                    <div class="d-flex justify-content-center align-items-center h-100 d-none bg-white position-absolute w-100 h-100 top-0 start-0" id="gf_cart_loading" style="z-index: 10;">
+                        <div class="spinner-border text-primary" role="status"></div>
+                    </div>
+                    <div id="gf_cart_content" class="h-100"></div>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <!-- Mini Cart Content -->
+    <template id="cart_offcanvas_content" name="Gadgetflix - Mini Cart Content">
+        <div class="d-flex flex-column h-100">
+            <div class="offcanvas-header border-bottom bg-light">
+                <h5 class="offcanvas-title fw-bold" id="gf_cart_offcanvas_label">
+                    <i class="fa fa-shopping-cart me-2"></i>
+                    <t t-out="website_sale_order.cart_quantity if website_sale_order else 0"/> Items
+                </h5>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="text-center p-5 text-muted flex-grow-1 d-flex flex-column align-items-center justify-content-center">
+                <i class="fa fa-shopping-cart fa-3x mb-3"></i>
+                <h4>Your cart is empty!</h4>
+                <a href="/shop" class="btn w-100 mt-3 py-2 fw-bold text-uppercase" style="background-color: #000; color: #fff; border-radius: 8px;" data-bs-dismiss="offcanvas">Continue Shopping</a>
+            </div>
+            <div t-else="" class="d-flex flex-column flex-grow-1 overflow-hidden">
+                <div class="flex-grow-1 overflow-auto p-3">
+                <t t-foreach="website_sale_order.website_order_line.filtered(lambda l: not l.is_reward_line)" t-as="line">
+                    <div class="d-flex mb-3 border-bottom pb-3">
+                        <span t-field="line.product_id.image_128" t-options="{'widget': 'image', 'class': 'rounded border', 'style': 'width: 80px; height: 80px; object-fit: contain;'}"/>
+                        <div class="ms-3 flex-grow-1">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <h6 class="mb-1 text-break pe-2" t-out="line.name_short"/>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <span class="text-muted small">Qty: <t t-out="line.product_uom_qty"/></span>
+                                <span class="fw-bold" t-field="line.price_reduce_taxexcl" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <div class="p-3 bg-light border-top">
+                <div class="d-flex justify-content-between mb-3 fs-5 fw-bold">
+                    <span>Subtotal</span>
+                    <span t-field="website_sale_order.amount_untaxed" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                </div>
+                <a href="/shop/checkout" class="btn w-100 mb-2 py-2 fw-bold text-uppercase shadow-sm" style="background-color: #000; color: #fff; border-radius: 8px;">Checkout</a>
+                <button type="button" class="btn w-100 py-2 text-uppercase fw-bold" style="background-color: #fff; color: #000; border: 1px solid #000; border-radius: 8px;" data-bs-dismiss="offcanvas">Continue Shopping</button>
+            </div>
+            </div>
+        </div>
     </template>
 
 </odoo>

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         Anti-Yellow Case Landing Page
+         Layout: Image left | Searchable Brand+Model configurator right
+         Route: /anti-yellow-case
+    ============================================================ -->
+    <template id="anti_yellow_case_page" name="Anti-Yellow Case Landing Page">
+        <t t-call="gadgetflix_website.gadgetflix_page_layout">
+            <t t-set="additional_title">Anti-Yellow Clear Cases – GadgetFlix</t>
+
+            <div id="gf-ayc-page" class="gf-ayc-page">
+
+                <!-- ── Main PDP row (image left + configurator right) ── -->
+                <section class="gf-ayc-pdp">
+                    <div class="gf-container gf-ayc-pdp__inner"
+                         id="gf-ayc-configurator"
+                         t-if="brands"
+                         t-att-data-default-product-id="default_brand['product_id'] if default_brand else 0"
+                         t-att-data-default-brand-id="default_brand['brand_value_id'] if default_brand else 0">
+
+                        <!-- ── LEFT: Product image ──────────────────── -->
+                        <div class="gf-ayc-pdp__image-col">
+                            <div class="gf-ayc-pdp__image-wrap">
+                                <t t-call="website_sale.shop_product_images"/>
+                                <div class="gf-ayc-pdp__thumbs" id="gf-ayc-thumbs"></div>
+                            </div>
+                        </div>
+
+                        <!-- ── RIGHT: Configurator ──────────────────── -->
+                        <div class="gf-ayc-pdp__config-col">
+
+                            <!-- Product title + badge -->
+                            <div class="gf-ayc-pdp__title-row">
+                                <span class="gf-ayc-pdp__badge">
+                                    <i class="fa fa-shield" aria-hidden="true"/> Lifetime Anti-Yellow Warranty
+                                </span>
+                                <h1 class="gf-ayc-pdp__title" style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.5px;">Anti-Yellow Magsafe Clear Case</h1>
+                                <p class="gf-ayc-pdp__tagline mt-2" style="font-size: 1.1rem;">
+                                    🎁 3 Free Gifts With Every Order
+                                </p>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="gf-ayc-pdp__price-row">
+                                <span class="gf-ayc-pdp__price" id="gf-ayc-price">
+                                    <t t-if="default_brand">
+                                        <t t-out="default_brand['first_price']"
+                                           t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                    </t>
+                                    <t t-else="">—</t>
+                                </span>
+                                <span class="gf-ayc-pdp__avail" id="gf-ayc-avail">
+                                    <i class="fa fa-check-circle" aria-hidden="true"/> In stock
+                                </span>
+                            </div>
+
+                            <!-- Divider -->
+                            <hr class="gf-ayc-pdp__divider"/>
+
+                            <!-- Step 1: Brand (searchable dropdown) -->
+                            <div class="gf-ayc-field">
+                                <label class="gf-ayc-field__label" for="gf-ayc-brand-search">
+                                    Select Brand
+                                </label>
+                                <div class="gf-ayc-dropdown" id="gf-ayc-brand-dropdown">
+                                    <div class="gf-ayc-dropdown__trigger" id="gf-ayc-brand-trigger"
+                                         role="combobox" aria-haspopup="listbox"
+                                         aria-expanded="false" aria-controls="gf-ayc-brand-listbox"
+                                         tabindex="0">
+                                        <span id="gf-ayc-brand-label">Choose a brand…</span>
+                                        <i class="fa fa-angle-down gf-ayc-dropdown__caret" aria-hidden="true"/>
+                                    </div>
+                                    <div class="gf-ayc-dropdown__panel" id="gf-ayc-brand-panel" role="listbox" aria-label="Brand options">
+                                        <div class="gf-ayc-dropdown__search-wrap">
+                                            <i class="fa fa-search" aria-hidden="true"/>
+                                            <input
+                                                type="text"
+                                                id="gf-ayc-brand-search"
+                                                class="gf-ayc-dropdown__search"
+                                                placeholder="Search brand…"
+                                                autocomplete="off"
+                                                aria-label="Search brand"
+                                            />
+                                        </div>
+                                        <ul class="gf-ayc-dropdown__list" id="gf-ayc-brand-listbox">
+                                            <t t-foreach="brands" t-as="brand">
+                                                <li class="gf-ayc-dropdown__item"
+                                                    role="option"
+                                                    t-att-data-brand-value-id="brand['brand_value_id']"
+                                                    t-att-data-product-id="brand['product_id']"
+                                                    t-att-data-first-price="brand['first_price']"
+                                                    t-att-data-image-url="brand['first_image_url']"
+                                                    t-att-data-brand-name="brand['brand_name']"
+                                                    t-att-aria-selected="'true' if brand_index == 0 else 'false'">
+                                                    <span class="gf-ayc-dropdown__item-name" t-out="brand['brand_name']"/>
+                                                </li>
+                                            </t>
+                                        </ul>
+                                        <p class="gf-ayc-dropdown__no-results" hidden="hidden">No results found</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Model (searchable dropdown) -->
+                            <div class="gf-ayc-field gf-ayc-field--model">
+                                <label class="gf-ayc-field__label" for="gf-ayc-model-search">
+                                    Select Model
+                                </label>
+                                <div class="gf-ayc-dropdown gf-ayc-dropdown--disabled" id="gf-ayc-model-dropdown">
+                                    <div class="gf-ayc-dropdown__trigger" id="gf-ayc-model-trigger"
+                                         role="combobox" aria-haspopup="listbox"
+                                         aria-expanded="false" aria-controls="gf-ayc-model-listbox"
+                                         tabindex="0">
+                                        <span id="gf-ayc-model-label">Select a brand first…</span>
+                                        <span class="gf-ayc-spinner gf-ayc-dropdown__spinner" id="gf-ayc-model-spinner" hidden="hidden" aria-label="Loading"/>
+                                        <i class="fa fa-angle-down gf-ayc-dropdown__caret" aria-hidden="true"/>
+                                    </div>
+                                    <div class="gf-ayc-dropdown__panel" id="gf-ayc-model-panel" role="listbox" aria-label="Model options">
+                                        <div class="gf-ayc-dropdown__search-wrap">
+                                            <i class="fa fa-search" aria-hidden="true"/>
+                                            <input
+                                                type="text"
+                                                id="gf-ayc-model-search"
+                                                class="gf-ayc-dropdown__search"
+                                                placeholder="Search model…"
+                                                autocomplete="off"
+                                                aria-label="Search model"
+                                            />
+                                        </div>
+                                        <ul class="gf-ayc-dropdown__list" id="gf-ayc-model-listbox">
+                                            <!-- Populated by JS -->
+                                        </ul>
+                                        <p class="gf-ayc-dropdown__no-results" hidden="hidden">No results found</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Divider -->
+                            <hr class="gf-ayc-pdp__divider"/>
+
+                            <!-- Qty + Add to Cart + Buy Now -->
+                            <div class="gf-ayc-buy" id="gf-ayc-buy">
+                                <div id="add_to_cart_wrap" class="d-flex flex-nowrap align-items-center gap-2 mb-3">
+                                    <div class="css_quantity input-group d-inline-flex align-middle border bg-white" style="max-width: 120px; height: 52px; border-radius: 0.375rem;">
+                                        <button type="button" class="btn btn-link pe-2 border-0 text-dark" id="gf-ayc-qty-dec" aria-label="Remove one" title="Remove one" style="width: 35px;">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                        <input type="text" id="gf-ayc-qty" class="form-control quantity text-center border-0 bg-transparent fw-bold" value="1" min="1" max="99" style="font-size: 1.1rem; box-shadow: none;"/>
+                                        <button type="button" class="btn btn-link ps-2 border-0 text-dark" id="gf-ayc-qty-inc" aria-label="Add one" title="Add one" style="width: 35px;">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    <button type="button" id="gf-ayc-add-to-cart" class="btn btn-dark flex-grow-1" style="height: 52px; font-weight: 600; font-size: 1rem; border-radius: 0.375rem; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; padding: 0 10px;" disabled="disabled">
+                                        <i class="fa fa-shopping-cart me-2" aria-hidden="true"/>
+                                        <span>Add to Cart</span>
+                                    </button>
+                                </div>
+
+                                <p class="text-muted small mt-2 mb-0" id="gf-ayc-hint">
+                                    Select a brand and model to add to cart.
+                                </p>
+                            </div>
+
+                            <!-- Trust badges -->
+                            <div class="gf-ayc-pdp__trust">
+                                <div class="gf-ayc-trust-item">
+                                    <i class="fa fa-truck" aria-hidden="true"/>
+                                    <div>
+                                        <strong>Fast Delivery</strong>
+                                        <span>3–7 days</span>
+                                    </div>
+                                </div>
+                                <div class="gf-ayc-trust-item">
+                                    <i class="fa fa-shield" aria-hidden="true"/>
+                                    <div>
+                                        <strong>Lifetime Warranty</strong>
+                                        <span>Anti-yellow</span>
+                                    </div>
+                                </div>
+                                <div class="gf-ayc-trust-item">
+                                    <i class="fa fa-lock" aria-hidden="true"/>
+                                    <div>
+                                        <strong>Secure Payment</strong>
+                                        <span>100% Safe</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div><!-- /.gf-ayc-pdp__config-col -->
+                    </div>
+
+                    <!-- Empty state -->
+                    <div t-else="" class="gf-container gf-ayc-empty">
+                        <i class="fa fa-exclamation-circle" aria-hidden="true"/>
+                        <p>No anti-yellow products are currently available. Check back soon!</p>
+                        <a href="/shop" class="gf-ayc-btn-link">Browse all products</a>
+                    </div>
+                </section>
+
+                <!-- ── Features strip ─────────────────────────── -->
+                <section class="gf-ayc-features">
+                    <div class="gf-container">
+                        <div class="gf-ayc-features__grid">
+                            <div class="gf-ayc-feature">
+                                <span class="gf-ayc-feature__icon">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                        <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                                        <path d="M4.5 7.8L12 12l7.5-4.2M12 12v8.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                                    </svg>
+                                </span>
+                                <strong>5-Layer UV Shield</strong>
+                                <span>Military-grade UV blocking built into the material itself</span>
+                            </div>
+                            <div class="gf-ayc-feature">
+                                <span class="gf-ayc-feature__icon">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                        <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"/>
+                                        <path d="M8.5 12.5l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                                <strong>Crystal Clarity</strong>
+                                <span>High-transparency polycarbonate that showcases your phone</span>
+                            </div>
+
+                            <div class="gf-ayc-feature">
+                                <span class="gf-ayc-feature__icon">
+                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                                        <path d="M12 21c-4.4-1.3-8-6-8-11V6l8-4 8 4v4c0 5-3.6 9.7-8 11z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+                                        <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                                    </svg>
+                                </span>
+                                <strong>Lifetime Warranty</strong>
+                                <span>If it ever yellows, we replace it — free, no questions asked</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Lifestyle / Product Showcase ─────────────────────────── -->
+                <section class="gf-ayc-showcase">
+                    <div class="gf-container">
+                        <div class="gf-ayc-showcase__header text-center">
+                            <h2>Pure Clarity. Zero Yellowing.</h2>
+                            <p>See your phone exactly as it was meant to be seen. Our crystal-clear design perfectly showcases every curve.</p>
+                        </div>
+                        <div class="row g-4 justify-content-center">
+                            <!-- First Row: 3 Images -->
+                            <div class="col-12 col-md-4">
+                                <div class="gf-ayc-showcase__item">
+                                    <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_1.png" alt="Clear Case 1" loading="lazy"/>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="gf-ayc-showcase__item">
+                                    <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_2.png" alt="Clear Case 2" loading="lazy"/>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="gf-ayc-showcase__item">
+                                    <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_3.png" alt="Clear Case 3" loading="lazy"/>
+                                </div>
+                            </div>
+                            
+                            <!-- Second Row: 2 Images -->
+                            <div class="col-12 col-md-5">
+                                <div class="gf-ayc-showcase__item">
+                                    <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_4.png" alt="Clear Case 4" loading="lazy"/>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-5">
+                                <div class="gf-ayc-showcase__item">
+                                    <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_5.png" alt="Clear Case 5" loading="lazy"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Official Warranty Section ─────────────────────────── -->
+                <t t-call="gadgetflix_website.gadgetflix_warranty"/>
+
+                <!-- ── Newsletter Section ─────────────────────────── -->
+                <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
+
+                <!-- ── Sticky add-to-cart bar (mobile) ───────── -->
+                <div class="gf-ayc-sticky-bar" id="gf-ayc-sticky-bar" aria-hidden="true" hidden="hidden">
+                    <div class="gf-ayc-sticky-bar__inner">
+                        <div class="gf-ayc-sticky-bar__info">
+                            <span class="gf-ayc-sticky-bar__name" id="gf-ayc-sticky-name">Anti-Yellow Clear Case</span>
+                            <span class="gf-ayc-sticky-bar__price" id="gf-ayc-sticky-price"/>
+                        </div>
+                        <button type="button" id="gf-ayc-sticky-btn"
+                                class="gf-ayc-sticky-bar__btn" disabled="disabled">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+            </div><!-- /#gf-ayc-page -->
+        </t>
+    </template>
+
+</odoo>

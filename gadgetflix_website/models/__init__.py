@@ -9,4 +9,3 @@ from . import mix_match_offer_slab
 from . import sale_order_line
 from . import sale_order
 from . import payment_provider
-
