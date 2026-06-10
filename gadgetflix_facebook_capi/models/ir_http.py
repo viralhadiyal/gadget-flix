@@ -24,8 +24,8 @@ class IrHttp(models.AbstractModel):
 
             # Fire PageView for all successful HTML GET requests
             if method == 'GET' and hasattr(response, 'status_code') and response.status_code == 200:
-                mimetype = getattr(response, 'mimetype', '')
-                if 'text/html' in mimetype and not path.startswith(('/web', '/logo', '/mail')):
+                mimetype = getattr(response, 'mimetype', '') or ''
+                if 'text/html' in mimetype and not path.startswith(('/web', '/odoo', '/logo', '/mail')):
                     # Import here to avoid circular imports if any
                     from odoo.addons.gadgetflix_facebook_capi.controllers.main import trigger_backend_capi
                     trigger_backend_capi('PageView', {})

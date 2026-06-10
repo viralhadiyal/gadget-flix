@@ -7,6 +7,7 @@ from odoo import http
 from odoo.http import request
 from odoo.addons.website_sale.controllers.main import WebsiteSale
 from odoo.addons.website_sale.controllers.cart import Cart
+from odoo.addons.website_sale.controllers.payment import PaymentPortal
 
 _logger = logging.getLogger(__name__)
 
@@ -124,20 +125,33 @@ class GadgetflixCapiWebsiteSale(WebsiteSale):
             _logger.warning("CAPI InitiateCheckout failed: %s", e)
         return res
 
-    @http.route(['/shop/payment'], type='http', auth="public", website=True, sitemap=False)
-    def shop_payment(self, **post):
-        res = super().shop_payment(**post)
+
+    @http.route(['/shop/address/submit'], type='http', methods=['POST'], auth='public', website=True, sitemap=False)
+    def shop_address_submit(self, partner_id=None, address_type='billing', use_delivery_as_billing=None, callback=None, **form_data):
+        res = super().shop_address_submit(partner_id=partner_id, address_type=address_type, use_delivery_as_billing=use_delivery_as_billing, callback=callback, **form_data)
         try:
             order = request.cart
             if order and order.amount_total > 0:
-                # AddShippingInfo and AddPaymentInfo are usually triggered around payment step
-                custom_data = {
+                trigger_backend_capi('AddPaymentInfo', {
                     'value': float(order.amount_total),
                     'currency': order.currency_id.name
-                }
-                trigger_backend_capi('AddShippingInfo', custom_data)
-                trigger_backend_capi('AddPaymentInfo', custom_data)
+                })
         except Exception as e:
-            _logger.warning("CAPI AddPaymentInfo failed: %s", e)
+            _logger.warning("CAPI shop_address_submit failed: %s", e)
+        return res
+
+class GadgetflixCapiPaymentPortal(PaymentPortal):
+    @http.route('/shop/payment/transaction/<int:order_id>', type='jsonrpc', auth='public', website=True)
+    def shop_payment_transaction(self, order_id, access_token, **kwargs):
+        res = super().shop_payment_transaction(order_id, access_token, **kwargs)
+        try:
+            order = request.env['sale.order'].sudo().browse(order_id)
+            if order.exists() and order.amount_total > 0:
+                trigger_backend_capi('Lead', {
+                    'value': float(order.amount_total),
+                    'currency': order.currency_id.name
+                })
+        except Exception as e:
+            _logger.warning("CAPI shop_payment_transaction failed: %s", e)
         return res
 

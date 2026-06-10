@@ -7,6 +7,12 @@ from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
+def _send_capi_post_async(url, headers, params, payload):
+    try:
+        requests.post(url, headers=headers, params=params, json=payload, timeout=3)
+    except Exception as e:
+        _logger.warning("Facebook CAPI Purchase Async Error: %s", e)
+
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
@@ -87,5 +93,9 @@ class SaleOrder(models.Model):
         headers = {'Content-Type': 'application/json'}
         params = {'access_token': website.facebook_capi_token}
         
-        # Fire and forget with short timeout so it doesn't block checkout
-        requests.post(url, headers=headers, params=params, json=payload, timeout=3)
+        # Fire and forget asynchronously in a background thread to prevent blocking checkout page
+        import threading
+        threading.Thread(
+            target=_send_capi_post_async, 
+            args=(url, headers, params, payload)
+        ).start()
