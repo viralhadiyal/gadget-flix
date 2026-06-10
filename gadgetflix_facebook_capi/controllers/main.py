@@ -72,7 +72,7 @@ def trigger_backend_capi(event_name, custom_data=None):
     ).start()
 
 class GadgetflixCapiCart(Cart):
-    @http.route()
+    @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
     def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
         res = super().cart_update(product_id, add_qty, set_qty, **kw)
         try:
@@ -90,7 +90,7 @@ class GadgetflixCapiCart(Cart):
         return res
 
 class GadgetflixCapiWebsiteSale(WebsiteSale):
-    @http.route()
+    @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
     def checkout(self, **post):
         res = super().checkout(**post)
         try:
@@ -105,7 +105,7 @@ class GadgetflixCapiWebsiteSale(WebsiteSale):
             _logger.warning("CAPI InitiateCheckout failed: %s", e)
         return res
 
-    @http.route()
+    @http.route(['/shop/payment'], type='http', auth="public", website=True, sitemap=False)
     def payment(self, **post):
         res = super().payment(**post)
         try:
