@@ -72,21 +72,42 @@ def trigger_backend_capi(event_name, custom_data=None):
     ).start()
 
 class GadgetflixCapiCart(Cart):
-    @http.route(['/shop/cart/update'], type='http', auth="public", methods=['POST'], website=True, csrf=False)
-    def cart_update(self, product_id, add_qty=1, set_qty=0, **kw):
-        res = super().cart_update(product_id, add_qty, set_qty, **kw)
+    @http.route(['/shop/cart/add'], type='jsonrpc', auth='public', methods=['POST'], website=True, sitemap=False)
+    def add_to_cart(self, *args, **kwargs):
+        res = super().add_to_cart(*args, **kwargs)
         try:
-            if add_qty > 0:
+            product_id = kwargs.get('product_id')
+            quantity = float(kwargs.get('quantity', 1.0))
+            if product_id and quantity > 0:
                 product = request.env['product.product'].sudo().browse(int(product_id))
                 if product.exists():
                     trigger_backend_capi('AddToCart', {
                         'content_type': 'product',
                         'content_ids': [str(product.id)],
-                        'value': float(product.list_price * add_qty),
+                        'value': float(product.list_price * quantity),
                         'currency': request.website.currency_id.name
                     })
         except Exception as e:
-            _logger.warning("CAPI AddToCart failed: %s", e)
+            _logger.warning("CAPI add_to_cart failed: %s", e)
+        return res
+
+    @http.route(['/shop/cart/update'], type='jsonrpc', auth='public', methods=['POST'], website=True, sitemap=False)
+    def update_cart(self, *args, **kwargs):
+        res = super().update_cart(*args, **kwargs)
+        try:
+            line_id = kwargs.get('line_id')
+            quantity = float(kwargs.get('quantity', 0.0))
+            if line_id:
+                line = request.env['sale.order.line'].sudo().browse(int(line_id))
+                if line.exists() and line.product_id:
+                    trigger_backend_capi('AddToCart', {
+                        'content_type': 'product',
+                        'content_ids': [str(line.product_id.id)],
+                        'value': float(line.product_id.list_price * quantity),
+                        'currency': request.website.currency_id.name
+                    })
+        except Exception as e:
+            _logger.warning("CAPI update_cart failed: %s", e)
         return res
 
 class GadgetflixCapiWebsiteSale(WebsiteSale):
