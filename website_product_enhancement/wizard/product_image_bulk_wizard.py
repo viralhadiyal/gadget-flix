@@ -14,8 +14,34 @@ class ProductImageBulkWizard(models.TransientModel):
         'ir.attachment',
         'wpe_bulk_tmpl_att_rel',
         'wizard_id', 'attachment_id',
-        string="Template Images",
+        string="Images",
     )
+    template_image_line_ids = fields.One2many(
+        'product.image.bulk.template.line', 'wizard_id', string="Images Preview"
+    )
+    
+    @api.onchange('template_attachment_ids')
+    def _onchange_template_attachment_ids(self):
+        for rec in self:
+            if rec.template_attachment_ids:
+                new_lines = []
+                for att in rec.template_attachment_ids:
+                    is_main = False
+                    if not rec.template_image_line_ids and not new_lines:
+                        is_main = True
+                    new_lines.append((0, 0, {
+                        'image': att.datas,
+                        'image_filename': att.name,
+                        'is_main_image': is_main,
+                    }))
+                lines = [(4, line.id) for line in rec.template_image_line_ids]
+                lines.extend([(0, 0, vals) for _, _, vals in new_lines])
+                rec.template_image_line_ids = lines
+                rec.template_attachment_ids = [(5, 0, 0)]
+    template_image_action = fields.Selection([
+        ('replace', 'Replace Existing Images'),
+        ('add', 'Add/Keep Images')
+    ], string="Action", default='replace')
     variant_line_ids = fields.One2many(
         'product.image.bulk.variant.line', 'wizard_id', string="Variants",
     )
@@ -44,21 +70,22 @@ class ProductImageBulkWizard(models.TransientModel):
         if not self.product_tmpl_id:
             raise UserError(_("No product selected. Please reopen this wizard from a product form."))
 
-        attachments = self.template_attachment_ids
-        if attachments:
-            self.env['product.image'].search([
-                ('product_tmpl_id', '=', self.product_tmpl_id.id),
-                ('product_variant_id', '=', False),
-            ]).unlink()
-            for idx, att in enumerate(attachments):
-                if idx == 0:
-                    self.product_tmpl_id.image_1920 = att.datas
+        if self.template_image_line_ids or self.template_image_action == 'replace':
+            if self.template_image_action == 'replace':
+                self.env['product.image'].search([
+                    ('product_tmpl_id', '=', self.product_tmpl_id.id),
+                    ('product_variant_id', '=', False),
+                ]).unlink()
+
+            for idx, line in enumerate(self.template_image_line_ids):
+                if line.is_main_image:
+                    self.product_tmpl_id.image_1920 = line.image
                 else:
                     self.env['product.image'].create({
-                        'name': att.name or self.product_tmpl_id.name,
+                        'name': line.image_filename or self.product_tmpl_id.name,
                         'product_tmpl_id': self.product_tmpl_id.id,
-                        'image_1920': att.datas,
-                        'sequence': idx,
+                        'image_1920': line.image,
+                        'sequence': idx + 10,
                     })
 
         for vline in self.variant_line_ids:
@@ -69,20 +96,21 @@ class ProductImageBulkWizard(models.TransientModel):
             elif vline.weight:
                 variant.weight = vline.weight
 
-            var_attachments = vline.image_attachment_ids
-            if var_attachments:
-                self.env['product.image'].search([
-                    ('product_variant_id', '=', variant.id),
-                ]).unlink()
-                for idx, att in enumerate(var_attachments):
-                    if idx == 0:
-                        variant.image_variant_1920 = att.datas
+            if vline.variant_image_ids or vline.image_action == 'replace':
+                if vline.image_action == 'replace':
+                    self.env['product.image'].search([
+                        ('product_variant_id', '=', variant.id),
+                    ]).unlink()
+                
+                for idx, line in enumerate(vline.variant_image_ids):
+                    if line.is_main_image:
+                        variant.image_variant_1920 = line.image
                     else:
                         self.env['product.image'].create({
-                            'name': att.name or variant.display_name,
+                            'name': line.image_filename or variant.display_name,
                             'product_variant_id': variant.id,
-                            'image_1920': att.datas,
-                            'sequence': idx,
+                            'image_1920': line.image,
+                            'sequence': idx + 10,
                         })
 
         return {'type': 'ir.actions.act_window_close'}

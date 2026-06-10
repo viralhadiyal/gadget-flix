@@ -19,15 +19,23 @@
                     </div>
 
                     <separator string="① Product Template Images"/>
+                    <group>
+                        <field name="template_image_action" widget="radio" options="{'horizontal': true}"/>
+                    </group>
                     <div class="alert alert-info" role="alert">
                         <i class="fa fa-info-circle"/>
-                        Click
-                        <strong>Upload</strong>
-                        and select <strong>multiple images at once</strong> (hold Ctrl/Cmd to multi-select).
-                        The first file becomes the main image; the rest are saved as extra media.
+                        <strong>Replace Existing Images</strong> clears current extra images before uploading. 
+                        <strong>Add/Keep Images</strong> appends to existing extra images.
                     </div>
-                    <field name="template_attachment_ids"
-                           widget="many2many_binary"/>
+                    <label for="template_attachment_ids" string="Upload Images (Multi-select)"/>
+                    <field name="template_attachment_ids" widget="many2many_binary"/>
+                    <field name="template_image_line_ids">
+                        <list editable="bottom">
+                            <field name="image" widget="image" options="{'size': [64, 64]}"/>
+                            <field name="image_filename"/>
+                            <field name="is_main_image" widget="boolean_toggle"/>
+                        </list>
+                    </field>
 
                     <separator string="② Bulk Weight"/>
                     <group>
@@ -62,15 +70,22 @@
                                 </div>
                                 <group>
                                     <field name="weight"/>
+                                    <field name="image_action" widget="radio" options="{'horizontal': true}"/>
                                 </group>
                                 <div class="alert alert-info" role="alert">
                                     <i class="fa fa-info-circle"/>
                                     Click <strong>Upload</strong> and select multiple image
                                     files at once (hold Ctrl/Cmd to multi-select in file picker).
-                                    The first image becomes the variant's main image.
                                 </div>
-                                <field name="image_attachment_ids"
-                                       widget="many2many_binary"/>
+                                <label for="image_attachment_ids" string="Upload Images (Multi-select)"/>
+                                <field name="image_attachment_ids" widget="many2many_binary"/>
+                                <field name="variant_image_ids">
+                                    <list editable="bottom">
+                                        <field name="image" widget="image" options="{'size': [64, 64]}"/>
+                                        <field name="image_filename"/>
+                                        <field name="is_main_image" widget="boolean_toggle"/>
+                                    </list>
+                                </field>
                                 <field name="product_id" invisible="1"/>
                             </sheet>
                         </form>

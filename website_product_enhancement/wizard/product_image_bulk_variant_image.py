@@ -20,3 +20,4 @@ class ProductImageBulkVariantImage(models.TransientModel):
     sequence = fields.Integer(default=10)
     image = fields.Binary("Image", required=True, attachment=False)
     image_filename = fields.Char("Filename")
+    is_main_image = fields.Boolean("Main Image", default=False)
