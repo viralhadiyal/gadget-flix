@@ -1177,16 +1177,6 @@
                     });
                 }
 
-                // Fire Facebook Pixel for Anti-Yellow Case
-                if (typeof fbq !== 'undefined') {
-                    fbq('track', 'AddToCart', {
-                        content_type: 'product',
-                        content_ids: [state.activeVariantId],
-                        value: state.activePrice * qty,
-                        currency: 'INR' // Assuming INR, or fetch from dataset if available
-                    });
-                }
-
                 document.dispatchEvent(new CustomEvent("add_to_cart_event", {
                     detail: { product_id: state.activeVariantId, quantity: qty }
                 }));
