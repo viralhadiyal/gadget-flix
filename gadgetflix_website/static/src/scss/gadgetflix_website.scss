@@ -4555,52 +4555,159 @@
    ============================================================ */
 
 /* Add to Cart Button */
-.o_wsale_product_page #add_to_cart {
-    height: 52px;
-    border: 1px solid #000 !important;
-    border-radius: 0.375rem !important;
-    background: #000 !important;
+html body #wrap #product_detail #add_to_cart,
+html body .oe_website_sale #add_to_cart {
+    flex: 1;
+    min-width: 200px;
+    background-color: #000 !important;
+    border-color: #000 !important;
     color: #fff !important;
-    font-family: inherit;
+    font-weight: 800 !important;
+    border-radius: 8px !important;
     font-size: 1rem !important;
-    font-weight: 600 !important;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0 24px;
-    white-space: nowrap;
-    transition: all 0.2s ease;
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 52px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 24px !important;
+    white-space: nowrap !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    transition: all 0.2s ease !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    line-height: 1 !important;
 }
-.o_wsale_product_page #add_to_cart:hover {
-    background: #333 !important;
-    border-color: #333 !important;
+
+html body #wrap #product_detail #add_to_cart:hover,
+html body .oe_website_sale #add_to_cart:hover {
+    background-color: #222 !important;
+    border-color: #222 !important;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24) !important;
+}
+
+html body #wrap #product_detail #add_to_cart i.fa,
+html body .oe_website_sale #add_to_cart i.fa {
+    margin-right: 8px !important;
+    font-size: 1.1rem !important;
 }
 
 /* Quantity Input Box */
-.o_wsale_product_page .css_quantity {
-    max-width: 120px !important;
-    height: 52px;
-    border-radius: 0.375rem !important;
-    background: #fff !important;
-    border: 1px solid #dee2e6 !important;
+html body #wrap #product_detail .css_quantity,
+html body .oe_website_sale .css_quantity {
+    display: inline-flex !important;
+    align-items: stretch !important;
+    width: 140px !important;
+    min-width: 140px !important;
+    height: 52px !important;
+    min-height: 52px !important;
+    max-height: 52px !important;
+    border-radius: 8px !important;
+    background-color: #fff !important;
+    border: 1.5px solid #eaeaea !important;
     box-shadow: none !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
 }
 
-.o_wsale_product_page .css_quantity .btn-link {
-    width: 35px;
-    color: #000 !important;
-    border: none !important;
-}
-
-.o_wsale_product_page .css_quantity .quantity {
-    font-size: 1.1rem !important;
-    font-weight: 700 !important;
+html body #wrap #product_detail .css_quantity .input-group-prepend,
+html body #wrap #product_detail .css_quantity .input-group-append,
+html body .oe_website_sale .css_quantity .input-group-prepend,
+html body .oe_website_sale .css_quantity .input-group-append {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
     background: transparent !important;
     border: none !important;
+}
+
+html body #wrap #product_detail .css_quantity .btn-link,
+html body .oe_website_sale .css_quantity .btn-link {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 44px !important;
+    height: 100% !important;
+    color: #000 !important;
+    font-size: 16px !important;
+    text-decoration: none !important;
+    border: none !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    line-height: 1 !important;
+}
+
+html body #wrap #product_detail .css_quantity .btn-link i,
+html body .oe_website_sale .css_quantity .btn-link i {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+html body #wrap #product_detail .css_quantity .btn-link:hover,
+html body .oe_website_sale .css_quantity .btn-link:hover {
+    background-color: #f5f5f5 !important;
+}
+
+html body #wrap #product_detail .css_quantity .quantity,
+html body .oe_website_sale .css_quantity .quantity {
+    flex: 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    font-size: 1.1rem !important;
+    font-weight: 700 !important;
+    text-align: center !important;
+    background-color: transparent !important;
+    border: none !important;
+    border-left: 1px solid #eaeaea !important;
+    border-right: 1px solid #eaeaea !important;
     box-shadow: none !important;
     color: #000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+}
+
+/* Layout Wrapper for Buy Actions */
+#product_detail #add_to_cart_wrap {
+    display: flex !important;
+    align-items: center !important;
+    gap: 16px !important;
+    flex-wrap: wrap;
+    margin-top: 24px !important;
+    width: 100% !important;
+}
+
+/* Mobile responsive */
+@media (max-width: 768px) {
+    #product_detail #add_to_cart_wrap {
+        flex-direction: row !important;
+        align-items: center !important;
+        flex-wrap: nowrap !important;
+        gap: 12px !important;
+    }
+    html body #wrap #product_detail .css_quantity,
+    html body .oe_website_sale .css_quantity {
+        align-self: center !important;
+        width: 130px !important;
+        min-width: 130px !important;
+    }
+    html body #wrap #product_detail #add_to_cart,
+    html body .oe_website_sale #add_to_cart {
+        flex: 1 !important;
+        width: auto !important;
+        min-width: 0 !important;
+        margin-top: 0 !important;
+        padding: 0 12px !important;
+    }
 }
 
 
