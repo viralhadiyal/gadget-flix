@@ -73,11 +73,10 @@ def trigger_backend_capi(event_name, custom_data=None):
 
 class GadgetflixCapiCart(Cart):
     @http.route(['/shop/cart/add'], type='jsonrpc', auth='public', methods=['POST'], website=True, sitemap=False)
-    def add_to_cart(self, *args, **kwargs):
-        res = super().add_to_cart(*args, **kwargs)
+    def add_to_cart(self, product_template_id, product_id, quantity=1.0, uom_id=None, product_custom_attribute_values=None, no_variant_attribute_value_ids=None, linked_products=None, **kwargs):
+        res = super().add_to_cart(product_template_id, product_id, quantity=quantity, uom_id=uom_id, product_custom_attribute_values=product_custom_attribute_values, no_variant_attribute_value_ids=no_variant_attribute_value_ids, linked_products=linked_products, **kwargs)
         try:
-            product_id = kwargs.get('product_id')
-            quantity = float(kwargs.get('quantity', 1.0))
+            quantity = float(quantity)
             if product_id and quantity > 0:
                 product = request.env['product.product'].sudo().browse(int(product_id))
                 if product.exists():
@@ -92,11 +91,10 @@ class GadgetflixCapiCart(Cart):
         return res
 
     @http.route(['/shop/cart/update'], type='jsonrpc', auth='public', methods=['POST'], website=True, sitemap=False)
-    def update_cart(self, *args, **kwargs):
-        res = super().update_cart(*args, **kwargs)
+    def update_cart(self, line_id, quantity, product_id=None, **kwargs):
+        res = super().update_cart(line_id, quantity, product_id=product_id, **kwargs)
         try:
-            line_id = kwargs.get('line_id')
-            quantity = float(kwargs.get('quantity', 0.0))
+            quantity = float(quantity)
             if line_id:
                 line = request.env['sale.order.line'].sudo().browse(int(line_id))
                 if line.exists() and line.product_id:
@@ -112,10 +110,10 @@ class GadgetflixCapiCart(Cart):
 
 class GadgetflixCapiWebsiteSale(WebsiteSale):
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
-    def shop_checkout(self, *args, **kwargs):
-        res = super().shop_checkout(*args, **kwargs)
+    def shop_checkout(self, try_skip_step=None, **query_params):
+        res = super().shop_checkout(try_skip_step=try_skip_step, **query_params)
         try:
-            order = request.website.sale_get_order()
+            order = request.cart
             if order and order.amount_total > 0:
                 trigger_backend_capi('InitiateCheckout', {
                     'value': float(order.amount_total),
@@ -127,10 +125,10 @@ class GadgetflixCapiWebsiteSale(WebsiteSale):
         return res
 
     @http.route(['/shop/payment'], type='http', auth="public", website=True, sitemap=False)
-    def shop_payment(self, *args, **kwargs):
-        res = super().shop_payment(*args, **kwargs)
+    def shop_payment(self, **post):
+        res = super().shop_payment(**post)
         try:
-            order = request.website.sale_get_order()
+            order = request.cart
             if order and order.amount_total > 0:
                 # AddShippingInfo and AddPaymentInfo are usually triggered around payment step
                 custom_data = {

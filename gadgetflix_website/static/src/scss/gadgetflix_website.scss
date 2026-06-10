@@ -4868,9 +4868,15 @@ html body .oe_website_sale .css_quantity .quantity {
 }
 
 /* Make Price Bold in product details page and listing page */
-.gf-product-card__price,
 .o_wsale_product_page .product_price .oe_price {
     font-size: 24px !important;
+    font-weight: 700 !important;
+    color: #000 !important;
+}
+
+/* Smaller price font for horizontal slider / product cards */
+.gf-product-card__price {
+    font-size: 16px !important;
     font-weight: 700 !important;
     color: #000 !important;
 }
