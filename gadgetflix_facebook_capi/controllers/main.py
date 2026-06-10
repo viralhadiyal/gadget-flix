@@ -91,8 +91,8 @@ class GadgetflixCapiCart(Cart):
 
 class GadgetflixCapiWebsiteSale(WebsiteSale):
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
-    def checkout(self, **post):
-        res = super().checkout(**post)
+    def shop_checkout(self, *args, **kwargs):
+        res = super().shop_checkout(*args, **kwargs)
         try:
             order = request.website.sale_get_order()
             if order and order.amount_total > 0:
@@ -106,8 +106,8 @@ class GadgetflixCapiWebsiteSale(WebsiteSale):
         return res
 
     @http.route(['/shop/payment'], type='http', auth="public", website=True, sitemap=False)
-    def payment(self, **post):
-        res = super().payment(**post)
+    def shop_payment(self, *args, **kwargs):
+        res = super().shop_payment(*args, **kwargs)
         try:
             order = request.website.sale_get_order()
             if order and order.amount_total > 0:
