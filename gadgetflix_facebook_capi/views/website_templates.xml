@@ -45,7 +45,7 @@
 
     <!-- Purchase Event on Confirmation Page (Frontend Deduplication) -->
     <template id="facebook_capi_purchase" inherit_id="website_sale.confirmation">
-        <xpath expr="//div[@id='wrap']" position="after">
+        <xpath expr="//t[@t-call='website_sale.checkout_layout']" position="inside">
             <script type="text/javascript">
                 if (typeof fbq !== 'undefined') {
                     // This event_id MUST match exactly the one sent by the Python backend API
