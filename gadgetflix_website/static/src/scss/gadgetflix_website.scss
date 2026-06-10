@@ -4740,7 +4740,7 @@ html body .oe_website_sale .css_quantity .quantity {
 }
 
 .gf-cart-line img,
-.gf-cart-line .rounded.border {
+.gf-cart-line a .rounded.border {
     width: 80px !important;
     height: 80px !important;
     min-width: 80px !important;
@@ -4755,7 +4755,7 @@ html body .oe_website_sale .css_quantity .quantity {
     background-color: #fff !important;
 }
 
-.gf-cart-line .rounded.border img {
+.gf-cart-line a .rounded.border img {
     width: 100% !important;
     height: 100% !important;
     min-width: 0 !important;
