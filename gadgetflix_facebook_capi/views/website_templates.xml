@@ -2,7 +2,7 @@
 <odoo>
     <!-- ViewContent Event on Product Page -->
     <template id="facebook_capi_product_view" inherit_id="website_sale.product">
-        <xpath expr="//div[@id='product_detail']" position="after">
+        <xpath expr="//section[@id='product_detail']" position="after">
             <script type="text/javascript">
                 if (typeof fbq !== 'undefined') {
                     fbq('track', 'ViewContent', {
