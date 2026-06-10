@@ -1125,6 +1125,17 @@
                 ? '<i class="fa fa-check-circle" aria-hidden="true"></i> In stock'
                 : '<i class="fa fa-times-circle" aria-hidden="true"></i> Unavailable';
         }
+
+        // Fire Facebook Pixel ViewContent when they view a specific model
+        if (typeof fbq !== 'undefined' && state.activeVariantId) {
+            fbq('track', 'ViewContent', {
+                content_name: state.activeBrandName + " " + state.activeModelName,
+                content_ids: [state.activeVariantId],
+                content_type: 'product',
+                value: state.activePrice,
+                currency: 'INR'
+            });
+        }
     }
 
     // ── Qty stepper ────────────────────────────────────────────────────────
@@ -1163,6 +1174,16 @@
                         badge.classList.remove('d-none');
                         const cartIconElement = badge.closest('li.o_wsale_my_cart');
                         if (cartIconElement) cartIconElement.classList.remove('d-none');
+                    });
+                }
+
+                // Fire Facebook Pixel for Anti-Yellow Case
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'AddToCart', {
+                        content_type: 'product',
+                        content_ids: [state.activeVariantId],
+                        value: state.activePrice * qty,
+                        currency: 'INR' // Assuming INR, or fetch from dataset if available
                     });
                 }
 

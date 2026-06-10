@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ViewContent Event on Product Page -->
+    <template id="facebook_capi_product_view" inherit_id="website_sale.product">
+        <xpath expr="//div[@id='product_detail']" position="after">
+            <script type="text/javascript">
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'ViewContent', {
+                        content_name: '<t t-esc="product.name" />',
+                        content_ids: ['<t t-esc="product.id" />'],
+                        content_type: 'product',
+                        value: <t t-esc="combination_info['price']" />,
+                        currency: '<t t-esc="website.currency_id.name" />'
+                    });
+                }
+            </script>
+        </xpath>
+    </template>
+
+    <!-- Checkout Funnel Events (InitiateCheckout) -->
+    <template id="facebook_capi_checkout_funnel" inherit_id="website_sale.checkout_layout">
+        <xpath expr="//div[hasclass('oe_website_sale')]" position="after">
+            <script type="text/javascript">
+                if (typeof fbq !== 'undefined') {
+                    var cartTotal = <t t-esc="website_sale_order.amount_total if website_sale_order else 0.0" />;
+                    var cartCurrency = '<t t-esc="website.currency_id.name" />';
+                    var numItems = <t t-esc="website_sale_order.cart_quantity if website_sale_order else 0" />;
+
+                    if (window.location.pathname.indexOf('/shop/checkout') !== -1 || window.location.pathname.indexOf('/shop/address') !== -1) {
+                        // User started checkout (One-page checkout)
+                        fbq('track', 'InitiateCheckout', {
+                            value: cartTotal,
+                            currency: cartCurrency,
+                            num_items: numItems
+                        });
+                        
+                        // Pass these to global window object so our JS can use them when they click Pay
+                        window.gf_fb_cartTotal = cartTotal;
+                        window.gf_fb_cartCurrency = cartCurrency;
+                    }
+                }
+            </script>
+        </xpath>
+    </template>
+
+    <!-- Purchase Event on Confirmation Page (Frontend Deduplication) -->
+    <template id="facebook_capi_purchase" inherit_id="website_sale.confirmation">
+        <xpath expr="//div[@id='wrap']" position="after">
+            <script type="text/javascript">
+                if (typeof fbq !== 'undefined') {
+                    // This event_id MUST match exactly the one sent by the Python backend API
+                    // so Facebook can correctly deduplicate them and not double-count the sale.
+                    fbq('track', 'Purchase', {
+                        value: <t t-esc="order.amount_total" />,
+                        currency: '<t t-esc="order.currency_id.name" />',
+                        content_type: 'product',
+                        content_ids: [<t t-foreach="order.order_line" t-as="line">'<t t-esc="line.product_id.id" />',</t>]
+                    }, {
+                        eventID: 'ORDER_<t t-esc="order.id" />'
+                    });
+                }
+            </script>
+        </xpath>
+    </template>
+</odoo>
