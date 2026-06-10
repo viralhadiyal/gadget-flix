@@ -152,7 +152,9 @@
            t-value="request.env['product.public.category'].sudo().search([('gadgetflix_show_accessories_menu', '=', True), ('has_published_products', '=', True)], order='sequence, id')"/>
         <t t-set="shop_by_device_menus"
            t-value="request.env['gadgetflix.shop.by.device.menu'].sudo().search(['&amp;', ('active', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website.id)], order='sequence, id').filtered(lambda menu: menu.link_ids.filtered(lambda link: link.active))"/>
-        <header class="gf-header o_no_autohide_menu" data-anchor="true">
+        <header id="top" class="gf-header o_no_autohide_menu" data-anchor="true">
+            <!-- Dummy top_menu to prevent Odoo core auto_hide_menu.js from crashing -->
+            <div class="top_menu d-none"></div>
             <div class="gf-container gf-header__inner">
                 <button type="button" class="gf-icon-button gf-menu-button" data-gf-menu-toggle="1" aria-label="Open menu" aria-expanded="false">
                     <i class="fa fa-bars" aria-hidden="true"></i>
