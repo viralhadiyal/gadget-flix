@@ -61,17 +61,16 @@
             <attribute name="t-foreach">sorted(product.valid_product_template_attribute_line_ids, key=lambda ptal: not (len(ptal.product_template_value_ids._only_active()) == 1 and not ptal.product_template_value_ids._only_active()[0].is_custom and ptal.attribute_id.display_type != 'multi'))</attribute>
         </xpath>
 
-        <!-- XPath 2: For the outer <li>, replace the t-attf-class so that:
-             - single-value non-custom non-multi attrs → visible + gf-single-value-attr
-             - everything else → no extra class (always visible, original interactive) -->
-        <xpath expr="//li[@name='variant_attribute']" position="attributes">
-            <attribute name="t-attf-class">variant_attribute #{
-                'gf-single-value-attr' if (
-                    single
-                    and not ptavs[0].is_custom
-                    and attribute.display_type != 'multi'
-                ) else ''
-            }</attribute>
+        <!-- XPath 2: Inject a clean, simple text display for single-value attributes BEFORE the hidden original li -->
+        <xpath expr="//li[@name='variant_attribute']" position="before">
+            <li t-if="single and not ptavs[0].is_custom and attribute.display_type != 'multi'" class="gf-single-value-attr" style="list-style-type: none;">
+                <div class="gf-single-display" style="font-size: 15px;">
+                    <strong t-field="attribute.name" style="color: #000000; font-weight: 800;"/>
+                    <span style="margin: 0 6px; color: #000000;">-</span>
+                    <span t-field="ptavs[0].name" style="color: #222222;"/>
+                </div>
+                <hr style="border-top: 1px solid #eaeaea; margin: 16px 0 0 0;"/>
+            </li>
         </xpath>
 
     </template>
@@ -1238,17 +1237,48 @@
                 <a href="/shop" class="btn w-100 mt-3 py-2 fw-bold text-uppercase" style="background-color: #000; color: #fff; border-radius: 8px;" data-bs-dismiss="offcanvas">Continue Shopping</a>
             </div>
             <div t-else="" class="d-flex flex-column flex-grow-1 overflow-hidden">
-                <div class="flex-grow-1 overflow-auto p-3">
+                <div class="flex-grow-1 overflow-auto p-3" id="gf_cart_lines_container">
                 <t t-foreach="website_sale_order.website_order_line" t-as="line">
-                    <div class="d-flex mb-3 border-bottom pb-3">
-                        <span t-field="line.product_id.image_128" t-options="{'widget': 'image', 'class': 'rounded border', 'style': 'width: 80px; height: 80px; object-fit: contain;'}"/>
+                    <div class="d-flex mb-3 border-bottom pb-3 gf-cart-line" t-att-data-line-id="line.id">
+                        <t t-call="website_sale.cart_line_product_link">
+                            <t t-if="not line._is_sellable() and line.product_id.image_128">
+                                <img
+                                    t-att-src="image_data_uri(line.product_id.image_128)"
+                                    class="rounded border"
+                                    style="width: 80px; height: 80px; object-fit: contain;"
+                                    t-att-alt="line.name_short"
+                                />
+                            </t>
+                            <t t-else="">
+                                <div
+                                    t-field="line.product_id.image_128"
+                                    t-options="{'widget': 'image', 'class': 'rounded border', 'style': 'width: 80px; height: 80px; object-fit: contain;'}"
+                                />
+                            </t>
+                        </t>
                         <div class="ms-3 flex-grow-1">
                             <div class="d-flex justify-content-between align-items-start">
                                 <h6 class="mb-1 text-break pe-2" t-out="line.name_short"/>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mt-2">
-                                <span class="text-muted small">Qty: <t t-out="line.product_uom_qty"/></span>
-                                <span class="fw-bold" t-field="line.price_reduce_taxexcl" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                                <t t-if="line._is_sellable()">
+                                    <div class="input-group input-group-sm border rounded" style="max-width: 110px; border-color: #dee2e6 !important;">
+                                        <button class="btn btn-link text-dark text-decoration-none shadow-none px-2 gf-cart-qty-btn gf-cart-qty-minus" type="button" style="width: 32px;">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                        <input type="text" class="form-control text-center gf-cart-qty-input fw-bold px-1 border-0 shadow-none bg-transparent" 
+                                               t-att-value="int(line.product_uom_qty)" 
+                                               t-att-data-line-id="line.id" 
+                                               t-att-data-product-id="line.product_id.id" />
+                                        <button class="btn btn-link text-dark text-decoration-none shadow-none px-2 gf-cart-qty-btn gf-cart-qty-plus" type="button" style="width: 32px;">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                </t>
+                                <t t-else="">
+                                    <span class="text-muted small gf-cart-qty-text" t-att-data-line-id="line.id">Qty: <t t-out="line.product_uom_qty"/></span>
+                                </t>
+                                <span class="fw-bold gf-line-price" t-att-data-line-id="line.id" t-field="line.price_subtotal" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                             </div>
                         </div>
                     </div>
@@ -1257,13 +1287,30 @@
             <div class="p-3 bg-light border-top">
                 <div class="d-flex justify-content-between mb-3 fs-5 fw-bold">
                     <span>Subtotal</span>
-                    <span t-field="website_sale_order.amount_untaxed" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
+                    <span id="gf_cart_subtotal" t-field="website_sale_order.amount_untaxed" t-options="{'widget': 'monetary', 'display_currency': website_sale_order.currency_id}"/>
                 </div>
                 <a href="/shop/checkout" class="btn w-100 mb-2 py-2 fw-bold shadow-sm" style="background-color: #000; color: #fff; border-radius: 8px;">Checkout</a>
                 <button type="button" class="btn w-100 py-2 fw-bold" style="background-color: #fff; color: #000; border: 1px solid #000; border-radius: 8px;" data-bs-dismiss="offcanvas">Continue Shopping</button>
             </div>
             </div>
         </div>
+    </template>
+
+    <template id="gadgetflix_payment_state_header" inherit_id="payment.state_header" name="Gadgetflix Payment Loader">
+        <xpath expr="//div[@name='o_payment_status_alert']" position="before">
+            <t t-if="is_processing and alert_style != 'danger'">
+                <div class="gf-payment-loader-wrapper d-flex flex-column align-items-center justify-content-center" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(255, 255, 255, 0.95); z-index: 999999;">
+                    <div class="spinner-border mb-3" role="status" style="width: 4rem; height: 4rem; color: #000; border-width: 0.35em;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <h3 class="mb-2" style="font-weight: 800;">Processing your payment...</h3>
+                    <p class="text-muted" style="font-size: 1.1rem;">Please do not refresh or close this page.</p>
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//div[@name='o_payment_status_alert']" position="attributes">
+            <attribute name="t-attf-class">{{o_payment_status_alert_class}} #{'d-none' if is_processing and alert_style != 'danger' else ''}</attribute>
+        </xpath>
     </template>
 
 </odoo>

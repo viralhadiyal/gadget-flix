@@ -29,6 +29,7 @@
     "assets": {
         "web.assets_frontend": [
             "gadgetflix_website/static/src/scss/gadgetflix_website.scss",
+            "gadgetflix_website/static/src/scss/anti_yellow_case.scss",
             "gadgetflix_website/static/src/js/gadgetflix_website.js",
             "gadgetflix_website/static/src/js/cart_service_patch.js",
         ],

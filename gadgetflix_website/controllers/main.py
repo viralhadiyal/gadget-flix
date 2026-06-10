@@ -103,7 +103,7 @@ class WebsiteSaleShop(Delivery):
             request.session['sale_order_id'] = None
             order = request.cart
         values = {
-            'website_sale_order': order,
+            'website_sale_order': order.sudo(),
             'date': fields.Date.today(),
             'suggested_products': [],
         }

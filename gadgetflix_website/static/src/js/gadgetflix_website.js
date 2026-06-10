@@ -805,7 +805,6 @@
     const heroImg         = document.getElementById("gf-ayc-hero-img");
     const priceEl         = document.getElementById("gf-ayc-price");
     const availEl         = document.getElementById("gf-ayc-avail");
-    const hintEl          = document.getElementById("gf-ayc-hint");
     const qtyInput        = document.getElementById("gf-ayc-qty");
     const qtyDec          = document.getElementById("gf-ayc-qty-dec");
     const qtyInc          = document.getElementById("gf-ayc-qty-inc");
@@ -898,10 +897,6 @@
             imgEl.style.opacity = "1";
         };
         tmp.src = url;
-    };
-
-    const setHint = function (msg) {
-        if (hintEl) hintEl.textContent = msg;
     };
 
     const updateThumbnails = function (urls) {
@@ -1034,7 +1029,6 @@
             if (modelDropdown) modelDropdown.classList.add("gf-ayc-dropdown--disabled");
             if (modelSpinner) modelSpinner.hidden = false;
             setButtonsDisabled(true);
-            setHint("Loading models…");
 
             // Fetch models
             rpc("/gadgetflix/anti-yellow/get_models", { product_id: productId })
@@ -1042,7 +1036,6 @@
                     if (modelSpinner) modelSpinner.hidden = true;
                     if (!models || !models.length) {
                         if (modelLabel) modelLabel.textContent = "No models available";
-                        setHint("No models found for this brand.");
                         return;
                     }
                     // Populate model list
@@ -1103,6 +1096,11 @@
         const name = item.dataset.modelName;
         if (modelLabel) modelLabel.textContent = name;
 
+        const titleModelSpan = document.getElementById("gf-ayc-title-model");
+        if (titleModelSpan) {
+            titleModelSpan.textContent = " - " + name;
+        }
+
         state.activeVariantId    = parseInt(item.dataset.variantId, 10);
         state.activeProductId    = parseInt(item.dataset.productId, 10);
         state.activeModelValueId = parseInt(item.dataset.modelValueId, 10);
@@ -1127,7 +1125,6 @@
                 ? '<i class="fa fa-check-circle" aria-hidden="true"></i> In stock'
                 : '<i class="fa fa-times-circle" aria-hidden="true"></i> Unavailable';
         }
-        setHint(state.activeVariantId ? "Ready to add to cart." : "This model is currently unavailable.");
     }
 
     // ── Qty stepper ────────────────────────────────────────────────────────
@@ -1155,9 +1152,20 @@
         if (cartBtn) cartBtn.querySelector("span").textContent = "Adding…";
 
         cartUpdate(state.activeProductId, state.activeVariantId, qty)
-            .then(function () {
+            .then(function (data) {
                 state.loading = false;
                 if (cartBtn) cartBtn.querySelector("span").textContent = "Added!";
+                
+                if (data && data.cart_quantity !== undefined) {
+                    sessionStorage.setItem("website_sale_cart_quantity", data.cart_quantity);
+                    document.querySelectorAll('.my_cart_quantity').forEach(badge => {
+                        badge.textContent = data.cart_quantity;
+                        badge.classList.remove('d-none');
+                        const cartIconElement = badge.closest('li.o_wsale_my_cart');
+                        if (cartIconElement) cartIconElement.classList.remove('d-none');
+                    });
+                }
+
                 document.dispatchEvent(new CustomEvent("add_to_cart_event", {
                     detail: { product_id: state.activeVariantId, quantity: qty }
                 }));
@@ -1195,55 +1203,125 @@
             firstBrand.click();
         }
     }
+})();
 
-    // ── Global Offcanvas Cart Listener ─────────────────────────────────────
+// ── Global Offcanvas Cart Listener ─────────────────────────────────────
+(function () {
+    "use strict";
+
+    let isFetchingMiniCart = false;
+    let isUpdatingQuantity = false;
+
+    const rpc = function (url, params) {
+        return fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "Accept": "application/json" },
+            credentials: "same-origin",
+            body: JSON.stringify({ jsonrpc: "2.0", method: "call", id: Date.now(), params: params || {} }),
+        }).then(r => r.json()).then(r => {
+            if (r.error) throw new Error((r.error.data && r.error.data.message) || r.error.message);
+            return r.result;
+        });
+    };
+
+    const fetchMiniCart = function() {
+        if (isFetchingMiniCart) return;
+        isFetchingMiniCart = true;
+        
+        const loadingEl = document.getElementById('gf_cart_loading');
+        if (loadingEl) loadingEl.classList.remove('d-none');
+
+        fetch('/shop/cart/mini')
+            .then(res => res.text())
+            .then(html => {
+                const doc = new DOMParser().parseFromString(html, "text/html");
+                const newContentEl = doc.body;
+                const contentEl = document.getElementById('gf_cart_content');
+                
+                if (!newContentEl || !contentEl) return;
+                
+                const newContainer = newContentEl.querySelector('#gf_cart_lines_container');
+                const oldContainer = contentEl.querySelector('#gf_cart_lines_container');
+                
+                if (!newContainer || !oldContainer) {
+                    contentEl.innerHTML = newContentEl.innerHTML;
+                    return;
+                }
+
+                // Update header and subtotal
+                const newHeader = newContentEl.querySelector('h5');
+                const oldHeader = contentEl.querySelector('h5');
+                if (newHeader && oldHeader) oldHeader.innerHTML = newHeader.innerHTML;
+
+                const newSubtotal = newContentEl.querySelector('#gf_cart_subtotal');
+                const oldSubtotal = contentEl.querySelector('#gf_cart_subtotal');
+                if (newSubtotal && oldSubtotal) oldSubtotal.innerHTML = newSubtotal.innerHTML;
+
+                // Sync lines safely without destroying inputs
+                const oldLines = Array.from(oldContainer.querySelectorAll('.gf-cart-line'));
+                const newLines = Array.from(newContainer.querySelectorAll('.gf-cart-line'));
+                
+                oldLines.forEach(oldLine => {
+                    if (!newContainer.querySelector(`.gf-cart-line[data-line-id="${oldLine.dataset.lineId}"]`)) {
+                        oldLine.remove();
+                    }
+                });
+                
+                newLines.forEach((newLine, index) => {
+                    const oldLine = oldContainer.querySelector(`.gf-cart-line[data-line-id="${newLine.dataset.lineId}"]`);
+                    if (oldLine) {
+                        const newPrice = newLine.querySelector('.gf-line-price');
+                        const oldPrice = oldLine.querySelector('.gf-line-price');
+                        if (newPrice && oldPrice) oldPrice.innerHTML = newPrice.innerHTML;
+                        
+                        const newQtyText = newLine.querySelector('.gf-cart-qty-text');
+                        const oldQtyText = oldLine.querySelector('.gf-cart-qty-text');
+                        if (newQtyText && oldQtyText) oldQtyText.innerHTML = newQtyText.innerHTML;
+                    } else {
+                        if (index === 0) oldContainer.prepend(newLine);
+                        else {
+                            const prevLine = oldContainer.querySelector(`.gf-cart-line[data-line-id="${newLines[index - 1].dataset.lineId}"]`);
+                            if (prevLine) prevLine.after(newLine);
+                            else oldContainer.appendChild(newLine);
+                        }
+                    }
+                });
+            })
+            .finally(() => {
+                isFetchingMiniCart = false;
+                if (loadingEl) loadingEl.classList.add('d-none');
+            });
+    };
+
     const openOffcanvasCart = function () {
         const offcanvasEl = document.getElementById('gf_cart_offcanvas');
         if (!offcanvasEl) return;
         
-        // Show loading spinner
-        const loadingEl = document.getElementById('gf_cart_loading');
-        if (loadingEl) loadingEl.classList.remove('d-none');
-        
-        // Open Bootstrap offcanvas
         let bsOffcanvas = window.Offcanvas.getInstance(offcanvasEl);
         if (!bsOffcanvas) {
             bsOffcanvas = new window.Offcanvas(offcanvasEl);
         }
         bsOffcanvas.show();
-
-        // Fetch mini cart HTML
-        fetch('/shop/cart/mini')
-            .then(res => res.text())
-            .then(html => {
-                const contentEl = document.getElementById('gf_cart_content');
-                if (contentEl) contentEl.innerHTML = html;
-                if (loadingEl) loadingEl.classList.add('d-none');
-            })
-            .catch(err => {
-                console.error("[GF] Failed to load mini cart content", err);
-                if (loadingEl) loadingEl.classList.add('d-none');
-            });
+        fetchMiniCart(false);
     };
 
-    // Listen on the window level in capture phase to catch non-bubbling events 
-    // dispatched on .oe_website_sale by Odoo's native CartService
     window.addEventListener("add_to_cart_event", function () {
-        openOffcanvasCart();
+        if (!isUpdatingQuantity) {
+            openOffcanvasCart();
+        }
     }, true);
 
-    // Ultimate fallback: Observe Odoo's native cart badge for changes.
-    // If the cart quantity updates, we know an item was just added/removed.
     document.addEventListener("DOMContentLoaded", function () {
         const cartBadges = document.querySelectorAll('.my_cart_quantity');
         cartBadges.forEach(badge => {
             let lastVal = badge.textContent.trim();
             const observer = new MutationObserver(() => {
                 const newVal = badge.textContent.trim();
-                // Only open if the quantity actually increased (item added)
                 if (newVal !== lastVal) {
                     if (parseInt(newVal) > parseInt(lastVal || 0)) {
-                        openOffcanvasCart();
+                        if (!isUpdatingQuantity) {
+                            openOffcanvasCart();
+                        }
                     }
                     lastVal = newVal;
                 }
@@ -1251,7 +1329,6 @@
             observer.observe(badge, { childList: true, characterData: true, subtree: true });
         });
 
-        // Also hijack standard cart link clicks to open offcanvas
         const cartLinks = document.querySelectorAll('.o_wsale_my_cart a, a[href="/shop/cart"]');
         cartLinks.forEach(link => {
             link.addEventListener('click', function(e) {
@@ -1261,4 +1338,67 @@
         });
     });
 
+    const updateOffcanvasQuantity = function (input, newQty) {
+        if (!input) return;
+        const lineId = parseInt(input.dataset.lineId, 10);
+        const productId = parseInt(input.dataset.productId, 10);
+        
+        isUpdatingQuantity = true;
+        const loadingEl = document.getElementById('gf_cart_loading');
+        if (loadingEl) loadingEl.classList.remove('d-none');
+        input.disabled = true;
+
+        rpc('/shop/cart/update', {
+            line_id: lineId,
+            product_id: productId,
+            quantity: newQty,
+        }).then(function(data) {
+            if (data && data.cart_quantity !== undefined) {
+                sessionStorage.setItem("website_sale_cart_quantity", data.cart_quantity);
+                document.querySelectorAll('.my_cart_quantity').forEach(b => {
+                    b.textContent = data.cart_quantity;
+                    b.classList.remove('d-none');
+                    const cartIconElement = b.closest('li.o_wsale_my_cart');
+                    if (cartIconElement) cartIconElement.classList.remove('d-none');
+                });
+            }
+            
+            // Re-fetch mini cart while preserving focus
+            fetchMiniCart();
+        }).catch(function(err) {
+            console.error("[GF] Failed to update cart quantity", err);
+            if (loadingEl) loadingEl.classList.add('d-none');
+        }).finally(() => {
+            input.disabled = false;
+            setTimeout(() => { isUpdatingQuantity = false; }, 100);
+        });
+    };
+
+    document.addEventListener('click', function(e) {
+        const btn = e.target.closest('.gf-cart-qty-btn');
+        if (!btn) return;
+        e.preventDefault();
+        
+        const input = btn.parentElement.querySelector('.gf-cart-qty-input');
+        if (!input || input.disabled) return;
+        
+        let qty = parseInt(input.value, 10) || 0;
+        if (btn.classList.contains('gf-cart-qty-minus')) {
+            qty = Math.max(0, qty - 1);
+        } else {
+            qty += 1;
+        }
+        
+        input.value = qty;
+        updateOffcanvasQuantity(input, qty);
+    });
+
+    document.addEventListener('change', function(e) {
+        if (!e.target.classList.contains('gf-cart-qty-input')) return;
+        const input = e.target;
+        let qty = parseInt(input.value, 10) || 0;
+        if (qty < 0) qty = 0;
+        input.value = qty;
+        updateOffcanvasQuantity(input, qty);
+    });
 })();

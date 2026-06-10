@@ -39,10 +39,10 @@
 
                             <!-- Product title + badge -->
                             <div class="gf-ayc-pdp__title-row">
-                                <span class="gf-ayc-pdp__badge">
-                                    <i class="fa fa-shield" aria-hidden="true"/> Lifetime Anti-Yellow Warranty
+                                <span class="gf-ayc-pdp__badge badge rounded-pill px-3 py-2 mb-2 d-inline-block shadow-sm">
+                                    <i class="fa fa-shield me-1" aria-hidden="true"/> Lifetime Anti-Yellow Warranty
                                 </span>
-                                <h1 class="gf-ayc-pdp__title" style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.5px;">Anti-Yellow Magsafe Clear Case</h1>
+                                <h1 class="gf-ayc-pdp__title" style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.5px;">Anti-Yellow Magsafe Clear Case<span id="gf-ayc-title-model"></span></h1>
                                 <p class="gf-ayc-pdp__tagline mt-2" style="font-size: 1.1rem;">
                                     🎁 3 Free Gifts With Every Order
                                 </p>
@@ -148,7 +148,7 @@
 
                             <!-- Qty + Add to Cart + Buy Now -->
                             <div class="gf-ayc-buy" id="gf-ayc-buy">
-                                <div id="add_to_cart_wrap" class="d-flex flex-nowrap align-items-center gap-2 mb-3">
+                                <div id="add_to_cart_wrap" class="d-flex flex-nowrap align-items-center gap-2">
                                     <div class="css_quantity input-group d-inline-flex align-middle border bg-white" style="max-width: 120px; height: 52px; border-radius: 0.375rem;">
                                         <button type="button" class="btn btn-link pe-2 border-0 text-dark" id="gf-ayc-qty-dec" aria-label="Remove one" title="Remove one" style="width: 35px;">
                                             <i class="fa fa-minus"></i>
@@ -158,15 +158,11 @@
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </div>
-                                    <button type="button" id="gf-ayc-add-to-cart" class="btn btn-dark flex-grow-1" style="height: 52px; font-weight: 600; font-size: 1rem; border-radius: 0.375rem; text-transform: uppercase; letter-spacing: 0.5px; white-space: nowrap; padding: 0 10px;" disabled="disabled">
+                                    <button type="button" id="gf-ayc-add-to-cart" class="gf-ayc-buy__cart-btn flex-grow-1" disabled="disabled">
                                         <i class="fa fa-shopping-cart me-2" aria-hidden="true"/>
                                         <span>Add to Cart</span>
                                     </button>
                                 </div>
-
-                                <p class="text-muted small mt-2 mb-0" id="gf-ayc-hint">
-                                    Select a brand and model to add to cart.
-                                </p>
                             </div>
 
                             <!-- Trust badges -->
@@ -205,45 +201,6 @@
                     </div>
                 </section>
 
-                <!-- ── Features strip ─────────────────────────── -->
-                <section class="gf-ayc-features">
-                    <div class="gf-container">
-                        <div class="gf-ayc-features__grid">
-                            <div class="gf-ayc-feature">
-                                <span class="gf-ayc-feature__icon">
-                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                        <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-                                        <path d="M4.5 7.8L12 12l7.5-4.2M12 12v8.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-                                    </svg>
-                                </span>
-                                <strong>5-Layer UV Shield</strong>
-                                <span>Military-grade UV blocking built into the material itself</span>
-                            </div>
-                            <div class="gf-ayc-feature">
-                                <span class="gf-ayc-feature__icon">
-                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                        <circle cx="12" cy="12" r="8.5" stroke="currentColor" stroke-width="1.8"/>
-                                        <path d="M8.5 12.5l2.5 2.5 4.5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </span>
-                                <strong>Crystal Clarity</strong>
-                                <span>High-transparency polycarbonate that showcases your phone</span>
-                            </div>
-
-                            <div class="gf-ayc-feature">
-                                <span class="gf-ayc-feature__icon">
-                                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                        <path d="M12 21c-4.4-1.3-8-6-8-11V6l8-4 8 4v4c0 5-3.6 9.7-8 11z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
-                                        <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-                                    </svg>
-                                </span>
-                                <strong>Lifetime Warranty</strong>
-                                <span>If it ever yellows, we replace it — free, no questions asked</span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
                 <!-- ── Lifestyle / Product Showcase ─────────────────────────── -->
                 <section class="gf-ayc-showcase">
                     <div class="gf-container">
@@ -251,34 +208,20 @@
                             <h2>Pure Clarity. Zero Yellowing.</h2>
                             <p>See your phone exactly as it was meant to be seen. Our crystal-clear design perfectly showcases every curve.</p>
                         </div>
-                        <div class="row g-4 justify-content-center">
-                            <!-- First Row: 3 Images -->
-                            <div class="col-12 col-md-4">
-                                <div class="gf-ayc-showcase__item">
-                                    <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_1.png" alt="Clear Case 1" loading="lazy"/>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4">
-                                <div class="gf-ayc-showcase__item">
-                                    <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_2.png" alt="Clear Case 2" loading="lazy"/>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-4">
-                                <div class="gf-ayc-showcase__item">
-                                    <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_3.png" alt="Clear Case 3" loading="lazy"/>
-                                </div>
-                            </div>
-
-                            <!-- Second Row: 2 Images -->
-                            <div class="col-12 col-md-5">
-                                <div class="gf-ayc-showcase__item">
-                                    <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_4.png" alt="Clear Case 4" loading="lazy"/>
-                                </div>
-                            </div>
-                            <div class="col-12 col-md-5">
-                                <div class="gf-ayc-showcase__item">
-                                    <img src="/gadgetflix_website/static/src/img/anti_yellow_no_border_5.png" alt="Clear Case 5" loading="lazy"/>
-                                </div>
+                        <div class="gf-ayc-marquee">
+                            <div class="gf-ayc-marquee-track">
+                                <!-- Original Set -->
+                                <t t-foreach="[1, 2, 3, 4, 5]" t-as="i">
+                                    <div class="gf-ayc-marquee-item">
+                                        <img t-attf-src="/gadgetflix_website/static/src/img/anti_yellow_no_border_#{i}.png" t-attf-alt="Clear Case #{i}" loading="lazy"/>
+                                    </div>
+                                </t>
+                                <!-- Duplicated Set for infinite loop -->
+                                <t t-foreach="[1, 2, 3, 4, 5]" t-as="i">
+                                    <div class="gf-ayc-marquee-item">
+                                        <img t-attf-src="/gadgetflix_website/static/src/img/anti_yellow_no_border_#{i}.png" t-attf-alt="Clear Case #{i}" loading="lazy"/>
+                                    </div>
+                                </t>
                             </div>
                         </div>
                     </div>
@@ -286,6 +229,138 @@
 
                 <!-- ── Official Warranty Section ─────────────────────────── -->
                 <t t-call="gadgetflix_website.gadgetflix_warranty"/>
+
+
+                <!-- ── FAQ Section ─────────────────────────────────────────── -->
+                <section class="gf-ayc-faq-section">
+                    <div class="gf-container">
+                        <div class="gf-ayc-faq-header text-center">
+                            <span class="gf-badge mb-3">Got Questions?</span>
+                            <h2>Frequently Asked Questions</h2>
+                        </div>
+                        <div class="accordion gf-ayc-accordion" id="ayc-faq-accordion">
+
+                            <!-- FAQ 1 -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="faq-heading-1">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-1" aria-expanded="false" aria-controls="faq-collapse-1">
+                                        What makes this case different from others?
+                                    </button>
+                                </h2>
+                                <div id="faq-collapse-1" class="accordion-collapse collapse" aria-labelledby="faq-heading-1" data-bs-parent="#ayc-faq-accordion">
+                                    <div class="accordion-body">
+                                        Our case is built with advanced UV Shield Technology, designed to prevent yellowing over time. This ensures your phone case stays crystal clear and maintains its fresh look for much longer compared to standard clear cases.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 2 -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="faq-heading-2">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-2" aria-expanded="false" aria-controls="faq-collapse-2">
+                                        What is the anti-yellowing guarantee?
+                                    </button>
+                                </h2>
+                                <div id="faq-collapse-2" class="accordion-collapse collapse" aria-labelledby="faq-heading-2" data-bs-parent="#ayc-faq-accordion">
+                                    <div class="accordion-body">
+                                        We provide a lifetime anti-yellowing guarantee. If your case ever develops yellowing, you are eligible for a one-time free replacement—no hassle.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 4 -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="faq-heading-4">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-4" aria-expanded="false" aria-controls="faq-collapse-4">
+                                        Does the case protect against drops and scratches?
+                                    </button>
+                                </h2>
+                                <div id="faq-collapse-4" class="accordion-collapse collapse" aria-labelledby="faq-heading-4" data-bs-parent="#ayc-faq-accordion">
+                                    <div class="accordion-body">
+                                        Yes, the case is designed to provide daily protection against minor drops, bumps, and scratches, all while maintaining a slim and lightweight profile.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 5 -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="faq-heading-5">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-5" aria-expanded="false" aria-controls="faq-collapse-5">
+                                        Is the case compatible with MagSafe?
+                                    </button>
+                                </h2>
+                                <div id="faq-collapse-5" class="accordion-collapse collapse" aria-labelledby="faq-heading-5" data-bs-parent="#ayc-faq-accordion">
+                                    <div class="accordion-body">
+                                        Absolutely. The case is equipped with high-quality magnets, ensuring strong and stable MagSafe compatibility for seamless charging and accessory use.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 6 -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="faq-heading-6">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-6" aria-expanded="false" aria-controls="faq-collapse-6">
+                                        What material is used in the case?
+                                    </button>
+                                </h2>
+                                <div id="faq-collapse-6" class="accordion-collapse collapse" aria-labelledby="faq-heading-6" data-bs-parent="#ayc-faq-accordion">
+                                    <div class="accordion-body">
+                                        Our case is crafted from premium polycarbonate material, enhanced with proprietary technology to deliver superior clarity, strength, and durability.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 7 -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="faq-heading-7">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-7" aria-expanded="false" aria-controls="faq-collapse-7">
+                                        How can I keep the case clean and clear?
+                                    </button>
+                                </h2>
+                                <div id="faq-collapse-7" class="accordion-collapse collapse" aria-labelledby="faq-heading-7" data-bs-parent="#ayc-faq-accordion">
+                                    <div class="accordion-body">
+                                        To maintain its clarity:<br/>
+                                        <ul class="gf-ayc-faq-list">
+                                            <li>Wipe the case with a soft microfiber cloth every 2–3 days</li>
+                                            <li>Avoid prolonged exposure to dirt, oils, or harsh environments</li>
+                                        </ul>
+                                        This simple care routine helps keep your case looking new for longer.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 8 -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="faq-heading-8">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-8" aria-expanded="false" aria-controls="faq-collapse-8">
+                                        Does the case turn yellow over time?
+                                    </button>
+                                </h2>
+                                <div id="faq-collapse-8" class="accordion-collapse collapse" aria-labelledby="faq-heading-8" data-bs-parent="#ayc-faq-accordion">
+                                    <div class="accordion-body">
+                                        No, thanks to our UV Shield Technology, the case is specifically engineered to resist yellowing caused by sunlight and everyday use.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- FAQ 9 -->
+                            <div class="accordion-item">
+                                <h2 class="accordion-header" id="faq-heading-9">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-9" aria-expanded="false" aria-controls="faq-collapse-9">
+                                        Will the case add bulk to my phone?
+                                    </button>
+                                </h2>
+                                <div id="faq-collapse-9" class="accordion-collapse collapse" aria-labelledby="faq-heading-9" data-bs-parent="#ayc-faq-accordion">
+                                    <div class="accordion-body">
+                                        Not at all. The case is designed to be slim, lightweight, and comfortable to hold, while still offering dependable protection.
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
 
                 <!-- ── Newsletter Section ─────────────────────────── -->
                 <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
