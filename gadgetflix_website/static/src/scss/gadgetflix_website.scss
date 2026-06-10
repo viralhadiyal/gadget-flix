@@ -4874,3 +4874,23 @@ html body .oe_website_sale .css_quantity .quantity {
     font-weight: 700 !important;
     color: #000 !important;
 }
+
+/* ============================================================
+   Product Detail Page - Main Image Sizing
+   ============================================================ */
+.o_wsale_product_page #o-carousel-product .carousel-inner img,
+.o_wsale_product_page .product_detail_img {
+    height: 600px !important;
+    max-height: 65vh !important;
+    width: 100% !important;
+    object-fit: contain !important;
+    background-color: transparent !important;
+}
+
+@media (max-width: 768px) {
+    .o_wsale_product_page #o-carousel-product .carousel-inner img,
+    .o_wsale_product_page .product_detail_img {
+        height: 400px !important;
+        max-height: 50vh !important;
+    }
+}
