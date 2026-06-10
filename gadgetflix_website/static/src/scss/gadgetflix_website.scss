@@ -4898,24 +4898,26 @@ html body .oe_website_sale .css_quantity .quantity {
 /* ============================================================
    Product Detail Page - Thumbnail Images (Bottom)
    ============================================================ */
-.o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li {
-    width: 64px !important;
-    height: 64px !important;
-    min-width: 64px !important;
-    aspect-ratio: 1 / 1 !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    overflow: hidden !important;
-    padding: 2px !important;
-}
+@media (min-width: 992px) {
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li {
+        width: 64px !important;
+        height: 64px !important;
+        min-width: 64px !important;
+        aspect-ratio: 1 / 1 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+        padding: 2px !important;
+    }
 
-.o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li > div,
-.o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li > div > img,
-.o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li > img {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain !important;
-    aspect-ratio: 1 / 1 !important;
-    border-radius: inherit !important;
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li > div,
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li > div > img,
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li > img {
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+        aspect-ratio: 1 / 1 !important;
+        border-radius: inherit !important;
+    }
 }
