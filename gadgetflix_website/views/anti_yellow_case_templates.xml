@@ -23,14 +23,13 @@
                         <!-- ── LEFT: Product image ──────────────────── -->
                         <div class="gf-ayc-pdp__image-col">
                             <div class="gf-ayc-pdp__image-wrap">
-                                <div class="gf-ayc-hero text-center mb-3" style="display: flex; align-items: center; justify-content: center;">
+                                <div class="gf-ayc-hero text-center mb-3">
                                     <img id="gf-ayc-hero-img"
                                          class="img img-fluid w-100"
-                                         style="object-fit: contain; max-height: 600px;"
                                          t-att-src="'/web/image/product.template/%s/image_1024' % product.id"
                                          alt="Product Image"/>
                                 </div>
-                                <div class="gf-ayc-pdp__thumbs" id="gf-ayc-thumbs" style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 5px;"></div>
+                                <div class="gf-ayc-pdp__thumbs" id="gf-ayc-thumbs"></div>
                             </div>
                         </div>
 
@@ -42,8 +41,8 @@
                                 <span class="gf-ayc-pdp__badge badge rounded-pill px-3 py-2 mb-2 d-inline-block shadow-sm">
                                     <i class="fa fa-shield me-1" aria-hidden="true"/> Lifetime Anti-Yellow Warranty
                                 </span>
-                                <h1 class="gf-ayc-pdp__title" style="font-size: 2.25rem; font-weight: 800; letter-spacing: -0.5px;">Anti-Yellow Magsafe Clear Case<span id="gf-ayc-title-model"></span></h1>
-                                <p class="gf-ayc-pdp__tagline mt-2" style="font-size: 1.1rem;">
+                                <h1 class="gf-ayc-pdp__title">Anti-Yellow Magsafe Clear Case<span id="gf-ayc-title-model"></span></h1>
+                                <p class="gf-ayc-pdp__tagline mt-2">
                                     🎁 3 Free Gifts With Every Order
                                 </p>
                             </div>
@@ -149,12 +148,12 @@
                             <!-- Qty + Add to Cart + Buy Now -->
                             <div class="gf-ayc-buy" id="gf-ayc-buy">
                                 <div id="add_to_cart_wrap" class="d-flex flex-nowrap align-items-center gap-2">
-                                    <div class="css_quantity input-group d-inline-flex align-middle border bg-white" style="max-width: 120px; height: 52px; border-radius: 0.375rem;">
-                                        <button type="button" class="btn btn-link pe-2 border-0 text-dark" id="gf-ayc-qty-dec" aria-label="Remove one" title="Remove one" style="width: 35px;">
+                                    <div class="css_quantity input-group d-inline-flex align-middle border bg-white">
+                                        <button type="button" class="btn btn-link pe-2 border-0 text-dark gf-ayc-qty-btn" id="gf-ayc-qty-dec" aria-label="Remove one" title="Remove one">
                                             <i class="fa fa-minus"></i>
                                         </button>
-                                        <input type="text" id="gf-ayc-qty" class="form-control quantity text-center border-0 bg-transparent fw-bold" value="1" min="1" max="99" style="font-size: 1.1rem; box-shadow: none;"/>
-                                        <button type="button" class="btn btn-link ps-2 border-0 text-dark" id="gf-ayc-qty-inc" aria-label="Add one" title="Add one" style="width: 35px;">
+                                        <input type="text" id="gf-ayc-qty" class="form-control quantity text-center border-0 bg-transparent fw-bold" value="1" min="1" max="99"/>
+                                        <button type="button" class="btn btn-link ps-2 border-0 text-dark gf-ayc-qty-btn" id="gf-ayc-qty-inc" aria-label="Add one" title="Add one">
                                             <i class="fa fa-plus"></i>
                                         </button>
                                     </div>
@@ -213,13 +212,13 @@
                                 <!-- Original Set -->
                                 <t t-foreach="[1, 2, 3, 4, 5]" t-as="i">
                                     <div class="gf-ayc-marquee-item">
-                                        <img t-attf-src="/gadgetflix_website/static/src/img/anti_yellow_no_border_#{i}.png" t-attf-alt="Clear Case #{i}" loading="lazy"/>
+                                        <img t-attf-src="/gadgetflix_website/static/src/img/anti_yellow_no_border_#{i}.webp" width="2000" height="2000" t-attf-alt="Clear Case #{i}" loading="lazy"/>
                                     </div>
                                 </t>
                                 <!-- Duplicated Set for infinite loop -->
                                 <t t-foreach="[1, 2, 3, 4, 5]" t-as="i">
                                     <div class="gf-ayc-marquee-item">
-                                        <img t-attf-src="/gadgetflix_website/static/src/img/anti_yellow_no_border_#{i}.png" t-attf-alt="Clear Case #{i}" loading="lazy"/>
+                                        <img t-attf-src="/gadgetflix_website/static/src/img/anti_yellow_no_border_#{i}.webp" width="2000" height="2000" t-attf-alt="Clear Case #{i}" loading="lazy"/>
                                     </div>
                                 </t>
                             </div>
