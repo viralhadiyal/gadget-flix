@@ -74,7 +74,6 @@
                     <span style="margin: 0 6px; color: #000000;">-</span>
                     <span t-field="ptavs[0].name" style="color: #222222;"/>
                 </div>
-                <hr style="border-top: 1px solid #eaeaea; margin: 16px 0 0 0;"/>
             </li>
         </xpath>
 
