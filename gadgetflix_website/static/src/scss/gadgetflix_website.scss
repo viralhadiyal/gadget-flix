@@ -4512,6 +4512,11 @@
    Product Detail – Single-value attribute rows (shown first)
    ============================================================ */
 
+/* Force display of attributes section if it has our custom single-value attributes */
+#o_wsale_product_details_content .o_wsale_product_details_content_section_attributes:where(:has(.gf-single-value-attr)) {
+    display: block !important;
+}
+
 /* Row wrapper: tighter vertical rhythm than interactive rows */
 .gf-single-value-attr {
     gap: 6px;
@@ -4862,3 +4867,10 @@ html body .oe_website_sale .css_quantity .quantity {
     }
 }
 
+/* Make Price Bold in product details page and listing page */
+.gf-product-card__price,
+.o_wsale_product_page .product_price .oe_price {
+    font-size: 24px !important;
+    font-weight: 700 !important;
+    color: #000 !important;
+}

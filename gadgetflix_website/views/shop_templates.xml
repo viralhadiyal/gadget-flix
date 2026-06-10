@@ -62,7 +62,7 @@
         </xpath>
 
         <!-- XPath 1b: Force the ul to display even if all attributes are single-value (so our custom text renders) -->
-        <xpath expr="//ul[hasclass('o_wsale_product_page_variants')]" position="attributes">
+        <xpath expr="//ul[contains(@t-attf-class, 'o_wsale_product_page_variants')][1]" position="attributes">
             <attribute name="t-attf-class">o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants #{ul_class}</attribute>
         </xpath>
 
