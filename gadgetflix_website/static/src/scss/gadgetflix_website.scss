@@ -4731,7 +4731,38 @@ html body .oe_website_sale .css_quantity .quantity {
     margin-bottom: 16px !important;
 }
 
+/* ============================================================
+   Offcanvas Cart Image Fix
+   ============================================================ */
+.gf-cart-line a {
+    display: inline-block;
+    flex-shrink: 0;
+}
 
+.gf-cart-line img,
+.gf-cart-line .rounded.border {
+    width: 80px !important;
+    height: 80px !important;
+    min-width: 80px !important;
+    min-height: 80px !important;
+    max-width: 80px !important;
+    max-height: 80px !important;
+    object-fit: contain !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    background-color: #fff !important;
+}
+
+.gf-cart-line .rounded.border img {
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    object-fit: contain !important;
+    border: none !important;
+}
 
 .gf-anti-wrapper {
     max-width: 1300px;   /* slightly wider */
