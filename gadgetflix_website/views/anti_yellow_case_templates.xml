@@ -226,6 +226,95 @@
                     </div>
                 </section>
 
+                <!-- ── Unique Interactive Video Accordion ── -->
+                <section class="gf-ayc-accordion-section">
+                    <div class="gf-container-fluid px-0">
+                        <div class="gf-ayc-accordion-header text-center">
+                            <h2>Engineered for Perfection</h2>
+                            <p>Hover over the cards to explore what makes our clear case the best in class.</p>
+                        </div>
+                        
+                        <div class="gf-ayc-accordion-wrapper">
+                            
+                            <!-- Accordion Item 1 -->
+                            <div class="gf-ayc-accordion-item">
+                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                    <source src="/gadgetflix_website/static/src/video/anti_yellow_case.mp4" type="video/mp4"/>
+                                </video>
+                                <div class="gf-ayc-accordion-overlay"></div>
+                                <div class="gf-ayc-accordion-content">
+                                    <div class="gf-ayc-acc-icon">01</div>
+                                    <div class="gf-ayc-acc-text">
+                                        <h3>Premium Anti-Yellow Case</h3>
+                                        <p>Finally, a clear case that stands the test of time. Engineered to stay crystal clear without any yellowing over time.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Accordion Item 2 -->
+                            <div class="gf-ayc-accordion-item">
+                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                    <source src="/gadgetflix_website/static/src/video/yellow_free_guarantee.mp4" type="video/mp4"/>
+                                </video>
+                                <div class="gf-ayc-accordion-overlay"></div>
+                                <div class="gf-ayc-accordion-content">
+                                    <div class="gf-ayc-acc-icon">02</div>
+                                    <div class="gf-ayc-acc-text">
+                                        <h3>100% Yellow-Free</h3>
+                                        <p>Experience unparalleled clarity backed by our comprehensive money-back guarantee.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Accordion Item 3 -->
+                            <div class="gf-ayc-accordion-item">
+                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                    <source src="/gadgetflix_website/static/src/video/magsafe_ready.mp4" type="video/mp4"/>
+                                </video>
+                                <div class="gf-ayc-accordion-overlay"></div>
+                                <div class="gf-ayc-accordion-content">
+                                    <div class="gf-ayc-acc-icon">03</div>
+                                    <div class="gf-ayc-acc-text">
+                                        <h3>MagSafe Ready</h3>
+                                        <p>Seamless wireless charging with perfectly aligned magnets that snap on securely every time.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Accordion Item 4 -->
+                            <div class="gf-ayc-accordion-item">
+                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                    <source src="/gadgetflix_website/static/src/video/stylish_premium.mp4" type="video/mp4"/>
+                                </video>
+                                <div class="gf-ayc-accordion-overlay"></div>
+                                <div class="gf-ayc-accordion-content">
+                                    <div class="gf-ayc-acc-icon">04</div>
+                                    <div class="gf-ayc-acc-text">
+                                        <h3>Stylish &amp; Premium</h3>
+                                        <p>Get premium minimalist aesthetics without adding any unnecessary bulk to your device.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Accordion Item 5 -->
+                            <div class="gf-ayc-accordion-item">
+                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                    <source src="/gadgetflix_website/static/src/video/stay_protected.mp4" type="video/mp4"/>
+                                </video>
+                                <div class="gf-ayc-accordion-overlay"></div>
+                                <div class="gf-ayc-accordion-content">
+                                    <div class="gf-ayc-acc-icon">05</div>
+                                    <div class="gf-ayc-acc-text">
+                                        <h3>Stay Protected</h3>
+                                        <p>Reliable everyday protection against accidental drops and scratches everywhere you go.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+
                 <!-- ── Official Warranty Section ─────────────────────────── -->
                 <t t-call="gadgetflix_website.gadgetflix_warranty"/>
 

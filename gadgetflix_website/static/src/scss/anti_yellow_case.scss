@@ -1273,3 +1273,173 @@
 .gf-anti-gallery-desc {
     max-width: 800px;
 }
+
+/* ── Unique Interactive Video Accordion ──────────────────────────────── */
+.gf-ayc-accordion-section {
+    padding: 80px 0;
+    background-color: #070707; /* Deep premium black */
+    color: #fff;
+    overflow: hidden;
+}
+
+.gf-ayc-accordion-header {
+    margin-bottom: 50px;
+    padding: 0 20px;
+}
+
+.gf-ayc-accordion-header h2 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 900;
+    margin-bottom: 16px;
+    letter-spacing: -1px;
+    background: linear-gradient(135deg, #fff 0%, #a3a3a3 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.gf-ayc-accordion-header p {
+    color: #888;
+    font-size: 1.15rem;
+}
+
+.gf-ayc-accordion-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 0 16px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.gf-ayc-accordion-item {
+    position: relative;
+    border-radius: 24px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.gf-ayc-accordion-item video {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 1;
+    filter: brightness(0.6);
+    transition: filter 0.6s ease;
+}
+
+.gf-ayc-accordion-overlay {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 80%;
+    background: linear-gradient(to top, rgba(0,0,0,0.95), transparent);
+    z-index: 2;
+    transition: opacity 0.6s ease;
+}
+
+.gf-ayc-accordion-content {
+    position: absolute;
+    bottom: 30px; left: 30px; right: 30px;
+    z-index: 3;
+}
+
+.gf-ayc-acc-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px; height: 44px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 50%;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+
+.gf-ayc-accordion-item h3 {
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin: 0 0 10px 0;
+    color: #fff;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    line-height: 1.2;
+}
+
+.gf-ayc-accordion-item p {
+    font-size: 1.05rem;
+    color: #ddd;
+    margin: 0;
+    line-height: 1.5;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+}
+
+.gf-ayc-acc-text {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+}
+
+/* Desktop Hover Interaction */
+@media (min-width: 992px) {
+    .gf-ayc-accordion-wrapper {
+        flex-direction: row;
+        height: 600px;
+    }
+    .gf-ayc-accordion-item {
+        flex: 1;
+        height: 100%;
+        border-radius: 32px;
+    }
+    .gf-ayc-acc-icon {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        transition: all 0.4s ease;
+    }
+
+    /* On Hover */
+    .gf-ayc-accordion-item:hover {
+        flex: 5; 
+    }
+    .gf-ayc-accordion-item:hover video {
+        filter: brightness(0.9);
+    }
+    .gf-ayc-accordion-item:hover .gf-ayc-acc-icon {
+        position: relative;
+        left: 0;
+        transform: translateX(0);
+        bottom: 0;
+        margin-bottom: 16px;
+    }
+    .gf-ayc-accordion-item:hover .gf-ayc-acc-text {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        transition-delay: 0.2s;
+    }
+}
+
+/* Mobile State */
+@media (max-width: 991px) {
+    .gf-ayc-accordion-item {
+        height: 350px;
+    }
+    .gf-ayc-acc-icon {
+        margin-bottom: 16px;
+    }
+    .gf-ayc-acc-text {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+    .gf-ayc-accordion-item video {
+        filter: brightness(0.8);
+    }
+}

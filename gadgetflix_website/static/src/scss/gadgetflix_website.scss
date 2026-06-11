@@ -1,3 +1,26 @@
+/* ── Global Typography Overrides ── */
+:root {
+    --bs-font-sans-serif: "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    --bs-body-font-family: "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+
+body, html, #wrapwrap {
+    font-family: "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
+    font-weight: 800 !important; /* Bold/Black weight */
+}
+
+p, span, a, li, label, input, button, select, textarea, .lead, .subheading {
+    font-family: "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.lead, .subheading {
+    font-weight: 500 !important; /* Medium weight for subheadings */
+}
+
 /* ── Design tokens ──────────────────────────────────── */
 
 .gf-page,
@@ -17,7 +40,7 @@
     --gf-radius-lg: 20px;
     color: var(--gf-black);
     background: var(--gf-white);
-    font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+    font-family: inherit;
 }
 
 .gf-page *,
@@ -5007,3 +5030,28 @@ html body .oe_website_sale .css_quantity .quantity {
 .gf-payment-desc {
     font-size: 1.1rem;
 }
+
+/* ── Announcement Bar (Apple Theme) ── */
+.apple-announcement-bar {
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 8px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-align: center;
+    width: 100%;
+}
+
+.apple-announcement-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+}
+
+.apple-announcement-container .bullet {
+    opacity: 0.4;
+}
+

@@ -784,7 +784,7 @@ class AntiYellowController(http.Controller):
                 'price': variant.lst_price if variant else product.list_price,
                 'image_url': f'/web/image/product.product/{variant.id}/image_1024' if variant else '',
                 'extra_image_urls': extra_images,
-                'is_available': variant.qty_available >= 0 if variant else True,
+                'is_available': (getattr(variant, 'qty_available', 0) >= 0 if hasattr(variant, 'qty_available') else True) if variant else True,
             })
 
         return result

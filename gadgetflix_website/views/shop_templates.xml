@@ -153,6 +153,15 @@
         <t t-set="shop_by_device_menus"
            t-value="request.env['gadgetflix.shop.by.device.menu'].sudo().search(['&amp;', ('active', '=', True), '|', ('website_id', '=', False), ('website_id', '=', website.id)], order='sequence, id').filtered(lambda menu: menu.link_ids.filtered(lambda link: link.active))"/>
         <header id="top" class="gf-header o_no_autohide_menu" data-anchor="true">
+            <div class="apple-announcement-bar">
+                <div class="apple-announcement-container">
+                    <span>Free Shipping Across India</span>
+                    <span class="bullet">•</span>
+                    <span>Cash On Delivery Available</span>
+                    <span class="bullet">•</span>
+                    <span>Trusted By Thousands Of Customers</span>
+                </div>
+            </div>
             <!-- Dummy top_menu to prevent Odoo core auto_hide_menu.js from crashing -->
             <div class="top_menu d-none"></div>
             <div class="gf-container gf-header__inner">
