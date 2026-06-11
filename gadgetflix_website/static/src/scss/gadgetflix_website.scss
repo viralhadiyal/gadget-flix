@@ -5110,6 +5110,7 @@ html body .oe_website_sale .css_quantity .quantity {
     width: max-content;
     animation: marqueeScroll 30s linear infinite;
 }
+
 .marquee-track:hover {
     animation-play-state: paused;
 }
@@ -5125,8 +5126,11 @@ html body .oe_website_sale .css_quantity .quantity {
 }
 
 @keyframes marqueeScroll {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-25%); }
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-25%);
+    }
 }
-
-
