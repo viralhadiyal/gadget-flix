@@ -875,65 +875,7 @@
         if (stickyPrice) stickyPrice.textContent = f;
     };
 
-    const updateHeroImage = function (url) {
-        const heroContainer = document.querySelector(".gf-ayc-hero");
-        if (!heroContainer || !url) return;
-        
-        let imgEl = heroContainer.querySelector("img#gf-ayc-hero-img");
-        if (!imgEl) {
-            heroContainer.innerHTML = "";
-            imgEl = document.createElement("img");
-            imgEl.id = "gf-ayc-hero-img";
-            imgEl.className = "img img-fluid w-100";
-            imgEl.style.objectFit = "contain";
-            imgEl.style.maxHeight = "600px";
-            heroContainer.appendChild(imgEl);
-        }
-        
-        imgEl.style.opacity = "0.5";
-        const tmp = new Image();
-        tmp.onload = function () {
-            imgEl.src = url;
-            imgEl.style.opacity = "1";
-        };
-        tmp.src = url;
-    };
 
-    const updateThumbnails = function (urls) {
-        if (!urls || !urls.length) return;
-        updateHeroImage(urls[0]); // Always update main image
-        
-        const thumbsEl = document.getElementById("gf-ayc-thumbs");
-        if (!thumbsEl) return;
-        thumbsEl.style.display = "flex";
-        thumbsEl.innerHTML = "";
-        
-        urls.forEach(function (url, idx) {
-            const btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "gf-ayc-thumb" + (idx === 0 ? " gf-ayc-thumb--active" : "");
-            btn.dataset.img = url;
-            btn.setAttribute("aria-label", "Image " + (idx + 1));
-            
-            const img = document.createElement("img");
-            img.src = url;
-            img.alt = "";
-            btn.appendChild(img);
-            thumbsEl.appendChild(btn);
-        });
-    };
-
-    // ── Thumbnail strip click handler ─────────────────────────────────────────
-    document.addEventListener("click", function (e) {
-        const thumb = e.target.closest(".gf-ayc-thumb");
-        if (!thumb) return;
-        const thumbsEl = document.getElementById("gf-ayc-thumbs");
-        if (!thumbsEl) return;
-        
-        thumbsEl.querySelectorAll(".gf-ayc-thumb").forEach(t => t.classList.remove("gf-ayc-thumb--active"));
-        thumb.classList.add("gf-ayc-thumb--active");
-        updateHeroImage(thumb.dataset.img);
-    });
 
     // ── Custom Dropdown helper ─────────────────────────────────────────────
     function makeDropdown(dropdownEl, triggerEl, panelEl, searchEl, listEl) {
@@ -1018,8 +960,7 @@
             state.activeBrandValueId   = parseInt(item.dataset.brandValueId, 10);
             state.activeBrandName      = name;
 
-            // Immediately show brand image
-            if (item.dataset.imageUrl) updateHeroImage(item.dataset.imageUrl);
+            // Immediately show brand image (handled by backend rendering on load, but if they change brand, we'll wait for models to load)
 
             // Reset model dropdown
             state.activeVariantId = 0;
@@ -1051,8 +992,8 @@
                         li.dataset.price      = m.price;
                         li.dataset.productId  = productId;
                         li.dataset.imageUrl   = m.image_url || "";
-                        if (m.extra_image_urls && m.extra_image_urls.length > 0) {
-                            li.dataset.extraImages = JSON.stringify(m.extra_image_urls);
+                        if (m.carousel_html) {
+                            li.dataset.carouselHtml = m.carousel_html;
                         }
                         li.innerHTML = `<span class="gf-ayc-dropdown__item-name">${m.name}</span>`;
                         modelList.appendChild(li);
@@ -1108,14 +1049,13 @@
         state.activeModelName    = name;
 
         updatePriceDisplay(state.activePrice);
-        if (item.dataset.extraImages) {
-            try {
-                updateThumbnails(JSON.parse(item.dataset.extraImages));
-            } catch (e) {
-                if (item.dataset.imageUrl) updateHeroImage(item.dataset.imageUrl);
+
+        // update carousel
+        if (item.dataset.carouselHtml) {
+            const carouselContainer = document.getElementById("o-carousel-product");
+            if (carouselContainer) {
+                carouselContainer.outerHTML = item.dataset.carouselHtml;
             }
-        } else if (item.dataset.imageUrl) {
-            updateThumbnails([item.dataset.imageUrl]);
         }
         setButtonsDisabled(!state.activeVariantId);
 

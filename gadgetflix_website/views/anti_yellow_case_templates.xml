@@ -22,33 +22,41 @@
 
                         <!-- ── LEFT: Product image ──────────────────── -->
                         <div class="gf-ayc-pdp__image-col">
-                            <div class="gf-ayc-pdp__image-wrap">
-                                <div class="gf-ayc-hero text-center mb-3">
-                                    <img id="gf-ayc-hero-img"
-                                         class="img img-fluid w-100"
-                                         t-att-src="'/web/image/product.template/%s/image_1024' % product.id"
-                                         alt="Product Image"/>
-                                </div>
-                                <div class="gf-ayc-pdp__thumbs" id="gf-ayc-thumbs"></div>
+                            <div class="gf-ayc-pdp__image-wrap" id="o-carousel-product">
+                                <t t-call="website_sale.shop_product_images"/>
                             </div>
                         </div>
 
                         <!-- ── RIGHT: Configurator ──────────────────── -->
                         <div class="gf-ayc-pdp__config-col">
 
-                            <!-- Product title + badge -->
+                            <!-- Product title + badges -->
                             <div class="gf-ayc-pdp__title-row">
-                                <span class="gf-ayc-pdp__badge badge rounded-pill px-3 py-2 mb-2 d-inline-block shadow-sm">
-                                    <i class="fa fa-shield me-1" aria-hidden="true"/> Lifetime Anti-Yellow Warranty
-                                </span>
+                                <div class="gf-ayc-badges mb-2 d-flex align-items-center gap-2">
+                                    <span class="gf-ayc-badge gf-badge-warranty">
+                                        Lifetime Warranty
+                                    </span>
+                                    <span class="gf-ayc-badge gf-badge-gifts">
+                                        3 Free Gifts
+                                    </span>
+                                </div>
                                 <h1 class="gf-ayc-pdp__title">Anti-Yellow Magsafe Clear Case<span id="gf-ayc-title-model"></span></h1>
-                                <p class="gf-ayc-pdp__tagline mt-2">
-                                    🎁 3 Free Gifts With Every Order
-                                </p>
+                                
+                                <!-- Ratings -->
+                                <div class="gf-ayc-ratings d-flex align-items-center gap-2 mt-2 mb-2">
+                                    <div class="stars" style="color: #fbbc04; font-size: 1rem;">
+                                        <i class="fa fa-star"/>
+                                        <i class="fa fa-star"/>
+                                        <i class="fa fa-star"/>
+                                        <i class="fa fa-star"/>
+                                        <i class="fa fa-star-half-o"/>
+                                    </div>
+                                    <span class="text-muted" style="font-size: 0.85rem; font-weight: 500;">4.8 (1,284 Reviews)</span>
+                                </div>
                             </div>
 
                             <!-- Price -->
-                            <div class="gf-ayc-pdp__price-row">
+                            <div class="gf-ayc-pdp__price-row mb-3">
                                 <span class="gf-ayc-pdp__price" id="gf-ayc-price">
                                     <t t-if="default_brand">
                                         <t t-out="default_brand['first_price']"
@@ -56,9 +64,47 @@
                                     </t>
                                     <t t-else="">—</t>
                                 </span>
-                                <span class="gf-ayc-pdp__avail" id="gf-ayc-avail">
-                                    <i class="fa fa-check-circle" aria-hidden="true"/> In stock
-                                </span>
+                            </div>
+
+                            <!-- Bundle & Save -->
+                            <div class="gf-ayc-bundle-compact mb-3">
+                                <h6 class="gf-ayc-sec-title">🔥 Bundle &amp; save more</h6>
+                                <div class="d-flex gap-2">
+                                    <div class="gf-ayc-bundle-card flex-fill">
+                                        <div class="b-qty">1 case</div>
+                                        <div class="b-price">₹549</div>
+                                    </div>
+                                    <div class="gf-ayc-bundle-card popular flex-fill">
+                                        <div class="b-badge">MOST POPULAR</div>
+                                        <div class="b-qty">2 cases</div>
+                                        <div class="b-price">₹749</div>
+                                        <div class="b-save">Save ₹349</div>
+                                    </div>
+                                    <div class="gf-ayc-bundle-card flex-fill">
+                                        <div class="b-qty">3 cases</div>
+                                        <div class="b-price">₹849</div>
+                                        <div class="b-save">Save ₹798</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Free Gifts Compact Banner -->
+                            <div class="gf-ayc-gifts-compact mb-4">
+                                <div class="g-header">🎁 3 Free Gifts With Every Order:</div>
+                                <div class="g-items">
+                                    <div class="g-item">
+                                        <img src="/gadgetflix_website/static/src/img/gift_cable_protector.webp" alt="Cable Protector"/>
+                                        <span>Cable Protector</span>
+                                    </div>
+                                    <div class="g-item">
+                                        <img src="/gadgetflix_website/static/src/img/gift_c_to_c_cable.webp" alt="C-to-C Cable"/>
+                                        <span>C-to-C Cable</span>
+                                    </div>
+                                    <div class="g-item">
+                                        <img src="/gadgetflix_website/static/src/img/gift_popup_stand.webp" alt="Pop-up Stand"/>
+                                        <span>Pop-up Stand</span>
+                                    </div>
+                                </div>
                             </div>
 
                             <!-- Divider -->

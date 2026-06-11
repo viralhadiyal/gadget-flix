@@ -4,21 +4,47 @@
     --bs-body-font-family: "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
-body, html, #wrapwrap {
+body,
+html,
+#wrapwrap {
     font-family: "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
     font-family: "SF Pro Display", "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-    font-weight: 800 !important; /* Bold/Black weight */
+    font-weight: 800 !important;
+    /* Bold/Black weight */
 }
 
-p, span, a, li, label, input, button, select, textarea, .lead, .subheading {
+p,
+span,
+a,
+li,
+label,
+input,
+button,
+select,
+textarea,
+.lead,
+.subheading {
     font-family: "SF Pro Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
-.lead, .subheading {
-    font-weight: 500 !important; /* Medium weight for subheadings */
+.lead,
+.subheading {
+    font-weight: 500 !important;
+    /* Medium weight for subheadings */
 }
 
 /* ── Design tokens ──────────────────────────────────── */
@@ -1220,7 +1246,7 @@ p, span, a, li, label, input, button, select, textarea, .lead, .subheading {
 }
 
 .gf-section {
-    padding: 32px 0;
+    padding: 64px 0px 0px;
 }
 
 
@@ -1623,8 +1649,9 @@ p, span, a, li, label, input, button, select, textarea, .lead, .subheading {
 .gf-new-arrivals {
     background: var(--gf-white);
 }
+
 .gf-featured {
-    padding: 32px 0;
+    padding: 64px 0;
 }
 
 .gf-newsletter {
@@ -1998,7 +2025,7 @@ p, span, a, li, label, input, button, select, textarea, .lead, .subheading {
 /* ── Warranty section ─────────────────────────────── */
 
 .gf-warranty {
-    padding: 32px 0 0;
+    padding: 64px 0 0;
 }
 
 .gf-warranty__card {
@@ -2595,6 +2622,7 @@ p, span, a, li, label, input, button, select, textarea, .lead, .subheading {
     font-size: 56px !important;
     line-height: 1 !important;
     font-weight: 900;
+
     span {
         font-size: 24px !important;
         margin: 24px 0px 16px 0px;
@@ -2897,7 +2925,7 @@ p, span, a, li, label, input, button, select, textarea, .lead, .subheading {
     display: none !important;
 }
 
-.o_search_result_item_detail btn{
+.o_search_result_item_detail btn {
     display: none !important;
 }
 
@@ -3690,6 +3718,7 @@ p, span, a, li, label, input, button, select, textarea, .lead, .subheading {
         font-size: 42px !important;
         line-height: 1.02 !important;
         overflow-wrap: anywhere;
+
         span {
             font-size: 16px !important;
             margin: 24px 0px 16px 0px;
@@ -4572,7 +4601,7 @@ p, span, a, li, label, input, button, select, textarea, .lead, .subheading {
 }
 
 /* Visually separate the two groups with a subtle divider */
-.o_wsale_product_page_variants .gf-single-value-attr ~ .variant_attribute:not(.gf-single-value-attr):first-of-type {
+.o_wsale_product_page_variants .gf-single-value-attr~.variant_attribute:not(.gf-single-value-attr):first-of-type {
     margin-top: 8px;
     padding-top: 16px;
     border-top: 1px solid #f0f0f0;
@@ -4722,12 +4751,14 @@ html body .oe_website_sale .css_quantity .quantity {
         flex-wrap: nowrap !important;
         gap: 12px !important;
     }
+
     html body #wrap #product_detail .css_quantity,
     html body .oe_website_sale .css_quantity {
         align-self: center !important;
         width: 130px !important;
         min-width: 130px !important;
     }
+
     html body #wrap #product_detail #add_to_cart,
     html body .oe_website_sale #add_to_cart {
         flex: 1 !important;
@@ -4793,7 +4824,8 @@ html body .oe_website_sale .css_quantity .quantity {
 }
 
 .gf-anti-wrapper {
-    max-width: 1300px;   /* slightly wider */
+    max-width: 1300px;
+    /* slightly wider */
     margin: auto;
     padding: 80px 20px;
     background: #fafafa;
@@ -4803,12 +4835,13 @@ html body .oe_website_sale .css_quantity .quantity {
 .gf-anti-row {
     display: flex;
     align-items: center;
-    gap: 60px;   /* more spacing */
+    gap: 60px;
+    /* more spacing */
     margin-bottom: 60px;
     padding: 40px;
     background: #fff;
     border-radius: 16px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
     transition: 0.3s ease;
 }
 
@@ -4823,7 +4856,8 @@ html body .oe_website_sale .css_quantity .quantity {
 
 /* 🔥 IMAGE (BIGGER + NO CUT) */
 .gf-anti-image {
-    flex: 1.2;   /* give more space to image */
+    flex: 1.2;
+    /* give more space to image */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -4831,7 +4865,8 @@ html body .oe_website_sale .css_quantity .quantity {
 
 .gf-anti-image img {
     width: 100%;
-    max-width: 420px;   /* increased size */
+    max-width: 420px;
+    /* increased size */
     height: auto;
     object-fit: contain;
     transition: transform 0.3s ease;
@@ -4886,7 +4921,8 @@ html body .oe_website_sale .css_quantity .quantity {
     }
 
     .gf-anti-image img {
-        max-width: 300px;  /* bigger mobile image */
+        max-width: 300px;
+        /* bigger mobile image */
     }
 }
 
@@ -4917,6 +4953,7 @@ html body .oe_website_sale .css_quantity .quantity {
 }
 
 @media (max-width: 768px) {
+
     .o_wsale_product_page #o-carousel-product .carousel-inner img,
     .o_wsale_product_page .product_detail_img {
         height: 400px !important;
@@ -4940,9 +4977,9 @@ html body .oe_website_sale .css_quantity .quantity {
         padding: 2px !important;
     }
 
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li > div,
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li > div > img,
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li > img {
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div,
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div>img,
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>img {
         width: 100% !important;
         height: 100% !important;
         object-fit: contain !important;
@@ -4955,60 +4992,74 @@ html body .oe_website_sale .css_quantity .quantity {
 .gf-single-value-attr {
     list-style-type: none;
 }
+
 .gf-single-display {
     font-size: 15px;
 }
+
 .gf-single-display-strong {
     color: #000000;
     font-weight: 800;
 }
+
 .gf-single-display-sep {
     margin: 0 6px;
     color: #000000;
 }
+
 .gf-single-display-val {
     color: #222222;
 }
+
 .gf-single-display-hr {
     border-top: 1px solid #eaeaea;
     margin: 16px 0 0 0;
 }
+
 .gf-my-cart-li {
     list-style: none;
     padding: 0;
     margin: 0;
 }
+
 #gf_cart_offcanvas {
     width: 400px;
     max-width: 90vw;
     z-index: 1055;
 }
+
 #gf_cart_loading {
     z-index: 10;
 }
+
 .gf-btn-black {
     background-color: #000 !important;
     color: #fff !important;
     border-radius: 8px !important;
 }
+
 .gf-btn-outline-black {
     background-color: #fff !important;
     color: #000 !important;
     border: 1px solid #000 !important;
     border-radius: 8px !important;
 }
+
 .gf-cart-img {
     width: 80px;
     height: 80px;
     object-fit: contain;
 }
+
 .gf-cart-qty-group {
     max-width: 110px;
     border-color: #dee2e6 !important;
 }
+
 .gf-cart-qty-btn {
     width: 32px;
 }
+
 .gf-payment-loader-wrapper {
     position: fixed;
     top: 0;
@@ -5018,15 +5069,18 @@ html body .oe_website_sale .css_quantity .quantity {
     background-color: rgba(255, 255, 255, 0.95);
     z-index: 999999;
 }
+
 .gf-payment-spinner {
     width: 4rem;
     height: 4rem;
     color: #000;
     border-width: 0.35em;
 }
+
 .gf-payment-title {
     font-weight: 800;
 }
+
 .gf-payment-desc {
     font-size: 1.1rem;
 }
@@ -5038,20 +5092,41 @@ html body .oe_website_sale .css_quantity .quantity {
     font-size: 11px;
     font-weight: 500;
     padding: 8px 0;
-    text-transform: uppercase;
     letter-spacing: 0.1em;
-    text-align: center;
     width: 100%;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .apple-announcement-container {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 12px;
+    width: 100%;
+    overflow: hidden;
 }
 
-.apple-announcement-container .bullet {
-    opacity: 0.4;
+.marquee-track {
+    display: inline-flex;
+    align-items: center;
+    width: max-content;
+    animation: marqueeScroll 30s linear infinite;
 }
+.marquee-track:hover {
+    animation-play-state: paused;
+}
+
+.marquee-track .bullet {
+    opacity: 0.4;
+    margin: 0 12px;
+}
+
+.marquee-track .m-item {
+    display: inline-flex;
+    align-items: center;
+}
+
+@keyframes marqueeScroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-25%); }
+}
+
 

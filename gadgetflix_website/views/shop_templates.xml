@@ -155,11 +155,16 @@
         <header id="top" class="gf-header o_no_autohide_menu" data-anchor="true">
             <div class="apple-announcement-bar">
                 <div class="apple-announcement-container">
-                    <span>Free Shipping Across India</span>
-                    <span class="bullet">•</span>
-                    <span>Cash On Delivery Available</span>
-                    <span class="bullet">•</span>
-                    <span>Trusted By Thousands Of Customers</span>
+                    <div class="marquee-track">
+                        <t t-foreach="[1, 2, 3, 4]" t-as="i">
+                            <span class="m-item"><i class="fa fa-truck me-2" aria-hidden="true"/> Free Shipping Across India</span>
+                            <span class="bullet">•</span>
+                            <span class="m-item"><i class="fa fa-money me-2" aria-hidden="true"/> Cash On Delivery Available</span>
+                            <span class="bullet">•</span>
+                            <span class="m-item"><i class="fa fa-star me-2" aria-hidden="true"/> Trusted By Thousands Of Customers</span>
+                            <span class="bullet">•</span>
+                        </t>
+                    </div>
                 </div>
             </div>
             <!-- Dummy top_menu to prevent Odoo core auto_hide_menu.js from crashing -->

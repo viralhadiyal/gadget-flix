@@ -744,7 +744,7 @@ class AntiYellowController(http.Controller):
             'page_title': 'Anti-Yellow Clear Cases',
         })
 
-    @http.route('/gadgetflix/anti-yellow/get_models', type='jsonrpc', auth='public', csrf=False)
+    @http.route('/gadgetflix/anti-yellow/get_models', type='jsonrpc', auth='public', website=True, csrf=False)
     def gf_get_models(self, product_id):
         """Return model attribute values for a given product_id.
         Each entry carries enough data to identify the correct variant.
@@ -768,13 +768,16 @@ class AntiYellowController(http.Controller):
                 ).ids
             )[:1]
 
-            extra_images = []
+            carousel_html = ""
             if variant:
-                # Always put the main variant image first
-                extra_images.append(f'/web/image/product.product/{variant.id}/image_1024')
-                for img in product.product_template_image_ids:
-                    if not img.product_variant_id or variant.id == img.product_variant_id.id:
-                        extra_images.append(f'/web/image/product.image/{img.id}/image_1024')
+                carousel_html = request.env['ir.ui.view']._render_template(
+                    'website_sale.shop_product_images',
+                    values={
+                        'product': product,
+                        'product_variant': variant,
+                        'website': request.website,
+                    },
+                )
 
             result.append({
                 'id': attr_val.id,
@@ -783,7 +786,7 @@ class AntiYellowController(http.Controller):
                 'variant_id': variant.id if variant else 0,
                 'price': variant.lst_price if variant else product.list_price,
                 'image_url': f'/web/image/product.product/{variant.id}/image_1024' if variant else '',
-                'extra_image_urls': extra_images,
+                'carousel_html': carousel_html,
                 'is_available': (getattr(variant, 'qty_available', 0) >= 0 if hasattr(variant, 'qty_available') else True) if variant else True,
             })
 
