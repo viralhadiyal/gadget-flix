@@ -859,7 +859,7 @@
                             </div>
                             <div class="gf-warranty__card-divider"></div>
                             <div class="gf-warranty__card-hologram">
-                                <img src="/gadgetflix_website/static/src/img/trust_seal.png" alt="Anti-Yellow" loading="lazy" decoding="async" height="100" width="120"/>
+                                <img src="/gadgetflix_website/static/src/img/trust_seal.png" alt="Anti-Yellow" loading="lazy" decoding="async" height="80" width="100"/>
                             </div>
                         </div>
                     </div>
