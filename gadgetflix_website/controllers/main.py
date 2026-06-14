@@ -720,11 +720,19 @@ class AntiYellowController(http.Controller):
         if not default_brand and brands:
             default_brand = brands[0]
 
+        # Mark active brand
+        for b in brands:
+            b['is_active'] = bool(default_brand and b['brand_value_id'] == default_brand['brand_value_id'])
+
         default_product = request.env['product.template'].sudo().browse(default_brand['product_id']) if default_brand else None
 
         # Load default models
         default_models = self._get_product_models(default_product) if default_product else []
         default_model = default_models[0] if default_models else None
+
+        # Mark active model
+        for m in default_models:
+            m['is_active'] = bool(default_model and m['variant_id'] == default_model['variant_id'])
 
         default_variant = None
         if default_model and default_model['variant_id']:
