@@ -377,13 +377,23 @@
                             <a href="/contact">Contact</a>
                         </div>
                     </div>
-                    <div class="gf-footer-map" aria-label="Location map for New Ranip">
-                        <iframe title="New Ranip Ahmedabad map"
-                                loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"
-                                src="https://maps.google.com/maps?q=New%20Ranip%2C%20Ahmedabad%2C%20Gujarat&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=&amp;output=embed"></iframe>
-                        <span class="gf-footer-map__pin"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-                        <span class="gf-footer-map__label">New Ranip, Ahmedabad</span>
+                    <div class="gf-footer__newsletter">
+                        <h3>Newsletter</h3>
+                        <p>Get updates on new accessory drops and exclusive offers.</p>
+                        <div class="gf-newsletter__form s_newsletter_subscribe_form s_newsletter_list js_subscribe"
+                             data-vxml="001"
+                             data-name="Newsletter Form"
+                             t-att-data-list-id="request.env.ref('gadgetflix_website.gadgetflix_newsletter_list').id">
+                            <div class="js_subscribed_wrap d-none gf-newsletter__thanks">
+                                <i class="fa fa-check-circle-o" role="img" aria-label="Subscribed"></i>
+                                Thanks for registering!
+                            </div>
+                            <div class="js_subscribe_wrap">
+                                <label class="visually-hidden" for="gf_footer_newsletter_email">Email</label>
+                                <input id="gf_footer_newsletter_email" class="s_newsletter_subscribe_form_input js_subscribe_value form-control" type="email" name="email" placeholder="Email address"/>
+                                <a role="button" href="#" class="js_subscribe_btn o_submit">Subscribe</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="gf-footer__bottom float-end">
@@ -526,9 +536,6 @@
                     </t>
                 </nav>
             </div>
-        </xpath>
-        <xpath expr="//div[@id='wrap']" position="after">
-            <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
         </xpath>
     </template>
 
@@ -696,8 +703,6 @@
                     <p t-else="" class="gf-empty">Add more accessories to show this section.</p>
                 </div>
             </section>
-
-            <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
         </t>
     </template>
 
@@ -777,7 +782,6 @@
                     <p t-else="" class="gf-empty">Select accessories for the About page from each product's Website Sections settings.</p>
                 </div>
             </section>
-            <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
         </t>
     </template>
 
@@ -807,17 +811,7 @@
                         </a>
                         <address>
                             <i class="fa fa-map-marker" aria-hidden="true"></i>
-                            <span t-if="company.street or company.street2 or company.city or company.state_id or company.zip or company.country_id">
-                                <span t-if="company.street" t-field="company.street"/>
-                                <span t-if="company.street2" t-field="company.street2"/>
-                                <span>
-                                    <t t-if="company.city" t-out="company.city"/>
-                                    <t t-if="company.state_id">, <t t-out="company.state_id.name"/></t>
-                                    <t t-if="company.zip"> <t t-out="company.zip"/></t>
-                                </span>
-                                <span t-if="company.country_id" t-field="company.country_id.name"/>
-                            </span>
-                            <span t-else="">New Ranip</span>
+                            <span>Ahmedabad</span>
                         </address>
                     </div>
                 </div>
@@ -843,25 +837,6 @@
                 </div>
             </section>
 
-            <section class="gf-section gf-contact-map-section">
-                <div class="gf-container gf-contact-map-grid">
-                    <div class="gf-contact-map">
-                        <iframe title="New Ranip Ahmedabad map"
-                                loading="lazy"
-                                referrerpolicy="no-referrer-when-downgrade"
-                                src="https://maps.google.com/maps?q=New%20Ranip%2C%20Ahmedabad%2C%20Gujarat&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=&amp;output=embed"></iframe>
-                        <span class="gf-footer-map__pin"><i class="fa fa-map-marker" aria-hidden="true"></i></span>
-                        <span class="gf-footer-map__label">New Ranip, Ahmedabad</span>
-                    </div>
-                    <div class="gf-contact-note">
-                        <h2>Visit or message us</h2>
-                        <p>Find us around New Ranip, Ahmedabad, or use the contact form for accessory recommendations, order help, and business inquiries.</p>
-                        <a href="/contactus" class="gf-button gf-button--light">Open contact form <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
-                    </div>
-                </div>
-            </section>
-
-            <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
         </t>
     </template>
 

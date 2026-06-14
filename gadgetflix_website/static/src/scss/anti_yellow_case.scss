@@ -1242,8 +1242,7 @@
 }
 
 .gf-ayc-accordion .accordion-item {
-    border: 1px solid #eee;
-    border-left: 4px solid transparent !important;
+    border: 1px solid rgba(0, 0, 0, 0.06);
     border-radius: 20px !important;
     background: #fff;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
@@ -1251,21 +1250,29 @@
     transition: all 0.3s ease;
     
     &:has(.accordion-button:not(.collapsed)) {
-        border-left-color: var(--ayc-gold) !important;
         background: #fafafa;
-        border-color: #eee #eee #eee var(--ayc-gold) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-left: 4px solid var(--ayc-gold) !important;
+        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.04);
     }
 }
 
 .gf-ayc-accordion .accordion-item:hover {
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.08);
-    border-color: #ddd;
+    border-color: rgba(0, 0, 0, 0.12);
     transform: translateY(-2px);
+    
+    &:has(.accordion-button:not(.collapsed)) {
+        border-left-color: var(--ayc-gold) !important;
+    }
 }
 
 .gf-ayc-accordion .accordion-button {
-    position: relative;
-    padding: 24px 64px 24px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 24px 32px;
     font-size: 1.15rem;
     font-weight: 700;
     color: #333;
@@ -1273,7 +1280,7 @@
     border: none;
     box-shadow: none !important;
     border-radius: 20px !important;
-    transition: color 0.3s ease;
+    transition: color 0.3s ease, padding-left 0.3s ease;
 }
 
 .gf-ayc-accordion .accordion-button:hover {
@@ -1283,6 +1290,7 @@
 .gf-ayc-accordion .accordion-button:not(.collapsed) {
     color: #000;
     background: transparent;
+    padding-left: 29px;
     border-bottom-left-radius: 0 !important;
     border-bottom-right-radius: 0 !important;
 }
@@ -1292,21 +1300,24 @@
     background-image: none !important;
     content: '+';
     font-family: inherit;
-    font-size: 28px;
+    font-size: 24px;
     font-weight: 300;
-    line-height: 1;
-    position: absolute;
-    right: 32px;
-    top: 50%;
-    transform: translateY(-50%);
     color: #aaa;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    transition: all 0.3s ease;
+    transform: none !important;
+    flex-shrink: 0;
 }
 
 .gf-ayc-accordion .accordion-button:not(.collapsed)::after {
     content: '−';
     color: #000;
-    transform: translateY(-50%) rotate(180deg);
+    transform: none !important;
 }
 
 .gf-ayc-accordion .accordion-button:focus {
@@ -1315,7 +1326,7 @@
 }
 
 .gf-ayc-accordion .accordion-body {
-    padding: 0 32px 32px 32px;
+    padding: 0 32px 32px 29px;
     color: #555;
     font-size: 1.05rem;
     line-height: 1.7;
@@ -1852,14 +1863,14 @@
     &:hover {
         transform: translateY(-2px);
         box-shadow: 0 12px 24px rgba(0, 0, 0, 0.04);
-        border-color: rgba(212, 175, 55, 0.4);
+        border-color: rgba(0, 0, 0, 0.12);
     }
     
     .step-num {
         font-size: 1.15rem;
         font-weight: 900;
-        color: var(--ayc-gold);
-        background: rgba(212, 175, 55, 0.08);
+        color: #fff;
+        background: #000;
         width: 38px;
         height: 38px;
         border-radius: 50%;
@@ -1915,7 +1926,7 @@
     
     i {
         font-size: 1.4rem;
-        color: var(--ayc-gold);
+        color: #000;
         margin-top: 2px;
     }
     

@@ -596,8 +596,6 @@
                 </section>
 
 
-                <!-- ── Newsletter Section ─────────────────────────── -->
-                <t t-call="gadgetflix_website.gadgetflix_newsletter"/>
 
                 <!-- ── Sticky add-to-cart bar (mobile) ───────── -->
                 <div class="gf-ayc-sticky-bar" id="gf-ayc-sticky-bar" aria-hidden="true" hidden="hidden">
