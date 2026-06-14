@@ -4584,6 +4584,31 @@ html body .oe_website_sale .css_quantity .quantity {
     box-sizing: border-box !important;
 }
 
+/* Readonly Quantity Selector (Free Products / Promo lines) */
+html body #wrap #product_detail .css_quantity:has(input[readonly]),
+html body .oe_website_sale .css_quantity:has(input[readonly]) {
+    border: none !important;
+    background: transparent !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+}
+
+html body #wrap #product_detail .css_quantity .quantity[readonly],
+html body .oe_website_sale .css_quantity .quantity[readonly] {
+    border: none !important;
+    background: transparent !important;
+    width: 32px !important;
+    height: auto !important;
+    text-align: center !important;
+    color: #555 !important;
+    font-size: 1rem !important;
+    font-weight: 500 !important;
+}
+
 /* Layout Wrapper for Buy Actions */
 #product_detail #add_to_cart_wrap {
     display: flex !important;
