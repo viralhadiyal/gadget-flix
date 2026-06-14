@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_gadgetflix_shop_by_device_menu_list" model="ir.ui.view">
+        <field name="name">gadgetflix.shop.by.device.menu.list</field>
+        <field name="model">gadgetflix.shop.by.device.menu</field>
+        <field name="arch" type="xml">
+            <list string="Shop by Device Menus">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="website_id"/>
+                <field name="active" widget="boolean_toggle"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_gadgetflix_shop_by_device_menu_form" model="ir.ui.view">
+        <field name="name">gadgetflix.shop.by.device.menu.form</field>
+        <field name="model">gadgetflix.shop.by.device.menu</field>
+        <field name="arch" type="xml">
+            <form string="Shop by Device Menu">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Title"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="active" widget="boolean_toggle"/>
+                            <field name="sequence"/>
+                            <field name="website_id"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Links" name="links">
+                            <field name="link_ids">
+                                <list editable="bottom">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"/>
+                                    <field name="url"/>
+                                    <field name="active" widget="boolean_toggle"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_gadgetflix_shop_by_device_menu_search" model="ir.ui.view">
+        <field name="name">gadgetflix.shop.by.device.menu.search</field>
+        <field name="model">gadgetflix.shop.by.device.menu</field>
+        <field name="arch" type="xml">
+            <search string="Shop by Device Menus">
+                <field name="name"/>
+                <field name="website_id"/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_gadgetflix_shop_by_device_menu" model="ir.actions.act_window">
+        <field name="name">Shop by Device Menu</field>
+        <field name="res_model">gadgetflix.shop.by.device.menu</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create menu titles and add device links under each title.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_gadgetflix_shop_by_device_menu"
+              name="Shop by Device Menu"
+              parent="website.menu_website_global_configuration"
+              action="action_gadgetflix_shop_by_device_menu"
+              sequence="45"/>
+</odoo>

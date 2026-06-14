@@ -1,0 +1,819 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- ============================================================
+         Anti-Yellow Case Landing Page
+         Layout: Image left | Searchable Brand+Model configurator right
+         Route: /anti-yellow-case
+    ============================================================ -->
+    <template id="anti_yellow_case_page" name="Anti-Yellow Case Landing Page">
+        <t t-call="gadgetflix_website.gadgetflix_page_layout">
+            <t t-set="additional_title">Anti-Yellow Clear Cases – GadgetFlix</t>
+
+            <div id="gf-ayc-page" class="gf-ayc-page">
+
+                <!-- ── Main PDP row (image left + configurator right) ── -->
+                <section class="gf-ayc-pdp">
+                    <div class="gf-container gf-ayc-pdp__inner"
+                         id="gf-ayc-configurator"
+                         t-if="brands"
+                         t-att-data-default-product-id="default_brand['product_id'] if default_brand else 0"
+                         t-att-data-default-brand-id="default_brand['brand_value_id'] if default_brand else 0">
+
+                        <!-- ── LEFT: Product image ──────────────────── -->
+                        <div class="gf-ayc-pdp__image-col">
+                            <div class="gf-ayc-pdp__image-wrap" id="o-carousel-product">
+                                <t t-call="website_sale.shop_product_images"/>
+                            </div>
+                        </div>
+
+                        <!-- ── RIGHT: Configurator ──────────────────── -->
+                        <div class="gf-ayc-pdp__config-col">
+
+                            <!-- Product title + badges -->
+                            <div class="gf-ayc-pdp__title-row">
+                                <div class="gf-ayc-badges mb-2 d-flex align-items-center gap-2">
+                                    <span class="gf-ayc-badge gf-badge-warranty">
+                                        Lifetime Warranty
+                                    </span>
+                                    <span class="gf-ayc-badge gf-badge-gifts">
+                                        3 Free Gifts
+                                    </span>
+                                </div>
+                                <h1 class="gf-ayc-pdp__title">Anti-Yellow Magsafe Clear Case<span id="gf-ayc-title-model"></span></h1>
+                                
+                                <!-- Ratings -->
+                                <div class="gf-ayc-ratings d-flex align-items-center gap-2 mt-2 mb-2">
+                                    <div class="stars" style="color: #fbbc04; font-size: 1rem;">
+                                        <i class="fa fa-star"/>
+                                        <i class="fa fa-star"/>
+                                        <i class="fa fa-star"/>
+                                        <i class="fa fa-star"/>
+                                        <i class="fa fa-star-half-o"/>
+                                    </div>
+                                    <span class="text-muted" style="font-size: 0.85rem; font-weight: 500;">4.8 (1,284 Reviews)</span>
+                                </div>
+                            </div>
+
+                            <!-- Price -->
+                            <div class="gf-ayc-pdp__price-row mb-3">
+                                <span class="gf-ayc-pdp__price" id="gf-ayc-price">
+                                    <t t-if="product_variant">
+                                        <t t-out="product_variant.lst_price"
+                                           t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                    </t>
+                                    <t t-elif="default_brand">
+                                        <t t-out="default_brand['first_price']"
+                                           t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                    </t>
+                                    <t t-else="">—</t>
+                                </span>
+                            </div>
+
+                            <!-- Bundle & Save -->
+                            <div class="gf-ayc-bundle-compact mb-3">
+                                <h6 class="gf-ayc-sec-title mb-1">🔥 Bundle &amp; save more</h6>
+                                <p class="gf-ayc-bundle-subtitle">Buy covers for different devices and still enjoy the same offer.</p>
+                                <div class="d-flex gap-2 align-items-stretch">
+                                    <div class="gf-ayc-bundle-card flex-fill" data-qty="1">
+                                        <div class="b-qty">1 Case</div>
+                                        <div class="b-price">₹549</div>
+                                        <div class="b-subtext">Perfect for yourself.</div>
+                                    </div>
+                                    <div class="gf-ayc-bundle-card popular flex-fill" data-qty="2">
+                                        <div class="b-badge">MOST POPULAR</div>
+                                        <div class="b-qty">2 Cases</div>
+                                        <div class="b-price">₹749</div>
+                                        <div class="b-save">Save ₹349</div>
+                                        <div class="b-subtext">Great for you &amp; a friend.</div>
+                                    </div>
+                                    <div class="gf-ayc-bundle-card flex-fill" data-qty="3">
+                                        <div class="b-qty">3 Cases</div>
+                                        <div class="b-price">₹849</div>
+                                        <div class="b-save">Save ₹798</div>
+                                        <div class="b-subtext">Best value for more savings!</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Free Gifts Compact Banner -->
+                            <div class="gf-ayc-gifts-compact mb-4">
+                                <div class="g-header text-center">
+                                    <div class="g-title">🎁 3 FREE Gifts with Every Order!</div>
+                                    <div class="g-subtitle"><i class="fa fa-check-circle" aria-hidden="true"/> No extra cost – always included.</div>
+                                </div>
+                                <div class="g-items">
+                                    <div class="g-item">
+                                        <div class="g-item-title">Cable Protector</div>
+                                        <div class="g-item-desc">Protects your charging cable from damage &amp; fraying.</div>
+                                        <div class="g-image-box">
+                                            <img src="/gadgetflix_website/static/src/img/gift_cable_protector.webp" alt="Cable Protector"/>
+                                        </div>
+                                    </div>
+                                    <div class="g-item border-middle">
+                                        <div class="g-item-title">C-to-C Cable</div>
+                                        <div class="g-item-desc">Fast charging &amp; data sync with durable build.</div>
+                                        <div class="g-image-box">
+                                            <img src="/gadgetflix_website/static/src/img/gift_c_to_c_cable.webp" alt="C-to-C Cable"/>
+                                        </div>
+                                    </div>
+                                    <div class="g-item">
+                                        <div class="g-item-title">Pop-up Stand</div>
+                                        <div class="g-item-desc">Secure grip &amp; hands-free viewing anytime, anywhere.</div>
+                                        <div class="g-image-box">
+                                            <img src="/gadgetflix_website/static/src/img/gift_popup_stand.webp" alt="Pop-up Stand"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Divider -->
+                            <hr class="gf-ayc-pdp__divider"/>
+
+                            <!-- Step 1: Brand (radio squarebox) -->
+                            <div class="gf-ayc-field gf-ayc-field--brand" id="gf-ayc-brand-dropdown">
+                                <div class="gf-ayc-field__header">
+                                    <label class="gf-ayc-field__label">Select Brand</label>
+                                    <span id="gf-ayc-brand-label" class="gf-ayc-field__selected-value" t-out="default_brand['brand_name'] if default_brand else 'Choose a brand…'"/>
+                                </div>
+                                <div class="gf-ayc-brand-grid-wrapper">
+                                    <!-- Dummy elements to satisfy JS makeDropdown helper without errors -->
+                                    <div id="gf-ayc-brand-trigger" style="display: none;"/>
+                                    <div id="gf-ayc-brand-panel" style="display: none;">
+                                        <input type="text" id="gf-ayc-brand-search" style="display: none;"/>
+                                    </div>
+
+                                    <div class="gf-ayc-brand-grid" id="gf-ayc-brand-listbox" role="radiogroup">
+                                        <t t-foreach="brands" t-as="brand">
+                                            <div t-attf-class="gf-ayc-dropdown__item {{'gf-ayc-dropdown__item--active' if brand['is_active'] else ''}}"
+                                                 role="option"
+                                                 t-att-data-brand-value-id="brand['brand_value_id']"
+                                                 t-att-data-product-id="brand['product_id']"
+                                                 t-att-data-first-price="brand['first_price']"
+                                                 t-att-data-image-url="brand['first_image_url']"
+                                                 t-att-data-brand-name="brand['brand_name']"
+                                                 t-att-aria-selected="'true' if brand['is_active'] else 'false'">
+                                                <span class="gf-ayc-dropdown__item-name" t-out="brand['brand_name']"/>
+                                            </div>
+                                        </t>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Step 2: Model (searchable dropdown) -->
+                            <div class="gf-ayc-field gf-ayc-field--model">
+                                <label class="gf-ayc-field__label" for="gf-ayc-model-search">
+                                    Select Model
+                                </label>
+                                <div t-attf-class="gf-ayc-dropdown {{'gf-ayc-dropdown--disabled' if not default_models else ''}}" id="gf-ayc-model-dropdown">
+                                    <div class="gf-ayc-dropdown__trigger" id="gf-ayc-model-trigger"
+                                         role="combobox" aria-haspopup="listbox"
+                                         aria-expanded="false" aria-controls="gf-ayc-model-listbox"
+                                         tabindex="0">
+                                        <span id="gf-ayc-model-label" t-out="default_model['name'] if default_model else 'Select a brand first…'"/>
+                                        <span class="gf-ayc-spinner gf-ayc-dropdown__spinner" id="gf-ayc-model-spinner" hidden="hidden" aria-label="Loading"/>
+                                        <i class="fa fa-angle-down gf-ayc-dropdown__caret" aria-hidden="true"/>
+                                    </div>
+                                    <div class="gf-ayc-dropdown__panel" id="gf-ayc-model-panel" role="listbox" aria-label="Model options">
+                                        <div class="gf-ayc-dropdown__search-wrap">
+                                            <i class="fa fa-search" aria-hidden="true"/>
+                                            <input
+                                                type="text"
+                                                id="gf-ayc-model-search"
+                                                class="gf-ayc-dropdown__search"
+                                                placeholder="Search model…"
+                                                autocomplete="off"
+                                                aria-label="Search model"
+                                            />
+                                        </div>
+                                        <ul class="gf-ayc-dropdown__list" id="gf-ayc-model-listbox">
+                                            <t t-if="default_models" t-foreach="default_models" t-as="m">
+                                                <li t-attf-class="gf-ayc-dropdown__item {{'gf-ayc-dropdown__item--active' if m['is_active'] else ''}}"
+                                                    role="option"
+                                                    t-att-aria-selected="'true' if m['is_active'] else 'false'"
+                                                    t-att-data-model-name="m['name']"
+                                                    t-att-data-variant-id="m['variant_id']"
+                                                    t-att-data-model-value-id="m['id']"
+                                                    t-att-data-price="m['price']"
+                                                    t-att-data-product-id="default_brand['product_id']"
+                                                    t-att-data-image-url="m['image_url']"
+                                                    t-att-data-carousel-html="m['carousel_html']">
+                                                    <span class="gf-ayc-dropdown__item-name" t-out="m['name']"/>
+                                                </li>
+                                            </t>
+                                        </ul>
+                                        <p class="gf-ayc-dropdown__no-results" hidden="hidden">No results found</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Divider -->
+                            <hr class="gf-ayc-pdp__divider"/>
+
+                            <!-- Qty + Add to Cart + Buy Now -->
+                            <div class="gf-ayc-buy" id="gf-ayc-buy">
+                                <div id="add_to_cart_wrap" class="d-flex flex-nowrap align-items-center gap-2">
+                                    <div class="css_quantity input-group d-inline-flex align-middle border bg-white">
+                                        <button type="button" class="btn btn-link pe-2 border-0 text-dark gf-ayc-qty-btn" id="gf-ayc-qty-dec" aria-label="Remove one" title="Remove one">
+                                            <i class="fa fa-minus"></i>
+                                        </button>
+                                        <input type="text" id="gf-ayc-qty" class="form-control quantity text-center border-0 bg-transparent fw-bold" value="1" min="1" max="99"/>
+                                        <button type="button" class="btn btn-link ps-2 border-0 text-dark gf-ayc-qty-btn" id="gf-ayc-qty-inc" aria-label="Add one" title="Add one">
+                                            <i class="fa fa-plus"></i>
+                                        </button>
+                                    </div>
+                                    <button type="button" id="gf-ayc-add-to-cart" class="gf-ayc-buy__cart-btn flex-grow-1" disabled="disabled">
+                                        <i class="fa fa-shopping-cart me-2" aria-hidden="true"/>
+                                        <span>Add to Cart</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Trust badges -->
+                            <div class="gf-ayc-pdp__trust">
+                                <div class="gf-ayc-trust-item">
+                                    <i class="fa fa-truck" aria-hidden="true"/>
+                                    <div>
+                                        <strong>Fast Delivery</strong>
+                                        <span>3–7 days</span>
+                                    </div>
+                                </div>
+                                <div class="gf-ayc-trust-item">
+                                    <i class="fa fa-shield" aria-hidden="true"/>
+                                    <div>
+                                        <strong>Lifetime Warranty</strong>
+                                        <span>Anti-yellow</span>
+                                    </div>
+                                </div>
+                                <div class="gf-ayc-trust-item">
+                                    <i class="fa fa-lock" aria-hidden="true"/>
+                                    <div>
+                                        <strong>Secure Payment</strong>
+                                        <span>100% Safe</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div><!-- /.gf-ayc-pdp__config-col -->
+                    </div>
+
+                    <!-- Empty state -->
+                    <div t-else="" class="gf-container gf-ayc-empty">
+                        <i class="fa fa-exclamation-circle" aria-hidden="true"/>
+                        <p>No anti-yellow products are currently available. Check back soon!</p>
+                        <a href="/shop" class="gf-ayc-btn-link">Browse all products</a>
+                    </div>
+                </section>
+
+                <!-- ── Google Reviews Section ── -->
+                 <section class="gf-ayc-reviews-section">
+                     <div class="gf-container">
+                         <div class="gf-ayc-reviews-header text-center mb-5">
+                             <div class="g-reviews-badge mb-3">
+                                 <svg viewBox="0 0 24 24" width="18" height="18" class="me-1"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+                                 <span><strong>5 / 5</strong> Rating on Google Reviews</span>
+                             </div>
+                             <h2>What Our Customers Are Saying</h2>
+                             <p>Real reviews from verified buyers who experienced the premium quality and protection of our clear cases.</p>
+                         </div>
+
+                         <div class="row g-4 gf-ayc-reviews-grid">
+                             <!-- Review 1: Naresh Suthar -->
+                             <div class="col-md-6 col-lg-4">
+                                 <div class="gf-review-card">
+                                     <div class="r-header">
+                                         <div class="r-avatar r-avatar-n">N</div>
+                                         <div class="r-user-info">
+                                             <div class="r-name">Naresh Suthar</div>
+                                         </div>
+                                         <i class="fa fa-google r-g-icon" aria-hidden="true"/>
+                                     </div>
+                                     <div class="r-stars-row">
+                                         <div class="r-stars">★★★★★</div>
+                                     </div>
+                                     <div class="r-text-container">
+                                         <p class="r-text clamped">I have ordered anti yellow case for iPhone 14 and I just realise the product is so worth it as compar to the price.</p>
+                                         <button type="button" class="r-read-more" style="display: none;">Read more</button>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <!-- Review 2: Dhruv Panchal -->
+                             <div class="col-md-6 col-lg-4">
+                                 <div class="gf-review-card">
+                                     <div class="r-header">
+                                         <div class="r-avatar r-avatar-d">D</div>
+                                         <div class="r-user-info">
+                                             <div class="r-name">Dhruv Panchal</div>
+                                         </div>
+                                         <i class="fa fa-google r-g-icon" aria-hidden="true"/>
+                                     </div>
+                                     <div class="r-stars-row">
+                                         <div class="r-stars">★★★★★</div>
+                                     </div>
+                                     <div class="r-text-container">
+                                         <p class="r-text clamped">Bought this for my iPhone because I was tired of replacing yellow cases every few months. The fit is excellent and the...</p>
+                                         <button type="button" class="r-read-more" style="display: none;">Read more</button>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <!-- Review 3: Devanshu Jotangiya -->
+                             <div class="col-md-6 col-lg-4">
+                                 <div class="gf-review-card">
+                                     <div class="r-header">
+                                         <div class="r-avatar r-avatar-dev">D</div>
+                                         <div class="r-user-info">
+                                             <div class="r-name">Devanshu Jotangiya</div>
+                                         </div>
+                                         <i class="fa fa-google r-g-icon" aria-hidden="true"/>
+                                     </div>
+                                     <div class="r-stars-row">
+                                         <div class="r-stars">★★★★★</div>
+                                     </div>
+                                     <div class="r-text-container">
+                                         <p class="r-text clamped">Crystal clear design that shows your phone's original beauty. Good grip, solid protection, and resists yellowing for a long time. A stylish and durable case that keeps your phone looking premium.</p>
+                                         <button type="button" class="r-read-more" style="display: none;">Read more</button>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <!-- Review 4: Rohan Tripathi -->
+                             <div class="col-md-6 col-lg-4">
+                                 <div class="gf-review-card">
+                                     <div class="r-header">
+                                         <div class="r-avatar r-avatar-r">R</div>
+                                         <div class="r-user-info">
+                                             <div class="r-name">Rohan Tripathi</div>
+                                         </div>
+                                         <i class="fa fa-google r-g-icon" aria-hidden="true"/>
+                                     </div>
+                                     <div class="r-stars-row">
+                                         <div class="r-stars">★★★★★</div>
+                                     </div>
+                                     <div class="r-text-container">
+                                         <p class="r-text clamped">Anti yellow case fit perfect slimest and safest case ever I purchased</p>
+                                         <button type="button" class="r-read-more" style="display: none;">Read more</button>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <!-- Review 5: Kartik Chauhan -->
+                             <div class="col-md-6 col-lg-4">
+                                 <div class="gf-review-card">
+                                     <div class="r-header">
+                                         <div class="r-avatar r-avatar-k">K</div>
+                                         <div class="r-user-info">
+                                             <div class="r-name">Kartik Chauhan</div>
+                                         </div>
+                                         <i class="fa fa-google r-g-icon" aria-hidden="true"/>
+                                     </div>
+                                     <div class="r-stars-row">
+                                         <div class="r-stars">★★★★★</div>
+                                     </div>
+                                     <div class="r-text-container">
+                                         <p class="r-text clamped">I purchased 17 pro antiyellow case from them quality superb after sales service good</p>
+                                         <button type="button" class="r-read-more" style="display: none;">Read more</button>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <!-- Review 6: viral hadiyal -->
+                             <div class="col-md-6 col-lg-4">
+                                 <div class="gf-review-card">
+                                     <div class="r-header">
+                                         <div class="r-avatar r-avatar-v">V</div>
+                                         <div class="r-user-info">
+                                             <div class="r-name">viral hadiyal</div>
+                                         </div>
+                                         <i class="fa fa-google r-g-icon" aria-hidden="true"/>
+                                     </div>
+                                     <div class="r-stars-row">
+                                         <div class="r-stars">★★★★★</div>
+                                     </div>
+                                     <div class="r-text-container">
+                                         <p class="r-text clamped">I purchased mobile case for my iPhone 16 and had a very good experience. The case fits perfectly, feels sturdy, and provides excellent protection without adding too much bulk. The material is of good quality, and the buttons remain easy to press. It also looks stylish and matches the phone well. Overall, I am very satisfied with this purchase and would recommend it to anyone looking for a reliable iPhone 16 case.</p>
+                                         <button type="button" class="r-read-more" style="display: none;">Read more</button>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </section>
+
+                <!-- ── Lifestyle / Product Showcase ─────────────────────────── -->
+                <section class="gf-ayc-showcase">
+                    <div class="gf-container">
+                        <div class="gf-ayc-showcase__header text-center">
+                            <h2>Designed to Showcase. Built to Protect.</h2>
+                            <p>Premium materials meet military-grade drop defense. Our crystal-clear cases protect your phone without masking its color or styling.</p>
+                        </div>
+                        <div class="gf-ayc-marquee">
+                            <div class="gf-ayc-marquee-track">
+                                <!-- Original Set -->
+                                <t t-foreach="[1, 2, 3, 4, 5]" t-as="i">
+                                    <div class="gf-ayc-marquee-item">
+                                        <img t-attf-src="/gadgetflix_website/static/src/img/anti_yellow_no_border_#{i}.webp" width="2000" height="2000" t-attf-alt="Clear Case #{i}" loading="lazy"/>
+                                    </div>
+                                </t>
+                                <!-- Duplicated Set for infinite loop -->
+                                <t t-foreach="[1, 2, 3, 4, 5]" t-as="i">
+                                    <div class="gf-ayc-marquee-item">
+                                        <img t-attf-src="/gadgetflix_website/static/src/img/anti_yellow_no_border_#{i}.webp" width="2000" height="2000" t-attf-alt="Clear Case #{i}" loading="lazy"/>
+                                    </div>
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ── Unique Interactive Video Accordion ── -->
+                <section class="gf-ayc-accordion-section">
+                    <div class="gf-container-fluid px-0">
+                        <div class="gf-ayc-accordion-header text-center">
+                            <h2>Engineered for Perfection</h2>
+                            <p>Hover over the cards to explore what makes our clear case the best in class.</p>
+                        </div>
+                        
+                        <div class="gf-ayc-accordion-wrapper">
+                            
+                            <!-- Accordion Item 1 -->
+                            <div class="gf-ayc-accordion-item">
+                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                    <source src="/gadgetflix_website/static/src/video/anti_yellow_case.mp4" type="video/mp4"/>
+                                </video>
+                                <div class="gf-ayc-accordion-overlay"></div>
+                                <div class="gf-ayc-accordion-content">
+                                    <div class="gf-ayc-acc-icon">01</div>
+                                    <div class="gf-ayc-acc-text">
+                                        <h3>UV-Resistant Premium Bayer Material</h3>
+                                        <p>Crafted from premium Bayer TPU infused with advanced UV-defending molecules. Active blue-light absorption keeps the case crystal clear and prevents yellowing caused by sunlight or sweat.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Accordion Item 2 -->
+                             <div class="gf-ayc-accordion-item">
+                                 <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                     <source src="/gadgetflix_website/static/src/video/yellow_free_guarantee.mp4" type="video/mp4"/>
+                                 </video>
+                                 <div class="gf-ayc-accordion-overlay"></div>
+                                 <div class="gf-ayc-accordion-content">
+                                     <div class="gf-ayc-acc-icon">02</div>
+                                     <div class="gf-ayc-acc-text">
+                                         <h3>Advanced Drop &amp; Corner Protection</h3>
+                                         <p>Equipped with custom protective air cushions in all four corners and raised bumpers. Keeps your screen and camera lenses completely safe from accidental drops.</p>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <!-- Accordion Item 3 -->
+                             <div class="gf-ayc-accordion-item">
+                                 <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                     <source src="/gadgetflix_website/static/src/video/magsafe_ready.mp4" type="video/mp4"/>
+                                 </video>
+                                 <div class="gf-ayc-accordion-overlay"></div>
+                                 <div class="gf-ayc-accordion-content">
+                                     <div class="gf-ayc-acc-icon">03</div>
+                                     <div class="gf-ayc-acc-text">
+                                         <h3>Integrated MagSafe-Compatible Ring</h3>
+                                         <p>Features a built-in circle of magnets to ensure a secure snap-on connection with MagSafe accessories, mounts, and wireless chargers.</p>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <!-- Accordion Item 4 -->
+                             <div class="gf-ayc-accordion-item">
+                                 <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                     <source src="/gadgetflix_website/static/src/video/stylish_premium.mp4" type="video/mp4"/>
+                                 </video>
+                                 <div class="gf-ayc-accordion-overlay"></div>
+                                 <div class="gf-ayc-accordion-content">
+                                     <div class="gf-ayc-acc-icon">04</div>
+                                     <div class="gf-ayc-acc-text">
+                                         <h3>Slim Profile &amp; Ergonomic Grip</h3>
+                                         <p>Slim design showcases your phone's original aesthetics. The micro-dot laser texture prevents wet-look watermarks and offers an anti-slip, comfortable grip.</p>
+                                     </div>
+                                 </div>
+                             </div>
+
+                             <!-- Accordion Item 5 -->
+                             <div class="gf-ayc-accordion-item">
+                                 <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                     <source src="/gadgetflix_website/static/src/video/stay_protected.mp4" type="video/mp4"/>
+                                 </video>
+                                 <div class="gf-ayc-accordion-overlay"></div>
+                                 <div class="gf-ayc-accordion-content">
+                                     <div class="gf-ayc-acc-icon">05</div>
+                                     <div class="gf-ayc-acc-text">
+                                         <h3>Premium Scratch Resistance</h3>
+                                         <p>Coated with a specialized self-healing optical layer that resists keys, coins, and everyday abrasions, keeping your case looking brand new day after day.</p>
+                                     </div>
+                                 </div>
+                             </div>
+
+                        </div>
+                    </div>
+                 </section>
+
+                 <!-- ── Section A: Multi-Layer Fusion (Exploded Material View) ── -->
+                 <section class="gf-ayc-engineering">
+                     <div class="gf-container">
+                         <div class="row align-items-center">
+                             <div class="col-lg-6 mb-5 mb-lg-0">
+                                 <span class="gf-badge mb-3">MATERIAL SCIENCE</span>
+                                 <h2 class="gf-ayc-eng-heading">Three Layers of Invisible Protection</h2>
+                                 <p class="gf-ayc-eng-desc">Standard clear cases are made from single-layer cheap TPU that easily absorbs oils and yellows. We fused three specialized material layers to create the ultimate clear case.</p>
+                                 
+                                 <div class="gf-ayc-layers-list">
+                                     <div class="gf-ayc-layer-item">
+                                         <div class="layer-indicator">01</div>
+                                         <div>
+                                             <strong>Scratch-Resistant Armor</strong>
+                                             <p>An optical outer coating engineered to resist scratches from keys, coins, and daily contact, keeping your case clear and pristine.</p>
+                                         </div>
+                                     </div>
+                                     <div class="gf-ayc-layer-item">
+                                         <div class="layer-indicator">02</div>
+                                         <div>
+                                             <strong>High-Impact Core</strong>
+                                             <p>A rigid, crystal-clear backing that distributes pressure and provides solid structural strength to prevent bending or cracking.</p>
+                                         </div>
+                                     </div>
+                                     <div class="gf-ayc-layer-item">
+                                         <div class="layer-indicator">03</div>
+                                         <div>
+                                             <strong>UV-Defending Polymer Blend</strong>
+                                             <p>Infused throughout the TPU frame, this layer actively blocks UV light and sweat to prevent chemical yellowing at the molecular level.</p>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="col-lg-6">
+                                 <div class="gf-ayc-exploded-visual">
+                                     <!-- Exploded CSS layers representation -->
+                                     <div class="exploded-layer layer-3">
+                                         <span class="layer-tag">01 / Scratch-Resistant Armor</span>
+                                     </div>
+                                     <div class="exploded-layer layer-2">
+                                         <span class="layer-tag">02 / High-Impact Core</span>
+                                     </div>
+                                     <div class="exploded-layer layer-1">
+                                         <span class="layer-tag">03 / UV-Defending Polymer</span>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </section>
+
+                 <!-- ── Section B: Clarity Comparison Timeline ── -->
+                 <section class="gf-ayc-comparison">
+                     <div class="gf-container">
+                         <div class="gf-ayc-comp-header text-center mb-5">
+                             <span class="gf-badge mb-3">COMPARE THE DIFFERENCE</span>
+                             <h2>Clarity That Stands the Test of Time</h2>
+                             <p>Most clear cases look good on Day 1. Here is how Gadgetflix compares to standard clear cases over a 6-month timeline.</p>
+                         </div>
+                         
+                         <div class="gf-ayc-comp-grid">
+                             <!-- Header Row -->
+                             <div class="comp-row comp-header">
+                                 <div class="comp-col">Timeline</div>
+                                 <div class="comp-col">Standard Clear Case</div>
+                                 <div class="comp-col highlight">Gadgetflix Anti-Yellow Case</div>
+                             </div>
+                             
+                             <!-- Row 1 -->
+                             <div class="comp-row">
+                                 <div class="comp-col comp-day font-weight-bold">Day 1</div>
+                                 <div class="comp-col text-muted" data-label="Standard Clear Case">Crystal clear, looks great.</div>
+                                 <div class="comp-col highlight text-success font-weight-bold" data-label="Gadgetflix Anti-Yellow Case">✓ Crystal clear, high-gloss shine.</div>
+                             </div>
+                             
+                             <!-- Row 2 -->
+                             <div class="comp-row">
+                                 <div class="comp-col comp-day font-weight-bold">Day 90</div>
+                                 <div class="comp-col text-muted" data-label="Standard Clear Case">Slight greasy yellow tint around edges.</div>
+                                 <div class="comp-col highlight text-success font-weight-bold" data-label="Gadgetflix Anti-Yellow Case">✓ 100% Clear, zero color change.</div>
+                             </div>
+                             
+                             <!-- Row 3 -->
+                             <div class="comp-row">
+                                 <div class="comp-col comp-day font-weight-bold">Day 180</div>
+                                 <div class="comp-col text-muted text-warning" data-label="Standard Clear Case">Dirty yellow-brown color. Sticky feel.</div>
+                                 <div class="comp-col highlight text-success font-weight-bold" data-label="Gadgetflix Anti-Yellow Case">✓ Pristine transparency, looks like new.</div>
+                             </div>
+                         </div>
+                     </div>
+                 </section>
+
+                 <!-- ── Official Warranty Section ─────────────────────────── -->
+                 <t t-call="gadgetflix_website.gadgetflix_warranty"/>
+
+                <!-- ── FAQ Section ─────────────────────────────────────────── -->
+                <section class="gf-ayc-faq-section">
+                    <div class="gf-container">
+                        <div class="gf-ayc-faq-header text-center">
+                            <span class="gf-badge mb-3">Got Questions?</span>
+                            <h2>Frequently Asked Questions</h2>
+                        </div>
+                        <div class="row gf-ayc-faq-row" id="ayc-faq-accordion">
+                            <!-- Left Column -->
+                            <div class="col-md-6 mb-4 mb-md-0">
+                                <div class="accordion gf-ayc-accordion">
+                                    <!-- FAQ 1 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-1">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-1" aria-expanded="false" aria-controls="faq-collapse-1">
+                                                What makes this case different from others?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-1" class="accordion-collapse collapse" aria-labelledby="faq-heading-1" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                Our case is built with advanced UV Shield Technology, designed to prevent yellowing over time. This ensures your phone case stays crystal clear and maintains its fresh look for much longer compared to standard clear cases.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FAQ 2 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-2">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-2" aria-expanded="false" aria-controls="faq-collapse-2">
+                                                What is the anti-yellowing guarantee?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-2" class="accordion-collapse collapse" aria-labelledby="faq-heading-2" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                We provide a lifetime anti-yellowing guarantee. If your case ever develops yellowing, you are eligible for a one-time free replacement—no hassle.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FAQ 4 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-4">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-4" aria-expanded="false" aria-controls="faq-collapse-4">
+                                                Does the case protect against drops and scratches?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-4" class="accordion-collapse collapse" aria-labelledby="faq-heading-4" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                Yes, the case is designed to provide daily protection against minor drops, bumps, and scratches, all while maintaining a slim and lightweight profile.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FAQ 5 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-5">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-5" aria-expanded="false" aria-controls="faq-collapse-5">
+                                                Is the case compatible with MagSafe?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-5" class="accordion-collapse collapse" aria-labelledby="faq-heading-5" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                Absolutely. The case is equipped with high-quality magnets, ensuring strong and stable MagSafe compatibility for seamless charging and accessory use.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Right Column -->
+                            <div class="col-md-6">
+                                <div class="accordion gf-ayc-accordion">
+                                    <!-- FAQ 6 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-6">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-6" aria-expanded="false" aria-controls="faq-collapse-6">
+                                                What material is used in the case?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-6" class="accordion-collapse collapse" aria-labelledby="faq-heading-6" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                Our case is crafted from premium polycarbonate material, enhanced with proprietary technology to deliver superior clarity, strength, and durability.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FAQ 7 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-7">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-7" aria-expanded="false" aria-controls="faq-collapse-7">
+                                                How can I keep the case clean and clear?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-7" class="accordion-collapse collapse" aria-labelledby="faq-heading-7" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                To maintain its clarity:<br/>
+                                                <ul class="gf-ayc-faq-list">
+                                                    <li>Wipe the case with a soft microfiber cloth every 2–3 days</li>
+                                                    <li>Avoid prolonged exposure to dirt, oils, or harsh environments</li>
+                                                </ul>
+                                                This simple care routine helps keep your case looking new for longer.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FAQ 8 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-8">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-8" aria-expanded="false" aria-controls="faq-collapse-8">
+                                                Does the case turn yellow over time?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-8" class="accordion-collapse collapse" aria-labelledby="faq-heading-8" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                No, thanks to our UV Shield Technology, the case is specifically engineered to resist yellowing caused by sunlight and everyday use.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FAQ 9 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-9">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-9" aria-expanded="false" aria-controls="faq-collapse-9">
+                                                Will the case add bulk to my phone?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-9" class="accordion-collapse collapse" aria-labelledby="faq-heading-9" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                Not at all. The case is designed to be slim, lightweight, and comfortable to hold, while still offering dependable protection.
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+
+
+                <!-- ── Sticky add-to-cart bar (mobile) ───────── -->
+                <div class="gf-ayc-sticky-bar" id="gf-ayc-sticky-bar" aria-hidden="true" hidden="hidden">
+                    <div class="gf-ayc-sticky-bar__inner">
+                        <div class="gf-ayc-sticky-bar__info">
+                            <span class="gf-ayc-sticky-bar__name" id="gf-ayc-sticky-name">Anti-Yellow Clear Case</span>
+                            <span class="gf-ayc-sticky-bar__price" id="gf-ayc-sticky-price"/>
+                        </div>
+                        <button type="button" id="gf-ayc-sticky-btn"
+                                class="gf-ayc-sticky-bar__btn" disabled="disabled">
+                            Add to Cart
+                        </button>
+                    </div>
+                </div>
+
+                <script type="text/javascript">
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const initReadMore = function() {
+                            const reviewTexts = document.querySelectorAll('.gf-review-card .r-text');
+                            reviewTexts.forEach(textEl => {
+                                const container = textEl.parentElement;
+                                const btn = container.querySelector('.r-read-more');
+                                if (!btn) return;
+                                
+                                // Temporarily remove clamped to get full height
+                                const wasClamped = textEl.classList.contains('clamped');
+                                textEl.classList.remove('clamped');
+                                const fullHeight = textEl.offsetHeight;
+
+                                // Re-apply clamped to get clamped height
+                                if (wasClamped) {
+                                    textEl.classList.add('clamped');
+                                }
+                                const clampedHeight = textEl.offsetHeight;
+
+                                if (fullHeight > clampedHeight) {
+                                    btn.style.display = 'inline-block';
+                                    if (!btn.dataset.hasListener) {
+                                        btn.dataset.hasListener = 'true';
+                                        btn.addEventListener('click', function() {
+                                            const isClamped = textEl.classList.contains('clamped');
+                                            if (isClamped) {
+                                                textEl.classList.remove('clamped');
+                                                btn.textContent = 'Read less';
+                                            } else {
+                                                textEl.classList.add('clamped');
+                                                btn.textContent = 'Read more';
+                                            }
+                                        });
+                                    }
+                                } else {
+                                    btn.style.display = 'none';
+                                }
+                            });
+                        };
+
+                        initReadMore();
+                        window.addEventListener('load', initReadMore);
+                        setTimeout(initReadMore, 500);
+                        setTimeout(initReadMore, 1500);
+                    });
+                </script>
+            </div><!-- /#gf-ayc-page -->
+        </t>
+    </template>
+
+</odoo>
