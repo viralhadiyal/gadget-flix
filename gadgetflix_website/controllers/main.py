@@ -166,16 +166,6 @@ class WebsiteSaleShop(Delivery):
             limit=12,
             order='website_sequence asc, id desc',
         )
-        anti_yellow_products = Product.search(
-            product_domain & Domain('gadgetflix_show_anti_yellow', '=', True),
-            limit=12,
-            order='website_sequence asc, id desc',
-        )
-        anti_yellow_best_selling_products = Product.search(
-            product_domain & Domain('gadgetflix_show_anti_yellow_best_selling', '=', True),
-            limit=12,
-            order='website_sequence asc, id desc',
-        )
         about_products = Product.search(
             product_domain & Domain('gadgetflix_show_about_page', '=', True),
             limit=12,
@@ -185,8 +175,6 @@ class WebsiteSaleShop(Delivery):
             products
             | featured_products
             | new_arrival_products
-            | anti_yellow_products
-            | anti_yellow_best_selling_products
             | about_products
         )
         category_domain = (
@@ -199,18 +187,10 @@ class WebsiteSaleShop(Delivery):
             'website_categories': Category.search(category_domain, limit=6),
             'featured_products': featured_products,
             'new_arrival_products': new_arrival_products,
-            'anti_yellow_products': anti_yellow_products,
-            'anti_yellow_best_selling_products': anti_yellow_best_selling_products,
             'about_products': about_products,
             'products': products,
             'product_prices': priced_products._get_sales_prices(website) if priced_products else {},
         }
-
-    @route('/', type='http', auth='public', website=True, sitemap=True)
-    def gadgetflix_homepage(self, **kwargs):
-        values = self._get_gadgetflix_page_values(limit=12)
-        values['products'] = values['anti_yellow_products']
-        return request.render('gadgetflix_website.anti_yellow_cases', values)
 
     @route('/home', type='http', auth='public', website=True, sitemap=True)
     def gadgetflix_home(self, **kwargs):
@@ -228,12 +208,6 @@ class WebsiteSaleShop(Delivery):
     @route('/contact', type='http', auth='public', website=True, sitemap=True)
     def gadgetflix_contact(self, **kwargs):
         return request.render('gadgetflix_website.contact_page', self._get_gadgetflix_page_values(limit=4))
-
-    @route(['/anti-yellow-cases', '/anti-yellow'], type='http', auth='public', website=True, sitemap=True)
-    def gadgetflix_anti_yellow_cases(self, **kwargs):
-        values = self._get_gadgetflix_page_values(limit=12)
-        values['products'] = values['anti_yellow_products']
-        return request.render('gadgetflix_website.anti_yellow_cases', values)
 
     @route('/gadgetflix/cart/preview', type='http', auth='public', website=True, sitemap=False)
     def gadgetflix_cart_preview(self, **kwargs):
@@ -675,7 +649,7 @@ class WebsiteSaleShop(Delivery):
 
 class AntiYellowController(http.Controller):
 
-    @http.route('/anti-yellow-case', type='http', auth='public', website=True, sitemap=True)
+    @http.route('/', type='http', auth='public', website=True, sitemap=True)
     def anti_yellow_case_page(self, **kw):
         """Premium single landing page for Anti-Yellow Clear Cases.
         Finds all anti-yellow products and extracts their brand/model structure

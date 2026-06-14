@@ -250,8 +250,8 @@
                 <section class="gf-ayc-showcase">
                     <div class="gf-container">
                         <div class="gf-ayc-showcase__header text-center">
-                            <h2>Pure Clarity. Zero Yellowing.</h2>
-                            <p>See your phone exactly as it was meant to be seen. Our crystal-clear design perfectly showcases every curve.</p>
+                            <h2>Designed to Showcase. Built to Protect.</h2>
+                            <p>Premium materials meet military-grade drop defense. Our crystal-clear cases protect your phone without masking its color or styling.</p>
                         </div>
                         <div class="gf-ayc-marquee">
                             <div class="gf-ayc-marquee-track">
@@ -291,78 +291,170 @@
                                 <div class="gf-ayc-accordion-content">
                                     <div class="gf-ayc-acc-icon">01</div>
                                     <div class="gf-ayc-acc-text">
-                                        <h3>Premium Anti-Yellow Case</h3>
-                                        <p>Finally, a clear case that stands the test of time. Engineered to stay crystal clear without any yellowing over time.</p>
+                                        <h3>UV-Resistant Premium Bayer Material</h3>
+                                        <p>Crafted from premium Bayer TPU infused with advanced UV-defending molecules. Active blue-light absorption keeps the case crystal clear and prevents yellowing caused by sunlight or sweat.</p>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Accordion Item 2 -->
-                            <div class="gf-ayc-accordion-item">
-                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
-                                    <source src="/gadgetflix_website/static/src/video/yellow_free_guarantee.mp4" type="video/mp4"/>
-                                </video>
-                                <div class="gf-ayc-accordion-overlay"></div>
-                                <div class="gf-ayc-accordion-content">
-                                    <div class="gf-ayc-acc-icon">02</div>
-                                    <div class="gf-ayc-acc-text">
-                                        <h3>100% Yellow-Free</h3>
-                                        <p>Experience unparalleled clarity backed by our comprehensive money-back guarantee.</p>
-                                    </div>
-                                </div>
-                            </div>
+                             <div class="gf-ayc-accordion-item">
+                                 <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                     <source src="/gadgetflix_website/static/src/video/yellow_free_guarantee.mp4" type="video/mp4"/>
+                                 </video>
+                                 <div class="gf-ayc-accordion-overlay"></div>
+                                 <div class="gf-ayc-accordion-content">
+                                     <div class="gf-ayc-acc-icon">02</div>
+                                     <div class="gf-ayc-acc-text">
+                                         <h3>Advanced Drop &amp; Corner Protection</h3>
+                                         <p>Equipped with custom protective air cushions in all four corners and raised bumpers. Keeps your screen and camera lenses completely safe from accidental drops.</p>
+                                     </div>
+                                 </div>
+                             </div>
 
-                            <!-- Accordion Item 3 -->
-                            <div class="gf-ayc-accordion-item">
-                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
-                                    <source src="/gadgetflix_website/static/src/video/magsafe_ready.mp4" type="video/mp4"/>
-                                </video>
-                                <div class="gf-ayc-accordion-overlay"></div>
-                                <div class="gf-ayc-accordion-content">
-                                    <div class="gf-ayc-acc-icon">03</div>
-                                    <div class="gf-ayc-acc-text">
-                                        <h3>MagSafe Ready</h3>
-                                        <p>Seamless wireless charging with perfectly aligned magnets that snap on securely every time.</p>
-                                    </div>
-                                </div>
-                            </div>
+                             <!-- Accordion Item 3 -->
+                             <div class="gf-ayc-accordion-item">
+                                 <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                     <source src="/gadgetflix_website/static/src/video/magsafe_ready.mp4" type="video/mp4"/>
+                                 </video>
+                                 <div class="gf-ayc-accordion-overlay"></div>
+                                 <div class="gf-ayc-accordion-content">
+                                     <div class="gf-ayc-acc-icon">03</div>
+                                     <div class="gf-ayc-acc-text">
+                                         <h3>Integrated MagSafe-Compatible Ring</h3>
+                                         <p>Features a built-in circle of magnets to ensure a secure snap-on connection with MagSafe accessories, mounts, and wireless chargers.</p>
+                                     </div>
+                                 </div>
+                             </div>
 
-                            <!-- Accordion Item 4 -->
-                            <div class="gf-ayc-accordion-item">
-                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
-                                    <source src="/gadgetflix_website/static/src/video/stylish_premium.mp4" type="video/mp4"/>
-                                </video>
-                                <div class="gf-ayc-accordion-overlay"></div>
-                                <div class="gf-ayc-accordion-content">
-                                    <div class="gf-ayc-acc-icon">04</div>
-                                    <div class="gf-ayc-acc-text">
-                                        <h3>Stylish &amp; Premium</h3>
-                                        <p>Get premium minimalist aesthetics without adding any unnecessary bulk to your device.</p>
-                                    </div>
-                                </div>
-                            </div>
+                             <!-- Accordion Item 4 -->
+                             <div class="gf-ayc-accordion-item">
+                                 <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                     <source src="/gadgetflix_website/static/src/video/stylish_premium.mp4" type="video/mp4"/>
+                                 </video>
+                                 <div class="gf-ayc-accordion-overlay"></div>
+                                 <div class="gf-ayc-accordion-content">
+                                     <div class="gf-ayc-acc-icon">04</div>
+                                     <div class="gf-ayc-acc-text">
+                                         <h3>Slim Profile &amp; Ergonomic Grip</h3>
+                                         <p>Slim design showcases your phone's original aesthetics. The micro-dot laser texture prevents wet-look watermarks and offers an anti-slip, comfortable grip.</p>
+                                     </div>
+                                 </div>
+                             </div>
 
-                            <!-- Accordion Item 5 -->
-                            <div class="gf-ayc-accordion-item">
-                                <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
-                                    <source src="/gadgetflix_website/static/src/video/stay_protected.mp4" type="video/mp4"/>
-                                </video>
-                                <div class="gf-ayc-accordion-overlay"></div>
-                                <div class="gf-ayc-accordion-content">
-                                    <div class="gf-ayc-acc-icon">05</div>
-                                    <div class="gf-ayc-acc-text">
-                                        <h3>Stay Protected</h3>
-                                        <p>Reliable everyday protection against accidental drops and scratches everywhere you go.</p>
-                                    </div>
-                                </div>
-                            </div>
+                             <!-- Accordion Item 5 -->
+                             <div class="gf-ayc-accordion-item">
+                                 <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
+                                     <source src="/gadgetflix_website/static/src/video/stay_protected.mp4" type="video/mp4"/>
+                                 </video>
+                                 <div class="gf-ayc-accordion-overlay"></div>
+                                 <div class="gf-ayc-accordion-content">
+                                     <div class="gf-ayc-acc-icon">05</div>
+                                     <div class="gf-ayc-acc-text">
+                                         <h3>Premium Scratch Resistance</h3>
+                                         <p>Coated with a specialized self-healing optical layer that resists keys, coins, and everyday abrasions, keeping your case looking brand new day after day.</p>
+                                     </div>
+                                 </div>
+                             </div>
 
                         </div>
                     </div>
-                </section>
+                 </section>
 
-                <!-- ── Official Warranty Section ─────────────────────────── -->
-                <t t-call="gadgetflix_website.gadgetflix_warranty"/>
+                 <!-- ── Section A: Multi-Layer Fusion (Exploded Material View) ── -->
+                 <section class="gf-ayc-engineering">
+                     <div class="gf-container">
+                         <div class="row align-items-center">
+                             <div class="col-lg-6 mb-5 mb-lg-0">
+                                 <span class="gf-badge mb-3">MATERIAL SCIENCE</span>
+                                 <h2 class="gf-ayc-eng-heading">Three Layers of Invisible Protection</h2>
+                                 <p class="gf-ayc-eng-desc">Standard clear cases are made from single-layer cheap TPU that easily absorbs oils and yellows. We fused three specialized material layers to create the ultimate clear case.</p>
+                                 
+                                 <div class="gf-ayc-layers-list">
+                                     <div class="gf-ayc-layer-item">
+                                         <div class="layer-indicator">01</div>
+                                         <div>
+                                             <strong>Scratch-Resistant Armor</strong>
+                                             <p>An optical outer coating engineered to resist scratches from keys, coins, and daily contact, keeping your case clear and pristine.</p>
+                                         </div>
+                                     </div>
+                                     <div class="gf-ayc-layer-item">
+                                         <div class="layer-indicator">02</div>
+                                         <div>
+                                             <strong>High-Impact Core</strong>
+                                             <p>A rigid, crystal-clear backing that distributes pressure and provides solid structural strength to prevent bending or cracking.</p>
+                                         </div>
+                                     </div>
+                                     <div class="gf-ayc-layer-item">
+                                         <div class="layer-indicator">03</div>
+                                         <div>
+                                             <strong>UV-Defending Polymer Blend</strong>
+                                             <p>Infused throughout the TPU frame, this layer actively blocks UV light and sweat to prevent chemical yellowing at the molecular level.</p>
+                                         </div>
+                                     </div>
+                                 </div>
+                             </div>
+                             <div class="col-lg-6">
+                                 <div class="gf-ayc-exploded-visual">
+                                     <!-- Exploded CSS layers representation -->
+                                     <div class="exploded-layer layer-3">
+                                         <span class="layer-tag">01 / Scratch-Resistant Armor</span>
+                                     </div>
+                                     <div class="exploded-layer layer-2">
+                                         <span class="layer-tag">02 / High-Impact Core</span>
+                                     </div>
+                                     <div class="exploded-layer layer-1">
+                                         <span class="layer-tag">03 / UV-Defending Polymer</span>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </section>
+
+                 <!-- ── Section B: Clarity Comparison Timeline ── -->
+                 <section class="gf-ayc-comparison">
+                     <div class="gf-container">
+                         <div class="gf-ayc-comp-header text-center mb-5">
+                             <span class="gf-badge mb-3">COMPARE THE DIFFERENCE</span>
+                             <h2>Clarity That Stands the Test of Time</h2>
+                             <p>Most clear cases look good on Day 1. Here is how Gadgetflix compares to standard clear cases over a 6-month timeline.</p>
+                         </div>
+                         
+                         <div class="gf-ayc-comp-grid">
+                             <!-- Header Row -->
+                             <div class="comp-row comp-header">
+                                 <div class="comp-col">Timeline</div>
+                                 <div class="comp-col">Standard Clear Case</div>
+                                 <div class="comp-col highlight">Gadgetflix Anti-Yellow Case</div>
+                             </div>
+                             
+                             <!-- Row 1 -->
+                             <div class="comp-row">
+                                 <div class="comp-col comp-day font-weight-bold">Day 1</div>
+                                 <div class="comp-col text-muted" data-label="Standard Clear Case">Crystal clear, looks great.</div>
+                                 <div class="comp-col highlight text-success font-weight-bold" data-label="Gadgetflix Anti-Yellow Case">✓ Crystal clear, high-gloss shine.</div>
+                             </div>
+                             
+                             <!-- Row 2 -->
+                             <div class="comp-row">
+                                 <div class="comp-col comp-day font-weight-bold">Day 90</div>
+                                 <div class="comp-col text-muted" data-label="Standard Clear Case">Slight greasy yellow tint around edges.</div>
+                                 <div class="comp-col highlight text-success font-weight-bold" data-label="Gadgetflix Anti-Yellow Case">✓ 100% Clear, zero color change.</div>
+                             </div>
+                             
+                             <!-- Row 3 -->
+                             <div class="comp-row">
+                                 <div class="comp-col comp-day font-weight-bold">Day 180</div>
+                                 <div class="comp-col text-muted text-warning" data-label="Standard Clear Case">Dirty yellow-brown color. Sticky feel.</div>
+                                 <div class="comp-col highlight text-success font-weight-bold" data-label="Gadgetflix Anti-Yellow Case">✓ Pristine transparency, looks like new.</div>
+                             </div>
+                         </div>
+                     </div>
+                 </section>
+
+                 <!-- ── Official Warranty Section ─────────────────────────── -->
+                 <t t-call="gadgetflix_website.gadgetflix_warranty"/>
 
 
                 <!-- ── FAQ Section ─────────────────────────────────────────── -->
@@ -372,125 +464,133 @@
                             <span class="gf-badge mb-3">Got Questions?</span>
                             <h2>Frequently Asked Questions</h2>
                         </div>
-                        <div class="accordion gf-ayc-accordion" id="ayc-faq-accordion">
+                        <div class="row gf-ayc-faq-row" id="ayc-faq-accordion">
+                            <!-- Left Column -->
+                            <div class="col-md-6 mb-4 mb-md-0">
+                                <div class="accordion gf-ayc-accordion">
+                                    <!-- FAQ 1 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-1">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-1" aria-expanded="false" aria-controls="faq-collapse-1">
+                                                What makes this case different from others?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-1" class="accordion-collapse collapse" aria-labelledby="faq-heading-1" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                Our case is built with advanced UV Shield Technology, designed to prevent yellowing over time. This ensures your phone case stays crystal clear and maintains its fresh look for much longer compared to standard clear cases.
+                                            </div>
+                                        </div>
+                                    </div>
 
-                            <!-- FAQ 1 -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="faq-heading-1">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-1" aria-expanded="false" aria-controls="faq-collapse-1">
-                                        What makes this case different from others?
-                                    </button>
-                                </h2>
-                                <div id="faq-collapse-1" class="accordion-collapse collapse" aria-labelledby="faq-heading-1" data-bs-parent="#ayc-faq-accordion">
-                                    <div class="accordion-body">
-                                        Our case is built with advanced UV Shield Technology, designed to prevent yellowing over time. This ensures your phone case stays crystal clear and maintains its fresh look for much longer compared to standard clear cases.
+                                    <!-- FAQ 2 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-2">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-2" aria-expanded="false" aria-controls="faq-collapse-2">
+                                                What is the anti-yellowing guarantee?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-2" class="accordion-collapse collapse" aria-labelledby="faq-heading-2" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                We provide a lifetime anti-yellowing guarantee. If your case ever develops yellowing, you are eligible for a one-time free replacement—no hassle.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FAQ 4 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-4">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-4" aria-expanded="false" aria-controls="faq-collapse-4">
+                                                Does the case protect against drops and scratches?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-4" class="accordion-collapse collapse" aria-labelledby="faq-heading-4" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                Yes, the case is designed to provide daily protection against minor drops, bumps, and scratches, all while maintaining a slim and lightweight profile.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FAQ 5 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-5">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-5" aria-expanded="false" aria-controls="faq-collapse-5">
+                                                Is the case compatible with MagSafe?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-5" class="accordion-collapse collapse" aria-labelledby="faq-heading-5" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                Absolutely. The case is equipped with high-quality magnets, ensuring strong and stable MagSafe compatibility for seamless charging and accessory use.
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- FAQ 2 -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="faq-heading-2">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-2" aria-expanded="false" aria-controls="faq-collapse-2">
-                                        What is the anti-yellowing guarantee?
-                                    </button>
-                                </h2>
-                                <div id="faq-collapse-2" class="accordion-collapse collapse" aria-labelledby="faq-heading-2" data-bs-parent="#ayc-faq-accordion">
-                                    <div class="accordion-body">
-                                        We provide a lifetime anti-yellowing guarantee. If your case ever develops yellowing, you are eligible for a one-time free replacement—no hassle.
+                            <!-- Right Column -->
+                            <div class="col-md-6">
+                                <div class="accordion gf-ayc-accordion">
+                                    <!-- FAQ 6 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-6">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-6" aria-expanded="false" aria-controls="faq-collapse-6">
+                                                What material is used in the case?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-6" class="accordion-collapse collapse" aria-labelledby="faq-heading-6" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                Our case is crafted from premium polycarbonate material, enhanced with proprietary technology to deliver superior clarity, strength, and durability.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FAQ 7 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-7">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-7" aria-expanded="false" aria-controls="faq-collapse-7">
+                                                How can I keep the case clean and clear?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-7" class="accordion-collapse collapse" aria-labelledby="faq-heading-7" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                To maintain its clarity:<br/>
+                                                <ul class="gf-ayc-faq-list">
+                                                    <li>Wipe the case with a soft microfiber cloth every 2–3 days</li>
+                                                    <li>Avoid prolonged exposure to dirt, oils, or harsh environments</li>
+                                                </ul>
+                                                This simple care routine helps keep your case looking new for longer.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FAQ 8 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-8">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-8" aria-expanded="false" aria-controls="faq-collapse-8">
+                                                Does the case turn yellow over time?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-8" class="accordion-collapse collapse" aria-labelledby="faq-heading-8" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                No, thanks to our UV Shield Technology, the case is specifically engineered to resist yellowing caused by sunlight and everyday use.
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- FAQ 9 -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header" id="faq-heading-9">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-9" aria-expanded="false" aria-controls="faq-collapse-9">
+                                                Will the case add bulk to my phone?
+                                            </button>
+                                        </h2>
+                                        <div id="faq-collapse-9" class="accordion-collapse collapse" aria-labelledby="faq-heading-9" data-bs-parent="#ayc-faq-accordion">
+                                            <div class="accordion-body">
+                                                Not at all. The case is designed to be slim, lightweight, and comfortable to hold, while still offering dependable protection.
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- FAQ 4 -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="faq-heading-4">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-4" aria-expanded="false" aria-controls="faq-collapse-4">
-                                        Does the case protect against drops and scratches?
-                                    </button>
-                                </h2>
-                                <div id="faq-collapse-4" class="accordion-collapse collapse" aria-labelledby="faq-heading-4" data-bs-parent="#ayc-faq-accordion">
-                                    <div class="accordion-body">
-                                        Yes, the case is designed to provide daily protection against minor drops, bumps, and scratches, all while maintaining a slim and lightweight profile.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- FAQ 5 -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="faq-heading-5">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-5" aria-expanded="false" aria-controls="faq-collapse-5">
-                                        Is the case compatible with MagSafe?
-                                    </button>
-                                </h2>
-                                <div id="faq-collapse-5" class="accordion-collapse collapse" aria-labelledby="faq-heading-5" data-bs-parent="#ayc-faq-accordion">
-                                    <div class="accordion-body">
-                                        Absolutely. The case is equipped with high-quality magnets, ensuring strong and stable MagSafe compatibility for seamless charging and accessory use.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- FAQ 6 -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="faq-heading-6">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-6" aria-expanded="false" aria-controls="faq-collapse-6">
-                                        What material is used in the case?
-                                    </button>
-                                </h2>
-                                <div id="faq-collapse-6" class="accordion-collapse collapse" aria-labelledby="faq-heading-6" data-bs-parent="#ayc-faq-accordion">
-                                    <div class="accordion-body">
-                                        Our case is crafted from premium polycarbonate material, enhanced with proprietary technology to deliver superior clarity, strength, and durability.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- FAQ 7 -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="faq-heading-7">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-7" aria-expanded="false" aria-controls="faq-collapse-7">
-                                        How can I keep the case clean and clear?
-                                    </button>
-                                </h2>
-                                <div id="faq-collapse-7" class="accordion-collapse collapse" aria-labelledby="faq-heading-7" data-bs-parent="#ayc-faq-accordion">
-                                    <div class="accordion-body">
-                                        To maintain its clarity:<br/>
-                                        <ul class="gf-ayc-faq-list">
-                                            <li>Wipe the case with a soft microfiber cloth every 2–3 days</li>
-                                            <li>Avoid prolonged exposure to dirt, oils, or harsh environments</li>
-                                        </ul>
-                                        This simple care routine helps keep your case looking new for longer.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- FAQ 8 -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="faq-heading-8">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-8" aria-expanded="false" aria-controls="faq-collapse-8">
-                                        Does the case turn yellow over time?
-                                    </button>
-                                </h2>
-                                <div id="faq-collapse-8" class="accordion-collapse collapse" aria-labelledby="faq-heading-8" data-bs-parent="#ayc-faq-accordion">
-                                    <div class="accordion-body">
-                                        No, thanks to our UV Shield Technology, the case is specifically engineered to resist yellowing caused by sunlight and everyday use.
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- FAQ 9 -->
-                            <div class="accordion-item">
-                                <h2 class="accordion-header" id="faq-heading-9">
-                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq-collapse-9" aria-expanded="false" aria-controls="faq-collapse-9">
-                                        Will the case add bulk to my phone?
-                                    </button>
-                                </h2>
-                                <div id="faq-collapse-9" class="accordion-collapse collapse" aria-labelledby="faq-heading-9" data-bs-parent="#ayc-faq-accordion">
-                                    <div class="accordion-body">
-                                        Not at all. The case is designed to be slim, lightweight, and comfortable to hold, while still offering dependable protection.
-                                    </div>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
                 </section>

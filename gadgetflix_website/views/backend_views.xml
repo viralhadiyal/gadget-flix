@@ -9,8 +9,6 @@
                 <separator string="Website Sections"/>
                 <field name="gadgetflix_show_featured_home" widget="boolean_toggle"/>
                 <field name="gadgetflix_show_new_arrival_home" widget="boolean_toggle"/>
-                <field name="gadgetflix_show_anti_yellow" widget="boolean_toggle"/>
-                <field name="gadgetflix_show_anti_yellow_best_selling" widget="boolean_toggle"/>
                 <field name="gadgetflix_show_about_page" widget="boolean_toggle"/>
             </xpath>
         </field>
