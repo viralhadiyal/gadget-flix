@@ -1199,6 +1199,51 @@
             updatePriceDisplay(state.activePrice);
         }
     }
+
+    // ── Reviews "Read More" logic ──────────────────────────────────────────
+    const initReadMore = function () {
+        const reviewTexts = document.querySelectorAll(".gf-review-card .r-text");
+        reviewTexts.forEach(function (textEl) {
+            const container = textEl.parentElement;
+            const btn = container.querySelector(".r-read-more");
+            if (!btn) return;
+
+            // Temporarily remove clamped to get full height
+            const wasClamped = textEl.classList.contains("clamped");
+            textEl.classList.remove("clamped");
+            const fullHeight = textEl.offsetHeight;
+
+            // Re-apply clamped to get clamped height
+            if (wasClamped) {
+                textEl.classList.add("clamped");
+            }
+            const clampedHeight = textEl.offsetHeight;
+
+            if (fullHeight > clampedHeight) {
+                btn.style.display = "inline-block";
+                if (!btn.dataset.hasListener) {
+                    btn.dataset.hasListener = "true";
+                    btn.addEventListener("click", function () {
+                        const isClamped = textEl.classList.contains("clamped");
+                        if (isClamped) {
+                            textEl.classList.remove("clamped");
+                            btn.textContent = "Read less";
+                        } else {
+                            textEl.classList.add("clamped");
+                            btn.textContent = "Read more";
+                        }
+                    });
+                }
+            } else {
+                btn.style.display = "none";
+            }
+        });
+    };
+
+    initReadMore();
+    window.addEventListener("load", initReadMore);
+    setTimeout(initReadMore, 500);
+    setTimeout(initReadMore, 1500);
 })();
 
 // ── Global Offcanvas Cart Listener ─────────────────────────────────────
