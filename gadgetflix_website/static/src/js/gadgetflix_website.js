@@ -1162,15 +1162,41 @@
         }
     }
 
-    // ── Auto-select active or first brand on load ──────────────────────────
+    // Initialize state from rendered HTML structure on page load
     if (brandList) {
-        let activeBrand = brandList.querySelector(".gf-ayc-dropdown__item--active");
-        if (!activeBrand) {
-            activeBrand = brandList.querySelector(".gf-ayc-dropdown__item");
+        const activeBrandItem = brandList.querySelector(".gf-ayc-dropdown__item--active");
+        if (activeBrandItem) {
+            state.activeBrandProductId = parseInt(activeBrandItem.dataset.productId, 10);
+            state.activeBrandValueId   = parseInt(activeBrandItem.dataset.brandValueId, 10);
+            state.activeBrandName      = activeBrandItem.dataset.brandName || "";
         }
-        if (activeBrand) {
-            // Simulate click to trigger model load
-            activeBrand.click();
+    }
+
+    if (modelList) {
+        const activeModelItem = modelList.querySelector(".gf-ayc-dropdown__item--active");
+        if (activeModelItem) {
+            state.activeVariantId    = parseInt(activeModelItem.dataset.variantId, 10);
+            state.activeProductId    = parseInt(activeModelItem.dataset.productId, 10);
+            state.activeModelValueId = parseInt(activeModelItem.dataset.modelValueId, 10);
+            state.activePrice        = parseFloat(activeModelItem.dataset.price || 0);
+            state.activeModelName    = activeModelItem.dataset.modelName || "";
+
+            // Update title model suffix
+            const titleModelSpan = document.getElementById("gf-ayc-title-model");
+            if (titleModelSpan) {
+                titleModelSpan.textContent = " - " + state.activeModelName;
+            }
+
+            if (stickyName) {
+                stickyName.textContent = state.activeBrandName + " " + state.activeModelName + " – Anti-Yellow Case";
+            }
+            if (availEl) {
+                availEl.innerHTML = state.activeVariantId
+                    ? '<i class="fa fa-check-circle" aria-hidden="true"></i> In stock'
+                    : '<i class="fa fa-times-circle" aria-hidden="true"></i> Unavailable';
+            }
+            setButtonsDisabled(!state.activeVariantId);
+            updatePriceDisplay(state.activePrice);
         }
     }
 })();

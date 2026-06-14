@@ -704,6 +704,9 @@ class AntiYellowController(http.Controller):
                 'first_image_url': f'/web/image/product.template/{product.id}/image_1024',
             })
 
+        # Sort brands alphabetically
+        brands.sort(key=lambda x: x['brand_name'].lower())
+
         # Default selection: brand from query parameter or first brand
         default_brand = None
         brand_param = kw.get('brand')
@@ -719,22 +722,27 @@ class AntiYellowController(http.Controller):
 
         default_product = request.env['product.template'].sudo().browse(default_brand['product_id']) if default_brand else None
 
+        # Load default models
+        default_models = self._get_product_models(default_product) if default_product else []
+        default_model = default_models[0] if default_models else None
+
+        default_variant = None
+        if default_model and default_model['variant_id']:
+            default_variant = request.env['product.product'].sudo().browse(default_model['variant_id'])
+
         return request.render('gadgetflix_website.anti_yellow_case_page', {
             'brands': brands,
             'default_brand': default_brand,
             'product': default_product,
-            'product_variant': None,
+            'product_variant': default_variant,
             'combination_info': None,
             'page_title': 'Anti-Yellow Clear Cases',
+            'default_models': default_models,
+            'default_model': default_model,
         })
 
-    @http.route('/gadgetflix/anti-yellow/get_models', type='jsonrpc', auth='public', website=True, csrf=False)
-    def gf_get_models(self, product_id):
-        """Return model attribute values for a given product_id.
-        Each entry carries enough data to identify the correct variant.
-        """
-        product = request.env['product.template'].sudo().browse(int(product_id))
-        if not product.exists():
+    def _get_product_models(self, product):
+        if not product or not product.exists():
             return []
 
         model_line = product.attribute_line_ids.filtered(
@@ -775,3 +783,11 @@ class AntiYellowController(http.Controller):
             })
 
         return result
+
+    @http.route('/gadgetflix/anti-yellow/get_models', type='jsonrpc', auth='public', website=True, csrf=False)
+    def gf_get_models(self, product_id):
+        """Return model attribute values for a given product_id.
+        Each entry carries enough data to identify the correct variant.
+        """
+        product = request.env['product.template'].sudo().browse(int(product_id))
+        return self._get_product_models(product)

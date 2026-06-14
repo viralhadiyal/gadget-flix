@@ -58,7 +58,11 @@
                             <!-- Price -->
                             <div class="gf-ayc-pdp__price-row mb-3">
                                 <span class="gf-ayc-pdp__price" id="gf-ayc-price">
-                                    <t t-if="default_brand">
+                                    <t t-if="product_variant">
+                                        <t t-out="product_variant.lst_price"
+                                           t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                    </t>
+                                    <t t-elif="default_brand">
                                         <t t-out="default_brand['first_price']"
                                            t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                     </t>
@@ -161,12 +165,12 @@
                                 <label class="gf-ayc-field__label" for="gf-ayc-model-search">
                                     Select Model
                                 </label>
-                                <div class="gf-ayc-dropdown gf-ayc-dropdown--disabled" id="gf-ayc-model-dropdown">
+                                <div t-attf-class="gf-ayc-dropdown {{'gf-ayc-dropdown--disabled' if not default_models else ''}}" id="gf-ayc-model-dropdown">
                                     <div class="gf-ayc-dropdown__trigger" id="gf-ayc-model-trigger"
                                          role="combobox" aria-haspopup="listbox"
                                          aria-expanded="false" aria-controls="gf-ayc-model-listbox"
                                          tabindex="0">
-                                        <span id="gf-ayc-model-label">Select a brand first…</span>
+                                        <span id="gf-ayc-model-label" t-out="default_model['name'] if default_model else 'Select a brand first…'"/>
                                         <span class="gf-ayc-spinner gf-ayc-dropdown__spinner" id="gf-ayc-model-spinner" hidden="hidden" aria-label="Loading"/>
                                         <i class="fa fa-angle-down gf-ayc-dropdown__caret" aria-hidden="true"/>
                                     </div>
@@ -183,7 +187,20 @@
                                             />
                                         </div>
                                         <ul class="gf-ayc-dropdown__list" id="gf-ayc-model-listbox">
-                                            <!-- Populated by JS -->
+                                            <t t-if="default_models" t-foreach="default_models" t-as="m">
+                                                <li t-attf-class="gf-ayc-dropdown__item {{'gf-ayc-dropdown__item--active' if default_model and m['variant_id'] == default_model['variant_id'] else ''}}"
+                                                    role="option"
+                                                    t-att-aria-selected="'true' if default_model and m['variant_id'] == default_model['variant_id'] else 'false'"
+                                                    t-att-data-model-name="m['name']"
+                                                    t-att-data-variant-id="m['variant_id']"
+                                                    t-att-data-model-value-id="m['id']"
+                                                    t-att-data-price="m['price']"
+                                                    t-att-data-product-id="default_brand['product_id']"
+                                                    t-att-data-image-url="m['image_url']"
+                                                    t-att-data-carousel-html="m['carousel_html']">
+                                                    <span class="gf-ayc-dropdown__item-name" t-out="m['name']"/>
+                                                </li>
+                                            </t>
                                         </ul>
                                         <p class="gf-ayc-dropdown__no-results" hidden="hidden">No results found</p>
                                     </div>
