@@ -363,8 +363,8 @@
                         <div class="gf-socials" aria-label="Social links">
                             <a t-att-href="website.company_id.social_facebook or '#'" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
                             <a t-att-href="website.company_id.social_instagram or '#'" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-                            <a t-att-href="website.company_id.social_linkedin or '#'" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
-                            <a t-att-href="website.company_id.social_twitter or '#'" target="_blank" rel="noopener" aria-label="X"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+<!--                            <a t-att-href="website.company_id.social_linkedin or '#'" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa fa-linkedin" aria-hidden="true"></i></a>-->
+<!--                            <a t-att-href="website.company_id.social_twitter or '#'" target="_blank" rel="noopener" aria-label="X"><i class="fa fa-twitter" aria-hidden="true"></i></a>-->
                         </div>
                     </div>
                     <div class="gf-footer__links">
@@ -859,7 +859,7 @@
                             </div>
                             <div class="gf-warranty__card-divider"></div>
                             <div class="gf-warranty__card-hologram">
-                                <img src="/gadgetflix_website/static/src/img/trust_seal.png" alt="Anti-Yellow" loading="lazy" decoding="async" height="110" width="130"/>
+                                <img src="/gadgetflix_website/static/src/img/trust_seal.png" alt="Anti-Yellow" loading="lazy" decoding="async" height="100" width="120"/>
                             </div>
                         </div>
                     </div>

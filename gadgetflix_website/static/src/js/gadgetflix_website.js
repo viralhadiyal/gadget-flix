@@ -1133,6 +1133,22 @@
     if (cartBtn)   cartBtn.addEventListener("click",   function () { doAddToCart(true); });
     if (stickyBtn) stickyBtn.addEventListener("click",  function () { doAddToCart(true); });
 
+    // ── Bundle Cards Auto Add to Cart ──────────────────────────────────────
+    const bundleCards = document.querySelectorAll(".gf-ayc-bundle-card");
+    bundleCards.forEach(card => {
+        card.addEventListener("click", function () {
+            if (!state.activeVariantId) {
+                alert("Please select your device brand and model first!");
+                const modelSelect = document.getElementById("gf-ayc-brand-dropdown");
+                if (modelSelect) modelSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            const qty = parseInt(card.getAttribute("data-qty") || 1, 10);
+            if (qtyInput) qtyInput.value = qty;
+            doAddToCart(true);
+        });
+    });
+
     // ── Sticky bar visibility (mobile) ─────────────────────────────────────
     if (stickyBar) {
         const buyPanel = document.getElementById("gf-ayc-buy");
@@ -1228,6 +1244,13 @@
                         const newQtyText = newLine.querySelector('.gf-cart-qty-text');
                         const oldQtyText = oldLine.querySelector('.gf-cart-qty-text');
                         if (newQtyText && oldQtyText) oldQtyText.innerHTML = newQtyText.innerHTML;
+
+                        const newQtyInput = newLine.querySelector('.gf-cart-qty-input');
+                        const oldQtyInput = oldLine.querySelector('.gf-cart-qty-input');
+                        if (newQtyInput && oldQtyInput) {
+                            oldQtyInput.value = newQtyInput.value;
+                            oldQtyInput.setAttribute('value', newQtyInput.getAttribute('value'));
+                        }
                     } else {
                         if (index === 0) oldContainer.prepend(newLine);
                         else {
@@ -1248,9 +1271,15 @@
         const offcanvasEl = document.getElementById('gf_cart_offcanvas');
         if (!offcanvasEl) return;
         
-        let bsOffcanvas = window.Offcanvas.getInstance(offcanvasEl);
+        const OffcanvasClass = (typeof bootstrap !== 'undefined' && bootstrap.Offcanvas) ? bootstrap.Offcanvas : window.Offcanvas;
+        if (!OffcanvasClass) {
+            console.error("[GF] Offcanvas class not found!");
+            return;
+        }
+
+        let bsOffcanvas = OffcanvasClass.getInstance(offcanvasEl);
         if (!bsOffcanvas) {
-            bsOffcanvas = new window.Offcanvas(offcanvasEl);
+            bsOffcanvas = new OffcanvasClass(offcanvasEl);
         }
         bsOffcanvas.show();
         fetchMiniCart(false);
@@ -1287,6 +1316,51 @@
                 openOffcanvasCart();
             });
         });
+
+        // Google reviews Read More toggle
+        const initReadMore = function() {
+            const reviewTexts = document.querySelectorAll('.gf-review-card .r-text');
+            reviewTexts.forEach(textEl => {
+                const container = textEl.parentElement;
+                const btn = container.querySelector('.r-read-more');
+                if (!btn) return;
+                
+                // Temporarily remove clamped to get full height
+                const wasClamped = textEl.classList.contains('clamped');
+                textEl.classList.remove('clamped');
+                const fullHeight = textEl.offsetHeight;
+
+                // Re-apply clamped to get clamped height
+                if (wasClamped) {
+                    textEl.classList.add('clamped');
+                }
+                const clampedHeight = textEl.offsetHeight;
+
+                if (fullHeight > clampedHeight) {
+                    btn.style.display = 'inline-block';
+                    if (!btn.dataset.hasListener) {
+                        btn.dataset.hasListener = 'true';
+                        btn.addEventListener('click', function() {
+                            const isClamped = textEl.classList.contains('clamped');
+                            if (isClamped) {
+                                textEl.classList.remove('clamped');
+                                btn.textContent = 'Read less';
+                            } else {
+                                textEl.classList.add('clamped');
+                                btn.textContent = 'Read more';
+                            }
+                        });
+                    }
+                } else {
+                    btn.style.display = 'none';
+                }
+            });
+        };
+
+        initReadMore();
+        window.addEventListener('load', initReadMore);
+        setTimeout(initReadMore, 500);
+        setTimeout(initReadMore, 1500);
     });
 
     const updateOffcanvasQuantity = function (input, newQty) {
