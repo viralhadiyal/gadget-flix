@@ -141,14 +141,14 @@
 
                                     <div class="gf-ayc-brand-grid" id="gf-ayc-brand-listbox" role="radiogroup">
                                         <t t-foreach="brands" t-as="brand">
-                                            <div class="gf-ayc-dropdown__item"
+                                            <div t-attf-class="gf-ayc-dropdown__item {{'gf-ayc-dropdown__item--active' if default_brand and brand['brand_value_id'] == default_brand['brand_value_id'] else ''}}"
                                                  role="option"
                                                  t-att-data-brand-value-id="brand['brand_value_id']"
                                                  t-att-data-product-id="brand['product_id']"
                                                  t-att-data-first-price="brand['first_price']"
                                                  t-att-data-image-url="brand['first_image_url']"
                                                  t-att-data-brand-name="brand['brand_name']"
-                                                 t-att-aria-selected="'true' if brand_index == 0 else 'false'">
+                                                 t-att-aria-selected="'true' if default_brand and brand['brand_value_id'] == default_brand['brand_value_id'] else 'false'">
                                                 <span class="gf-ayc-dropdown__item-name" t-out="brand['brand_name']"/>
                                             </div>
                                         </t>

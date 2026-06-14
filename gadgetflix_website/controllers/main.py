@@ -704,8 +704,18 @@ class AntiYellowController(http.Controller):
                 'first_image_url': f'/web/image/product.template/{product.id}/image_1024',
             })
 
-        # Default selection: first brand
-        default_brand = brands[0] if brands else None
+        # Default selection: brand from query parameter or first brand
+        default_brand = None
+        brand_param = kw.get('brand')
+        if brand_param:
+            brand_param_lower = brand_param.strip().lower()
+            for b in brands:
+                if b['brand_name'].lower() == brand_param_lower:
+                    default_brand = b
+                    break
+
+        if not default_brand and brands:
+            default_brand = brands[0]
 
         default_product = request.env['product.template'].sudo().browse(default_brand['product_id']) if default_brand else None
 

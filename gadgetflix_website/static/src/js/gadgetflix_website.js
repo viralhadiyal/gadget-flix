@@ -1162,12 +1162,15 @@
         }
     }
 
-    // ── Auto-select first brand on load ────────────────────────────────────
+    // ── Auto-select active or first brand on load ──────────────────────────
     if (brandList) {
-        const firstBrand = brandList.querySelector(".gf-ayc-dropdown__item");
-        if (firstBrand) {
-            // Simulate click on the first brand to trigger model load
-            firstBrand.click();
+        let activeBrand = brandList.querySelector(".gf-ayc-dropdown__item--active");
+        if (!activeBrand) {
+            activeBrand = brandList.querySelector(".gf-ayc-dropdown__item");
+        }
+        if (activeBrand) {
+            // Simulate click to trigger model load
+            activeBrand.click();
         }
     }
 })();
