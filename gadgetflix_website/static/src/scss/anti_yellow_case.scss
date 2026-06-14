@@ -1652,38 +1652,71 @@
 
 /* ── Compact Free Gifts Banner ── */
 .gf-ayc-gifts-compact {
-    background: #fff9ed;
-    border: 1px solid #fde7c8;
+    background: #f7f7f7;
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
-    padding: 12px 16px;
+    padding: 16px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 12px;
 
     .g-header {
         font-size: 0.85rem;
         font-weight: 700;
-        color: #e65100;
+        color: #e65100 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        text-align: center;
     }
 
     .g-items {
         display: flex;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-start;
+        gap: 12px;
     }
 
     .g-item {
         display: flex;
+        flex-direction: column;
         align-items: center;
+        text-align: center;
         gap: 8px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        color: #333;
+        flex: 1;
 
-        img {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
+        span {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #444;
+            line-height: 1.25;
+            min-height: 2.5em;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .g-image-box {
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px;
+            transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+
+            img {
+                max-width: 100%;
+                max-height: 100%;
+                width: auto;
+                height: auto;
+                object-fit: contain;
+            }
+        }
+
+        &:hover {
+            .g-image-box {
+                transform: translateY(-3px);
+            }
         }
     }
 }
@@ -1790,26 +1823,8 @@
 
 .gf-warranty__card-hologram {
     position: absolute;
-    right: 32px;
+    right: 0px;
     bottom: 32px;
-    width: 64px;
-    height: 64px;
-    background: radial-gradient(circle, #ffe259 0%, #ffa751 100%);
-    border-radius: 50%;
-    opacity: 0.9;
-    box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    overflow: hidden;
-    
-    &::before {
-        content: '✦';
-        font-size: 1.6rem;
-        color: #fff;
-        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
-    }
 }
 
 .gf-warranty__card-footer {
@@ -2196,5 +2211,64 @@
             padding-bottom: 10px;
             margin-bottom: 4px;
         }
+    }
+}
+
+/* Brand grid / squarebox radio selection */
+.gf-ayc-field__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 8px;
+}
+
+.gf-ayc-field__selected-value {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #000;
+}
+
+.gf-ayc-brand-grid-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.gf-ayc-brand-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+    width: 100%;
+}
+
+/* Style grid items as square selection boxes */
+.gf-ayc-brand-grid .gf-ayc-dropdown__item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 12px 14px;
+    border: 1.5px solid #eaeaea;
+    border-radius: 8px;
+    background-color: #fff;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #111;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+    min-height: 48px;
+    user-select: none;
+    box-sizing: border-box;
+
+    &:hover {
+        background-color: #fafafa;
+        border-color: #000;
+    }
+
+    &.gf-ayc-dropdown__item--active {
+        background-color: #000 !important;
+        border-color: #000 !important;
+        color: #fff !important;
+        font-weight: 700;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     }
 }

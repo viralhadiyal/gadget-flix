@@ -90,19 +90,25 @@
 
                             <!-- Free Gifts Compact Banner -->
                             <div class="gf-ayc-gifts-compact mb-4">
-                                <div class="g-header">🎁 3 Free Gifts With Every Order:</div>
+                                <div class="g-header">🎁 3 Free Gifts With Every Order</div>
                                 <div class="g-items">
                                     <div class="g-item">
-                                        <img src="/gadgetflix_website/static/src/img/gift_cable_protector.webp" alt="Cable Protector"/>
                                         <span>Cable Protector</span>
+                                        <div class="g-image-box">
+                                            <img src="/gadgetflix_website/static/src/img/gift_cable_protector.webp" alt="Cable Protector"/>
+                                        </div>
                                     </div>
                                     <div class="g-item">
-                                        <img src="/gadgetflix_website/static/src/img/gift_c_to_c_cable.webp" alt="C-to-C Cable"/>
                                         <span>C-to-C Cable</span>
+                                        <div class="g-image-box">
+                                            <img src="/gadgetflix_website/static/src/img/gift_c_to_c_cable.webp" alt="C-to-C Cable"/>
+                                        </div>
                                     </div>
                                     <div class="g-item">
-                                        <img src="/gadgetflix_website/static/src/img/gift_popup_stand.webp" alt="Pop-up Stand"/>
                                         <span>Pop-up Stand</span>
+                                        <div class="g-image-box">
+                                            <img src="/gadgetflix_website/static/src/img/gift_popup_stand.webp" alt="Pop-up Stand"/>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -110,46 +116,32 @@
                             <!-- Divider -->
                             <hr class="gf-ayc-pdp__divider"/>
 
-                            <!-- Step 1: Brand (searchable dropdown) -->
-                            <div class="gf-ayc-field">
-                                <label class="gf-ayc-field__label" for="gf-ayc-brand-search">
-                                    Select Brand
-                                </label>
-                                <div class="gf-ayc-dropdown" id="gf-ayc-brand-dropdown">
-                                    <div class="gf-ayc-dropdown__trigger" id="gf-ayc-brand-trigger"
-                                         role="combobox" aria-haspopup="listbox"
-                                         aria-expanded="false" aria-controls="gf-ayc-brand-listbox"
-                                         tabindex="0">
-                                        <span id="gf-ayc-brand-label">Choose a brand…</span>
-                                        <i class="fa fa-angle-down gf-ayc-dropdown__caret" aria-hidden="true"/>
+                            <!-- Step 1: Brand (radio squarebox) -->
+                            <div class="gf-ayc-field gf-ayc-field--brand" id="gf-ayc-brand-dropdown">
+                                <div class="gf-ayc-field__header">
+                                    <label class="gf-ayc-field__label">Select Brand</label>
+                                    <span id="gf-ayc-brand-label" class="gf-ayc-field__selected-value">Choose a brand…</span>
+                                </div>
+                                <div class="gf-ayc-brand-grid-wrapper">
+                                    <!-- Dummy elements to satisfy JS makeDropdown helper without errors -->
+                                    <div id="gf-ayc-brand-trigger" style="display: none;"/>
+                                    <div id="gf-ayc-brand-panel" style="display: none;">
+                                        <input type="text" id="gf-ayc-brand-search" style="display: none;"/>
                                     </div>
-                                    <div class="gf-ayc-dropdown__panel" id="gf-ayc-brand-panel" role="listbox" aria-label="Brand options">
-                                        <div class="gf-ayc-dropdown__search-wrap">
-                                            <i class="fa fa-search" aria-hidden="true"/>
-                                            <input
-                                                type="text"
-                                                id="gf-ayc-brand-search"
-                                                class="gf-ayc-dropdown__search"
-                                                placeholder="Search brand…"
-                                                autocomplete="off"
-                                                aria-label="Search brand"
-                                            />
-                                        </div>
-                                        <ul class="gf-ayc-dropdown__list" id="gf-ayc-brand-listbox">
-                                            <t t-foreach="brands" t-as="brand">
-                                                <li class="gf-ayc-dropdown__item"
-                                                    role="option"
-                                                    t-att-data-brand-value-id="brand['brand_value_id']"
-                                                    t-att-data-product-id="brand['product_id']"
-                                                    t-att-data-first-price="brand['first_price']"
-                                                    t-att-data-image-url="brand['first_image_url']"
-                                                    t-att-data-brand-name="brand['brand_name']"
-                                                    t-att-aria-selected="'true' if brand_index == 0 else 'false'">
-                                                    <span class="gf-ayc-dropdown__item-name" t-out="brand['brand_name']"/>
-                                                </li>
-                                            </t>
-                                        </ul>
-                                        <p class="gf-ayc-dropdown__no-results" hidden="hidden">No results found</p>
+
+                                    <div class="gf-ayc-brand-grid" id="gf-ayc-brand-listbox" role="radiogroup">
+                                        <t t-foreach="brands" t-as="brand">
+                                            <div class="gf-ayc-dropdown__item"
+                                                 role="option"
+                                                 t-att-data-brand-value-id="brand['brand_value_id']"
+                                                 t-att-data-product-id="brand['product_id']"
+                                                 t-att-data-first-price="brand['first_price']"
+                                                 t-att-data-image-url="brand['first_image_url']"
+                                                 t-att-data-brand-name="brand['brand_name']"
+                                                 t-att-aria-selected="'true' if brand_index == 0 else 'false'">
+                                                <span class="gf-ayc-dropdown__item-name" t-out="brand['brand_name']"/>
+                                            </div>
+                                        </t>
                                     </div>
                                 </div>
                             </div>

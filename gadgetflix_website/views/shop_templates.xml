@@ -854,10 +854,13 @@
                                 GADGETFLIX
                             </div>
                             <div class="gf-warranty__card-name">
-                                Official Anti-Yellow Guarantee
+                                Official Anti-Yellow Guarantee*
+                                <p>One-Time Replacement*</p>
                             </div>
                             <div class="gf-warranty__card-divider"></div>
-                            <div class="gf-warranty__card-hologram"></div>
+                            <div class="gf-warranty__card-hologram">
+                                <img src="/gadgetflix_website/static/src/img/trust_seal.png" alt="Anti-Yellow" loading="lazy" decoding="async" height="110" width="130"/>
+                            </div>
                         </div>
                     </div>
                     
