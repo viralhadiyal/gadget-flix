@@ -96,20 +96,6 @@ class WebsiteSaleShop(Delivery):
         """Redirect /shop/payment back to the combined checkout page."""
         return request.redirect('/shop/checkout')
 
-    @route('/shop/cart/mini', type='http', auth="public", website=True, sitemap=False)
-    def cart_mini(self, **post):
-        order = request.cart
-        if order and order.state != 'draft':
-            request.session['sale_order_id'] = None
-            order = request.cart
-        values = {
-            'website_sale_order': order.sudo(),
-            'date': fields.Date.today(),
-            'suggested_products': [],
-        }
-        if order:
-            values['suggested_products'] = order._cart_accessories()
-        return request.render("gadgetflix_website.cart_offcanvas_content", values)
 
     def _order_summary_values(self, order, **kwargs):
         """Extend to include raw float value for frontend JS update."""

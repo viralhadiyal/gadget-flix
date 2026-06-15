@@ -808,7 +808,7 @@
     const qtyInput        = document.getElementById("gf-ayc-qty");
     const qtyDec          = document.getElementById("gf-ayc-qty-dec");
     const qtyInc          = document.getElementById("gf-ayc-qty-inc");
-    const cartBtn         = document.getElementById("gf-ayc-add-to-cart");
+    const cartBtn         = document.getElementById("add_to_cart");
     const stickyBar       = document.getElementById("gf-ayc-sticky-bar");
     const stickyBtn       = document.getElementById("gf-ayc-sticky-btn");
     const stickyName      = document.getElementById("gf-ayc-sticky-name");
@@ -844,15 +844,6 @@
         }).then(r => r.json()).then(r => {
             if (r.error) throw new Error((r.error.data && r.error.data.message) || r.error.message);
             return r.result;
-        });
-    };
-
-    // ── Cart helper ────────────────────────────────────────────────────────
-    const cartUpdate = function (templateId, variantId, qty) {
-        return rpc("/shop/cart/add", {
-            product_template_id: templateId,
-            product_id: variantId,
-            quantity: qty
         });
     };
 
@@ -1048,6 +1039,11 @@
         state.activePrice        = parseFloat(item.dataset.price || 0);
         state.activeModelName    = name;
 
+        const productInput = document.getElementById("gf-ayc-product-id-input");
+        if (productInput) productInput.value = state.activeVariantId || "";
+        const productTemplateInput = document.getElementById("gf-ayc-product-template-id-input");
+        if (productTemplateInput) productTemplateInput.value = state.activeProductId || "";
+
         updatePriceDisplay(state.activePrice);
 
         // update carousel
@@ -1077,7 +1073,6 @@
             });
         }
     }
-
     // ── Qty stepper ────────────────────────────────────────────────────────
     if (qtyDec && qtyInc && qtyInput) {
         qtyDec.addEventListener("click", function () {
@@ -1094,60 +1089,11 @@
     }
 
     // ── Add to Cart ────────────────────────────────────────────────────────
-    const doAddToCart = function (redirect) {
-        if (!state.activeVariantId || !state.activeProductId || state.loading) return;
-        const qty = parseInt((qtyInput && qtyInput.value) || 1, 10);
-
-        state.loading = true;
-        setButtonsDisabled(true);
-        if (cartBtn) cartBtn.querySelector("span").textContent = "Adding…";
-
-        cartUpdate(state.activeProductId, state.activeVariantId, qty)
-            .then(function (data) {
-                state.loading = false;
-                if (cartBtn) cartBtn.querySelector("span").textContent = "Added!";
-                
-                if (data && data.cart_quantity !== undefined) {
-                    sessionStorage.setItem("website_sale_cart_quantity", data.cart_quantity);
-                    document.querySelectorAll('.my_cart_quantity').forEach(badge => {
-                        badge.textContent = data.cart_quantity;
-                        badge.classList.remove('d-none');
-                        const cartIconElement = badge.closest('li.o_wsale_my_cart');
-                        if (cartIconElement) cartIconElement.classList.remove('d-none');
-                    });
-                }
-
-                document.dispatchEvent(new CustomEvent("add_to_cart_event", {
-                    detail: { product_id: state.activeVariantId, quantity: qty }
-                }));
-            })
-            .catch(function (err) {
-                state.loading = false;
-                setButtonsDisabled(false);
-                if (cartBtn) cartBtn.querySelector("span").textContent = "Add to Cart";
-                alert("Failed to add to cart. Please try again.");
-                console.error("[GF Anti-Yellow] Add to cart error:", err);
-            });
-    };
-
-    if (cartBtn)   cartBtn.addEventListener("click",   function () { doAddToCart(true); });
-    if (stickyBtn) stickyBtn.addEventListener("click",  function () { doAddToCart(true); });
-
-    // ── Bundle Cards Auto Add to Cart ──────────────────────────────────────
-    const bundleCards = document.querySelectorAll(".gf-ayc-bundle-card");
-    bundleCards.forEach(card => {
-        card.addEventListener("click", function () {
-            if (!state.activeVariantId) {
-                alert("Please select your device brand and model first!");
-                const modelSelect = document.getElementById("gf-ayc-brand-dropdown");
-                if (modelSelect) modelSelect.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                return;
-            }
-            const qty = parseInt(card.getAttribute("data-qty") || 1, 10);
-            if (qtyInput) qtyInput.value = qty;
-            doAddToCart(true);
+    if (stickyBtn) {
+        stickyBtn.addEventListener("click", function () {
+            if (cartBtn) cartBtn.click();
         });
-    });
+    }
 
     // ── Sticky bar visibility (mobile) ─────────────────────────────────────
     if (stickyBar) {
@@ -1197,6 +1143,11 @@
             }
             setButtonsDisabled(!state.activeVariantId);
             updatePriceDisplay(state.activePrice);
+
+            const productInput = document.getElementById("gf-ayc-product-id-input");
+            if (productInput) productInput.value = state.activeVariantId || "";
+            const productTemplateInput = document.getElementById("gf-ayc-product-template-id-input");
+            if (productTemplateInput) productTemplateInput.value = state.activeProductId || "";
         }
     }
 
@@ -1246,258 +1197,3 @@
     setTimeout(initReadMore, 1500);
 })();
 
-// ── Global Offcanvas Cart Listener ─────────────────────────────────────
-(function () {
-    "use strict";
-
-    let isFetchingMiniCart = false;
-    let isUpdatingQuantity = false;
-
-    const rpc = function (url, params) {
-        return fetch(url, {
-            method: "POST",
-            headers: { "Content-Type": "application/json", "Accept": "application/json" },
-            credentials: "same-origin",
-            body: JSON.stringify({ jsonrpc: "2.0", method: "call", id: Date.now(), params: params || {} }),
-        }).then(r => r.json()).then(r => {
-            if (r.error) throw new Error((r.error.data && r.error.data.message) || r.error.message);
-            return r.result;
-        });
-    };
-
-    const fetchMiniCart = function() {
-        if (isFetchingMiniCart) return;
-        isFetchingMiniCart = true;
-        
-        const loadingEl = document.getElementById('gf_cart_loading');
-        if (loadingEl) loadingEl.classList.remove('d-none');
-
-        fetch('/shop/cart/mini')
-            .then(res => res.text())
-            .then(html => {
-                const doc = new DOMParser().parseFromString(html, "text/html");
-                const newContentEl = doc.body;
-                const contentEl = document.getElementById('gf_cart_content');
-                
-                if (!newContentEl || !contentEl) return;
-                
-                const newContainer = newContentEl.querySelector('#gf_cart_lines_container');
-                const oldContainer = contentEl.querySelector('#gf_cart_lines_container');
-                
-                if (!newContainer || !oldContainer) {
-                    contentEl.innerHTML = newContentEl.innerHTML;
-                    return;
-                }
-
-                // Update header and subtotal
-                const newHeader = newContentEl.querySelector('h5');
-                const oldHeader = contentEl.querySelector('h5');
-                if (newHeader && oldHeader) oldHeader.innerHTML = newHeader.innerHTML;
-
-                const newSubtotal = newContentEl.querySelector('#gf_cart_subtotal');
-                const oldSubtotal = contentEl.querySelector('#gf_cart_subtotal');
-                if (newSubtotal && oldSubtotal) oldSubtotal.innerHTML = newSubtotal.innerHTML;
-
-                // Sync lines safely without destroying inputs
-                const oldLines = Array.from(oldContainer.querySelectorAll('.gf-cart-line'));
-                const newLines = Array.from(newContainer.querySelectorAll('.gf-cart-line'));
-                
-                oldLines.forEach(oldLine => {
-                    if (!newContainer.querySelector(`.gf-cart-line[data-line-id="${oldLine.dataset.lineId}"]`)) {
-                        oldLine.remove();
-                    }
-                });
-                
-                newLines.forEach((newLine, index) => {
-                    const oldLine = oldContainer.querySelector(`.gf-cart-line[data-line-id="${newLine.dataset.lineId}"]`);
-                    if (oldLine) {
-                        const newPrice = newLine.querySelector('.gf-line-price');
-                        const oldPrice = oldLine.querySelector('.gf-line-price');
-                        if (newPrice && oldPrice) oldPrice.innerHTML = newPrice.innerHTML;
-                        
-                        const newQtyText = newLine.querySelector('.gf-cart-qty-text');
-                        const oldQtyText = oldLine.querySelector('.gf-cart-qty-text');
-                        if (newQtyText && oldQtyText) oldQtyText.innerHTML = newQtyText.innerHTML;
-
-                        const newQtyInput = newLine.querySelector('.gf-cart-qty-input');
-                        const oldQtyInput = oldLine.querySelector('.gf-cart-qty-input');
-                        if (newQtyInput && oldQtyInput) {
-                            oldQtyInput.value = newQtyInput.value;
-                            oldQtyInput.setAttribute('value', newQtyInput.getAttribute('value'));
-                        }
-                    } else {
-                        if (index === 0) oldContainer.prepend(newLine);
-                        else {
-                            const prevLine = oldContainer.querySelector(`.gf-cart-line[data-line-id="${newLines[index - 1].dataset.lineId}"]`);
-                            if (prevLine) prevLine.after(newLine);
-                            else oldContainer.appendChild(newLine);
-                        }
-                    }
-                });
-            })
-            .finally(() => {
-                isFetchingMiniCart = false;
-                if (loadingEl) loadingEl.classList.add('d-none');
-            });
-    };
-
-    const openOffcanvasCart = function () {
-        const offcanvasEl = document.getElementById('gf_cart_offcanvas');
-        if (!offcanvasEl) return;
-        
-        const OffcanvasClass = (typeof bootstrap !== 'undefined' && bootstrap.Offcanvas) ? bootstrap.Offcanvas : window.Offcanvas;
-        if (!OffcanvasClass) {
-            console.error("[GF] Offcanvas class not found!");
-            return;
-        }
-
-        let bsOffcanvas = OffcanvasClass.getInstance(offcanvasEl);
-        if (!bsOffcanvas) {
-            bsOffcanvas = new OffcanvasClass(offcanvasEl);
-        }
-        bsOffcanvas.show();
-        fetchMiniCart(false);
-    };
-
-    window.addEventListener("add_to_cart_event", function () {
-        if (!isUpdatingQuantity) {
-            openOffcanvasCart();
-        }
-    }, true);
-
-    document.addEventListener("DOMContentLoaded", function () {
-        const cartBadges = document.querySelectorAll('.my_cart_quantity');
-        cartBadges.forEach(badge => {
-            let lastVal = badge.textContent.trim();
-            const observer = new MutationObserver(() => {
-                const newVal = badge.textContent.trim();
-                if (newVal !== lastVal) {
-                    if (parseInt(newVal) > parseInt(lastVal || 0)) {
-                        if (!isUpdatingQuantity) {
-                            openOffcanvasCart();
-                        }
-                    }
-                    lastVal = newVal;
-                }
-            });
-            observer.observe(badge, { childList: true, characterData: true, subtree: true });
-        });
-
-        const cartLinks = document.querySelectorAll('.o_wsale_my_cart a, a[href="/shop/cart"]');
-        cartLinks.forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                openOffcanvasCart();
-            });
-        });
-
-        // Google reviews Read More toggle
-        const initReadMore = function() {
-            const reviewTexts = document.querySelectorAll('.gf-review-card .r-text');
-            reviewTexts.forEach(textEl => {
-                const container = textEl.parentElement;
-                const btn = container.querySelector('.r-read-more');
-                if (!btn) return;
-                
-                // Temporarily remove clamped to get full height
-                const wasClamped = textEl.classList.contains('clamped');
-                textEl.classList.remove('clamped');
-                const fullHeight = textEl.offsetHeight;
-
-                // Re-apply clamped to get clamped height
-                if (wasClamped) {
-                    textEl.classList.add('clamped');
-                }
-                const clampedHeight = textEl.offsetHeight;
-
-                if (fullHeight > clampedHeight) {
-                    btn.style.display = 'inline-block';
-                    if (!btn.dataset.hasListener) {
-                        btn.dataset.hasListener = 'true';
-                        btn.addEventListener('click', function() {
-                            const isClamped = textEl.classList.contains('clamped');
-                            if (isClamped) {
-                                textEl.classList.remove('clamped');
-                                btn.textContent = 'Read less';
-                            } else {
-                                textEl.classList.add('clamped');
-                                btn.textContent = 'Read more';
-                            }
-                        });
-                    }
-                } else {
-                    btn.style.display = 'none';
-                }
-            });
-        };
-
-        initReadMore();
-        window.addEventListener('load', initReadMore);
-        setTimeout(initReadMore, 500);
-        setTimeout(initReadMore, 1500);
-    });
-
-    const updateOffcanvasQuantity = function (input, newQty) {
-        if (!input) return;
-        const lineId = parseInt(input.dataset.lineId, 10);
-        const productId = parseInt(input.dataset.productId, 10);
-        
-        isUpdatingQuantity = true;
-        const loadingEl = document.getElementById('gf_cart_loading');
-        if (loadingEl) loadingEl.classList.remove('d-none');
-        input.disabled = true;
-
-        rpc('/shop/cart/update', {
-            line_id: lineId,
-            product_id: productId,
-            quantity: newQty,
-        }).then(function(data) {
-            if (data && data.cart_quantity !== undefined) {
-                sessionStorage.setItem("website_sale_cart_quantity", data.cart_quantity);
-                document.querySelectorAll('.my_cart_quantity').forEach(b => {
-                    b.textContent = data.cart_quantity;
-                    b.classList.remove('d-none');
-                    const cartIconElement = b.closest('li.o_wsale_my_cart');
-                    if (cartIconElement) cartIconElement.classList.remove('d-none');
-                });
-            }
-            
-            // Re-fetch mini cart while preserving focus
-            fetchMiniCart();
-        }).catch(function(err) {
-            console.error("[GF] Failed to update cart quantity", err);
-            if (loadingEl) loadingEl.classList.add('d-none');
-        }).finally(() => {
-            input.disabled = false;
-            setTimeout(() => { isUpdatingQuantity = false; }, 100);
-        });
-    };
-
-    document.addEventListener('click', function(e) {
-        const btn = e.target.closest('.gf-cart-qty-btn');
-        if (!btn) return;
-        e.preventDefault();
-        
-        const input = btn.parentElement.querySelector('.gf-cart-qty-input');
-        if (!input || input.disabled) return;
-        
-        let qty = parseInt(input.value, 10) || 0;
-        if (btn.classList.contains('gf-cart-qty-minus')) {
-            qty = Math.max(0, qty - 1);
-        } else {
-            qty += 1;
-        }
-        
-        input.value = qty;
-        updateOffcanvasQuantity(input, qty);
-    });
-
-    document.addEventListener('change', function(e) {
-        if (!e.target.classList.contains('gf-cart-qty-input')) return;
-        const input = e.target;
-        let qty = parseInt(input.value, 10) || 0;
-        if (qty < 0) qty = 0;
-        input.value = qty;
-        updateOffcanvasQuantity(input, qty);
-    });
-})();

@@ -78,6 +78,7 @@
                                     <div class="gf-ayc-bundle-card flex-fill" data-qty="1">
                                         <div class="b-qty">1 Case</div>
                                         <div class="b-price">₹549</div>
+                                        <div class="b-save invisible">Placeholder</div>
                                         <div class="b-subtext">Perfect for yourself.</div>
                                     </div>
                                     <div class="gf-ayc-bundle-card popular flex-fill" data-qty="2">
@@ -85,13 +86,13 @@
                                         <div class="b-qty">2 Cases</div>
                                         <div class="b-price">₹749</div>
                                         <div class="b-save">Save ₹349</div>
-                                        <div class="b-subtext">Great for you &amp; a friend.</div>
+                                        <div class="b-subtext">For you &amp; a friend.</div>
                                     </div>
                                     <div class="gf-ayc-bundle-card flex-fill" data-qty="3">
                                         <div class="b-qty">3 Cases</div>
                                         <div class="b-price">₹849</div>
                                         <div class="b-save">Save ₹798</div>
-                                        <div class="b-subtext">Best value for more savings!</div>
+                                        <div class="b-subtext">Best value savings.</div>
                                     </div>
                                 </div>
                             </div>
@@ -206,28 +207,34 @@
                                     </div>
                                 </div>
                             </div>
-
+                            
                             <!-- Divider -->
                             <hr class="gf-ayc-pdp__divider"/>
 
-                            <!-- Qty + Add to Cart + Buy Now -->
-                            <div class="gf-ayc-buy" id="gf-ayc-buy">
-                                <div id="add_to_cart_wrap" class="d-flex flex-nowrap align-items-center gap-2">
-                                    <div class="css_quantity input-group d-inline-flex align-middle border bg-white">
-                                        <button type="button" class="btn btn-link pe-2 border-0 text-dark gf-ayc-qty-btn" id="gf-ayc-qty-dec" aria-label="Remove one" title="Remove one">
-                                            <i class="fa fa-minus"></i>
-                                        </button>
-                                        <input type="text" id="gf-ayc-qty" class="form-control quantity text-center border-0 bg-transparent fw-bold" value="1" min="1" max="99"/>
-                                        <button type="button" class="btn btn-link ps-2 border-0 text-dark gf-ayc-qty-btn" id="gf-ayc-qty-inc" aria-label="Add one" title="Add one">
-                                            <i class="fa fa-plus"></i>
+                            <form action="/shop/cart/update" method="POST" class="js_add_cart_variants oe_website_sale">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <input type="hidden" name="product_id" id="gf-ayc-product-id-input" t-att-value="product_variant.id if product_variant else ''"/>
+                                <input type="hidden" name="product_template_id" id="gf-ayc-product-template-id-input" t-att-value="product.id if product else ''"/>
+
+                                <!-- Qty + Add to Cart + Buy Now -->
+                                <div class="gf-ayc-buy" id="gf-ayc-buy">
+                                    <div id="add_to_cart_wrap" class="d-flex flex-nowrap align-items-center gap-2">
+                                        <div class="css_quantity input-group d-inline-flex align-middle border" contenteditable="false">
+                                            <button type="button" class="btn btn-link pe-2 border-0 text-dark css_quantity_minus" id="gf-ayc-qty-dec" aria-label="Remove one" title="Remove one" name="remove_one">
+                                                <i class="oi oi-minus text-600"></i>
+                                            </button>
+                                            <input type="text" name="add_qty" id="gf-ayc-qty" class="form-control quantity text-center border-0" value="1" min="1"/>
+                                            <button type="button" class="btn btn-link ps-2 border-0 text-dark css_quantity_plus" id="gf-ayc-qty-inc" aria-label="Add one" title="Add one">
+                                                <i class="oi oi-plus text-600"></i>
+                                            </button>
+                                        </div>
+                                        <button type="submit" id="add_to_cart" class="gf-ayc-buy__cart-btn flex-grow-1" disabled="disabled">
+                                            <i class="fa fa-shopping-cart me-2" aria-hidden="true"/>
+                                            <span>Add to Cart</span>
                                         </button>
                                     </div>
-                                    <button type="button" id="gf-ayc-add-to-cart" class="gf-ayc-buy__cart-btn flex-grow-1" disabled="disabled">
-                                        <i class="fa fa-shopping-cart me-2" aria-hidden="true"/>
-                                        <span>Add to Cart</span>
-                                    </button>
                                 </div>
-                            </div>
+                            </form>
 
                             <!-- Trust badges -->
                             <div class="gf-ayc-pdp__trust">

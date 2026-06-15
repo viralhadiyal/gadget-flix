@@ -4503,111 +4503,25 @@ html body .oe_website_sale #add_to_cart i.fa {
     font-size: 1.1rem !important;
 }
 
-/* Quantity Input Box */
-html body #wrap #product_detail .css_quantity,
-html body .oe_website_sale .css_quantity {
-    display: inline-flex !important;
-    align-items: stretch !important;
-    width: 140px !important;
-    min-width: 140px !important;
+/* Quantity Input Box Height & Alignment */
+html body .css_quantity {
     height: 52px !important;
-    min-height: 52px !important;
-    max-height: 52px !important;
-    border-radius: 8px !important;
-    background-color: #fff !important;
-    border: 1.5px solid #eaeaea !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
 }
-
-html body #wrap #product_detail .css_quantity .input-group-prepend,
-html body #wrap #product_detail .css_quantity .input-group-append,
-html body .oe_website_sale .css_quantity .input-group-prepend,
-html body .oe_website_sale .css_quantity .input-group-append {
-    display: flex !important;
+html body .css_quantity .btn,
+html body .css_quantity .form-control {
+    height: 100% !important;
+    display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    height: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background: transparent !important;
-    border: none !important;
 }
-
-html body #wrap #product_detail .css_quantity .btn-link,
-html body .oe_website_sale .css_quantity .btn-link {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    width: 44px !important;
-    height: 100% !important;
-    color: #000 !important;
-    font-size: 16px !important;
+html body .css_quantity .btn,
+html body .css_quantity .btn:hover,
+html body .css_quantity .btn:focus,
+html body .css_quantity .btn:active {
     text-decoration: none !important;
-    border: none !important;
-    background: transparent !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    line-height: 1 !important;
-}
-
-html body #wrap #product_detail .css_quantity .btn-link i,
-html body .oe_website_sale .css_quantity .btn-link i {
-    margin: 0 !important;
-    padding: 0 !important;
-}
-
-html body #wrap #product_detail .css_quantity .btn-link:hover,
-html body .oe_website_sale .css_quantity .btn-link:hover {
-    background-color: #f5f5f5 !important;
-}
-
-html body #wrap #product_detail .css_quantity .quantity,
-html body .oe_website_sale .css_quantity .quantity {
-    flex: 1 !important;
-    width: 100% !important;
-    height: 100% !important;
-    font-size: 1.1rem !important;
-    font-weight: 700 !important;
-    text-align: center !important;
-    background-color: transparent !important;
-    border: none !important;
-    border-left: 1px solid #eaeaea !important;
-    border-right: 1px solid #eaeaea !important;
     box-shadow: none !important;
-    color: #000 !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    box-sizing: border-box !important;
 }
 
-/* Readonly Quantity Selector (Free Products / Promo lines) */
-html body #wrap #product_detail .css_quantity:has(input[readonly]),
-html body .oe_website_sale .css_quantity:has(input[readonly]) {
-    border: none !important;
-    background: transparent !important;
-    width: auto !important;
-    min-width: 0 !important;
-    height: auto !important;
-    min-height: 0 !important;
-    box-shadow: none !important;
-    padding: 0 !important;
-}
-
-html body #wrap #product_detail .css_quantity .quantity[readonly],
-html body .oe_website_sale .css_quantity .quantity[readonly] {
-    border: none !important;
-    background: transparent !important;
-    width: 32px !important;
-    height: auto !important;
-    text-align: center !important;
-    color: #555 !important;
-    font-size: 1rem !important;
-    font-weight: 500 !important;
-}
 
 /* Layout Wrapper for Buy Actions */
 #product_detail #add_to_cart_wrap {
@@ -4628,12 +4542,7 @@ html body .oe_website_sale .css_quantity .quantity[readonly] {
         gap: 12px !important;
     }
 
-    html body #wrap #product_detail .css_quantity,
-    html body .oe_website_sale .css_quantity {
-        align-self: center !important;
-        width: 130px !important;
-        min-width: 130px !important;
-    }
+
 
     html body #wrap #product_detail #add_to_cart,
     html body .oe_website_sale #add_to_cart {
@@ -4797,15 +4706,6 @@ html body .oe_website_sale .css_quantity .quantity[readonly] {
     margin: 0;
 }
 
-#gf_cart_offcanvas {
-    width: 400px;
-    max-width: 90vw;
-    z-index: 1055;
-}
-
-#gf_cart_loading {
-    z-index: 10;
-}
 
 .gf-btn-black {
     background-color: #000 !important;
@@ -4818,21 +4718,6 @@ html body .oe_website_sale .css_quantity .quantity[readonly] {
     color: #000 !important;
     border: 1px solid #000 !important;
     border-radius: 8px !important;
-}
-
-.gf-cart-img {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-}
-
-.gf-cart-qty-group {
-    max-width: 110px;
-    border-color: #dee2e6 !important;
-}
-
-.gf-cart-qty-btn {
-    width: 32px;
 }
 
 .gf-payment-loader-wrapper {

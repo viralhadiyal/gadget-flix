@@ -837,16 +837,7 @@
         padding: 0 12px !important;
     }
 
-    .gf-ayc-qty {
-        align-self: center !important;
-    }
 
-    /* Target the standard quantity div if used inside anti-yellow */
-    .css_quantity.input-group {
-        width: 130px !important;
-        min-width: 130px !important;
-        align-self: center !important;
-    }
 
     .gf-ayc-features__grid {
         grid-template-columns: 1fr;
@@ -1372,20 +1363,6 @@
 }
 
 
-.gf-ayc-buy .css_quantity {
-    max-width: 120px;
-    height: 52px;
-    border-radius: 0.375rem;
-}
-
-.gf-ayc-qty-btn {
-    width: 35px;
-}
-
-#gf-ayc-qty {
-    font-size: 1.1rem;
-    box-shadow: none;
-}
 
 
 /* ── Unique Interactive Video Accordion ──────────────────────────────── */
@@ -1612,30 +1589,29 @@
     .gf-ayc-bundle-card {
         border: 1px solid #e0e0e0;
         border-radius: 8px;
-        padding: 8px 4px;
+        padding: 12px 6px;
         text-align: center;
         position: relative;
         background: #fff;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        flex: 1;
+        flex: 1 1 0px !important;
         min-width: 0;
 
-        @media (max-width: 400px) {
-            padding: 6px 2px;
-        }
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
 
-        &:hover {
-            border-color: #000;
+        @media (max-width: 400px) {
+            padding: 8px 3px;
         }
 
         &.popular {
             border: 2px solid #28a745;
-            padding: 6.5px 2.5px;
+            padding: 11px 5px;
             background: #f8fff9;
 
             @media (max-width: 400px) {
-                padding: 4.5px 1.5px;
+                padding: 7px 2px;
             }
 
             .b-qty, .b-save {
