@@ -79,6 +79,7 @@ class SaleOrder(models.Model):
                 'event_name': 'Purchase',
                 'event_time': int(time.time()),
                 'action_source': 'website',
+                'event_id': f"PURCHASE_{self.id}",
                 'user_data': user_data,
                 'custom_data': custom_data,
             }]
