@@ -11,7 +11,7 @@ from odoo.addons.website_sale.controllers.payment import PaymentPortal
 
 _logger = logging.getLogger(__name__)
 
-def _send_capi_async(website, event_name, custom_data, user_data, request_url=None):
+def _send_capi_async(website, event_name, custom_data, user_data, request_url=None, event_id=None):
     """Fire and forget CAPI event to prevent blocking the request."""
     api_version = website.facebook_capi_api_version or 'v19.0'
     url = f"https://graph.facebook.com/{api_version}/{website.facebook_pixel_id}/events"
@@ -25,6 +25,8 @@ def _send_capi_async(website, event_name, custom_data, user_data, request_url=No
         'user_data': user_data,
         'custom_data': custom_data,
     }
+    if event_id:
+        event_data['event_id'] = event_id
     if request_url:
         event_data['event_source_url'] = request_url
 
@@ -38,7 +40,7 @@ def _send_capi_async(website, event_name, custom_data, user_data, request_url=No
     except Exception as e:
         _logger.warning("Facebook CAPI Async Error: %s", e)
 
-def trigger_backend_capi(event_name, custom_data=None):
+def trigger_backend_capi(event_name, custom_data=None, event_id=None):
     website = request.env['website'].get_current_website()
     if not website or not website.facebook_pixel_id or not website.facebook_capi_token:
         return
@@ -69,7 +71,7 @@ def trigger_backend_capi(event_name, custom_data=None):
 
     threading.Thread(
         target=_send_capi_async, 
-        args=(website, event_name, custom_data or {}, user_data, current_url)
+        args=(website, event_name, custom_data or {}, user_data, current_url, event_id)
     ).start()
 
 class GadgetflixCapiCart(Cart):
@@ -81,33 +83,23 @@ class GadgetflixCapiCart(Cart):
             if product_id and quantity > 0:
                 product = request.env['product.product'].sudo().browse(int(product_id))
                 if product.exists():
+                    # Generate a unique event ID for deduplication
+                    event_id = f"ADD_TO_CART_{product.id}_{int(time.time() * 1000)}"
+                    
+                    # Set cookie on response for frontend JS to read
+                    request.set_cookie('gf_last_add_to_cart_event_id', event_id, httponly=False)
+
                     trigger_backend_capi('AddToCart', {
                         'content_type': 'product',
                         'content_ids': [str(product.id)],
                         'value': float(product.list_price * quantity),
                         'currency': request.website.currency_id.name
-                    })
+                    }, event_id=event_id)
         except Exception as e:
             _logger.warning("CAPI add_to_cart failed: %s", e)
         return res
 
-    @http.route(['/shop/cart/update'], type='jsonrpc', auth='public', methods=['POST'], website=True, sitemap=False)
-    def update_cart(self, line_id, quantity, product_id=None, **kwargs):
-        res = super().update_cart(line_id, quantity, product_id=product_id, **kwargs)
-        try:
-            quantity = float(quantity)
-            if line_id:
-                line = request.env['sale.order.line'].sudo().browse(int(line_id))
-                if line.exists() and line.product_id:
-                    trigger_backend_capi('AddToCart', {
-                        'content_type': 'product',
-                        'content_ids': [str(line.product_id.id)],
-                        'value': float(line.product_id.list_price * quantity),
-                        'currency': request.website.currency_id.name
-                    })
-        except Exception as e:
-            _logger.warning("CAPI update_cart failed: %s", e)
-        return res
+
 
 class GadgetflixCapiWebsiteSale(WebsiteSale):
     @http.route(['/shop/checkout'], type='http', auth="public", website=True, sitemap=False)
@@ -120,7 +112,7 @@ class GadgetflixCapiWebsiteSale(WebsiteSale):
                     'value': float(order.amount_total),
                     'currency': order.currency_id.name,
                     'num_items': order.cart_quantity
-                })
+                }, event_id=f"CHECKOUT_{order.id}")
         except Exception as e:
             _logger.warning("CAPI InitiateCheckout failed: %s", e)
         return res
@@ -135,7 +127,7 @@ class GadgetflixCapiWebsiteSale(WebsiteSale):
                 trigger_backend_capi('AddPaymentInfo', {
                     'value': float(order.amount_total),
                     'currency': order.currency_id.name
-                })
+                }, event_id=f"PAYMENT_INFO_{order.id}")
         except Exception as e:
             _logger.warning("CAPI shop_address_submit failed: %s", e)
         return res

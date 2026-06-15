@@ -25,6 +25,7 @@
                     var cartTotal = <t t-esc="website_sale_order.amount_total if website_sale_order else 0.0" />;
                     var cartCurrency = '<t t-esc="website.currency_id.name" />';
                     var numItems = <t t-esc="website_sale_order.cart_quantity if website_sale_order else 0" />;
+                    var cartOrderId = <t t-esc="website_sale_order.id if website_sale_order else 0" />;
 
                     if (window.location.pathname.indexOf('/shop/checkout') !== -1 || window.location.pathname.indexOf('/shop/address') !== -1) {
                         // User started checkout (One-page checkout)
@@ -32,11 +33,14 @@
                             value: cartTotal,
                             currency: cartCurrency,
                             num_items: numItems
+                        }, {
+                            eventID: 'CHECKOUT_' + cartOrderId
                         });
                         
                         // Pass these to global window object so our JS can use them when they click Pay
                         window.gf_fb_cartTotal = cartTotal;
                         window.gf_fb_cartCurrency = cartCurrency;
+                        window.gf_fb_cartOrderId = cartOrderId;
                     }
                 }
             </script>
