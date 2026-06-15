@@ -52,15 +52,11 @@
         <xpath expr="//t[@t-call='website_sale.checkout_layout']" position="inside">
             <script type="text/javascript">
                 if (typeof fbq !== 'undefined') {
-                    // This event_id MUST match exactly the one sent by the Python backend API
-                    // so Facebook can correctly deduplicate them and not double-count the sale.
                     fbq('track', 'Purchase', {
                         value: <t t-esc="order.amount_total" />,
                         currency: '<t t-esc="order.currency_id.name" />',
                         content_type: 'product',
                         content_ids: [<t t-foreach="order.order_line" t-as="line">'<t t-esc="line.product_id.id" />',</t>]
-                    }, {
-                        eventID: 'ORDER_<t t-esc="order.id" />'
                     });
                 }
             </script>
