@@ -79,7 +79,7 @@ class SaleOrder(models.Model):
                 'event_name': 'Purchase',
                 'event_time': int(time.time()),
                 'action_source': 'website',
-                'event_id': f"ORDER_{self.id}", # Essential for frontend deduplication
+                'event_id': f"order_{self.id}",  # Must match dataLayer push: order_<id>
                 'user_data': user_data,
                 'custom_data': custom_data,
             }]

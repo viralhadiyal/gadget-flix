@@ -1,39 +1,64 @@
 /** @odoo-module **/
 
+/**
+ * Facebook Tracking via GTM DataLayer
+ *
+ * Instead of calling fbq() directly, we push events to window.dataLayer.
+ * GTM picks up these events and fires the Meta Pixel with the same event_id,
+ * enabling proper deduplication with server-side CAPI events.
+ */
+
 document.addEventListener("DOMContentLoaded", function () {
+    window.dataLayer = window.dataLayer || [];
+
     // 1. Listen for Odoo 19's native add_to_cart_event from cart_service.js
-    // This is 100% safe and doesn't require patching Owl components
+    //    Push to dataLayer so GTM can fire AddToCart via Meta Pixel tag
     document.addEventListener("add_to_cart_event", function (ev) {
-        if (typeof fbq !== 'undefined' && ev.detail) {
+        if (ev.detail) {
             const items = Array.isArray(ev.detail) ? ev.detail : [ev.detail];
-            items.forEach(item => {
+            items.forEach(function (item) {
                 const productId = item.product_id || item.item_id;
                 const value = parseFloat(item.price || item.value || 0.0);
-                const currency = item.currency || window.gf_fb_cartCurrency || 'USD';
-                
+                const currency = item.currency || 'USD';
+
                 if (productId) {
-                    fbq('track', 'AddToCart', {
-                        content_type: 'product',
-                        content_ids: [productId],
+                    dataLayer.push({
+                        event: 'add_to_cart',
+                        product_id: productId,
                         value: value,
-                        currency: currency
+                        currency: currency,
+                        // Use product-level event_id for real-time add-to-cart actions
+                        event_id: 'atc_' + productId + '_' + Date.now()
                     });
                 }
             });
         }
     });
 
-    // 2. Intercept payment submit button clicks for the one-page checkout funnel
+    // 2. Intercept payment submit button clicks
+    //    Push AddShippingInfo and AddPaymentInfo to dataLayer when user clicks Pay
     document.addEventListener("click", function (event) {
-        const target = event.target.closest('button[name="o_payment_submit_button"]');
-        if (target && typeof fbq !== 'undefined') {
-            const val = window.gf_fb_cartTotal || 0.0;
-            const cur = window.gf_fb_cartCurrency || 'USD';
-            
-            // Fire shipping/payment events exactly when they click Pay Now
-            fbq('track', 'AddShippingInfo', { value: val, currency: cur });
-            fbq('track', 'AddPaymentInfo', { value: val, currency: cur });
+        var target = event.target.closest('button[name="o_payment_submit_button"]');
+        if (target) {
+            // Read order values from the checkout page context (set by QWeb template)
+            var orderDataEl = document.querySelector('[data-order-total]');
+            var val = orderDataEl ? parseFloat(orderDataEl.dataset.orderTotal) : 0.0;
+            var cur = orderDataEl ? orderDataEl.dataset.orderCurrency : 'USD';
+            var orderId = orderDataEl ? orderDataEl.dataset.orderId : '';
+
+            dataLayer.push({
+                event: 'add_shipping_info',
+                value: val,
+                currency: cur,
+                event_id: 'ship_' + orderId + '_' + Date.now()
+            });
+
+            dataLayer.push({
+                event: 'add_payment_info',
+                value: val,
+                currency: cur,
+                event_id: 'payment_' + orderId + '_' + Date.now()
+            });
         }
     });
 });
-
