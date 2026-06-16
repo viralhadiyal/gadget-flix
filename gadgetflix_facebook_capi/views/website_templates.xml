@@ -91,14 +91,19 @@
     <template id="facebook_datalayer_purchase" inherit_id="website_sale.confirmation">
         <xpath expr="//t[@t-call='website_sale.checkout_layout']" position="inside">
             <script type="text/javascript">
-                window.dataLayer = window.dataLayer || [];
-                dataLayer.push({
-                    event: 'purchase',
-                    value: <t t-esc="order.amount_total"/>,
-                    currency: '<t t-esc="order.currency_id.name"/>',
-                    order_id: '<t t-esc="order.id"/>',
-                    event_id: 'order_<t t-esc="order.id"/>'
-                });
+                if (!window._purchase_fired_) {
+                    window._purchase_fired_ = true;
+
+                    window.dataLayer = window.dataLayer || [];
+                    dataLayer.push({
+                        event: 'purchase',
+                        value: <t t-esc="order.amount_total"/>,
+                        currency: '<t t-esc="order.currency_id.name"/>',
+                        order_id: '<t t-esc="order.id"/>',
+                        event_id: 'order_<t t-esc="order.id"/>'
+                    });
+                }
+
             </script>
         </xpath>
     </template>
