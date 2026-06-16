@@ -1,72 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-
-    <!-- ══════════════════════════════════════════════════════════════
-         ViewContent — Product Page (browser-side)
-         Server-side: controllers/main.py product() override
-         Event ID matched via cookie gf_fb_view_content_eid
-         ══════════════════════════════════════════════════════════════ -->
+    <!-- ViewContent Event on Product Page -->
     <template id="facebook_capi_product_view" inherit_id="website_sale.product">
         <xpath expr="//section[@id='product_detail']" position="after">
-            <!-- Hidden element to pass data to static JS, avoiding inline JS scripts -->
-            <div id="gf_fb_view_content_data"
-                 class="d-none"
-                 t-att-data-product-name="product.name"
-                 t-att-data-product-id="product.id"
-                 t-att-data-product-price="combination_info.get('price', product.list_price) if combination_info else product.list_price"
-                 t-att-data-currency-name="website.currency_id.name" />
+            <script type="text/javascript">
+                if (typeof fbq !== 'undefined') {
+                    fbq('track', 'ViewContent', {
+                        content_name: '<t t-esc="product.name" />',
+                        content_ids: ['<t t-esc="product.id" />'],
+                        content_type: 'product',
+                        value: <t t-esc="combination_info['price']" />,
+                        currency: '<t t-esc="website.currency_id.name" />'
+                    });
+                }
+            </script>
         </xpath>
     </template>
 
-    <!-- ══════════════════════════════════════════════════════════════
-         ViewContent — Anti-Yellow Case Page (browser-side)
-         Server-side: controllers/main.py anti_yellow_case_page() override
-         Event ID matched via cookie gf_fb_view_content_eid
-         ══════════════════════════════════════════════════════════════ -->
-    <template id="facebook_capi_anti_yellow_view" inherit_id="gadgetflix_website.anti_yellow_case_page">
-        <xpath expr="//div[@id='gf-ayc-page']" position="inside">
-            <!-- Hidden element to pass data to static JS, avoiding inline JS scripts -->
-            <div id="gf_fb_view_content_data"
-                 class="d-none"
-                 t-att-data-product-name="product.name if product else 'Anti-Yellow Magsafe Clear Case'"
-                 t-att-data-product-id="product_variant.id if product_variant else (product._get_first_possible_variant_id() if product else '')"
-                 t-att-data-product-price="product_variant.lst_price if product_variant else (product.list_price if product else 0.0)"
-                 t-att-data-currency-name="website.currency_id.name" />
-        </xpath>
-    </template>
-
-    <!-- ══════════════════════════════════════════════════════════════
-         InitiateCheckout — Checkout Page (browser-side)
-         Server-side: controllers/main.py shop_checkout()
-         Event ID: CHECKOUT_{order_id}
-         ══════════════════════════════════════════════════════════════ -->
+    <!-- Checkout Funnel Events (InitiateCheckout) -->
     <template id="facebook_capi_checkout_funnel" inherit_id="website_sale.checkout_layout">
         <xpath expr="//div[hasclass('oe_website_sale')]" position="after">
-            <!-- Hidden element to pass data to static JS, avoiding inline JS scripts -->
-            <div id="gf_fb_checkout_data"
-                 class="d-none"
-                 t-att-data-cart-total="website_sale_order.amount_total if website_sale_order else 0.0"
-                 t-att-data-cart-currency="website.currency_id.name"
-                 t-att-data-num-items="website_sale_order.cart_quantity if website_sale_order else 0"
-                 t-att-data-cart-order-id="website_sale_order.id if website_sale_order else 0" />
+            <script type="text/javascript">
+                if (typeof fbq !== 'undefined') {
+                    var cartTotal = <t t-esc="website_sale_order.amount_total if website_sale_order else 0.0" />;
+                    var cartCurrency = '<t t-esc="website.currency_id.name" />';
+                    var numItems = <t t-esc="website_sale_order.cart_quantity if website_sale_order else 0" />;
+
+                    if (window.location.pathname.indexOf('/shop/checkout') !== -1 || window.location.pathname.indexOf('/shop/address') !== -1) {
+                        // User started checkout (One-page checkout)
+                        fbq('track', 'InitiateCheckout', {
+                            value: cartTotal,
+                            currency: cartCurrency,
+                            num_items: numItems
+                        });
+                        
+                        // Pass these to global window object so our JS can use them when they click Pay
+                        window.gf_fb_cartTotal = cartTotal;
+                        window.gf_fb_cartCurrency = cartCurrency;
+                    }
+                }
+            </script>
         </xpath>
     </template>
 
-    <!-- ══════════════════════════════════════════════════════════════
-         Purchase — Confirmation Page (browser-side)
-         Server-side: models/sale_order.py _action_confirm()
-         Event ID: PURCHASE_{order_id}
-         ══════════════════════════════════════════════════════════════ -->
+    <!-- Purchase Event on Confirmation Page (Frontend Deduplication) -->
     <template id="facebook_capi_purchase" inherit_id="website_sale.confirmation">
         <xpath expr="//t[@t-call='website_sale.checkout_layout']" position="inside">
-            <!-- Hidden element to pass data to static JS, avoiding inline JS scripts -->
-            <div id="gf_fb_purchase_data"
-                 class="d-none"
-                 t-att-data-order-total="order.amount_total"
-                 t-att-data-order-currency="order.currency_id.name"
-                 t-att-data-order-id="order.id"
-                 t-att-data-product-ids="','.join([str(line.product_id.id) for line in order.order_line if line.product_id])" />
+            <script type="text/javascript">
+                if (typeof fbq !== 'undefined') {
+                    // This event_id MUST match exactly the one sent by the Python backend API
+                    // so Facebook can correctly deduplicate them and not double-count the sale.
+                    fbq('track', 'Purchase', {
+                        value: <t t-esc="order.amount_total" />,
+                        currency: '<t t-esc="order.currency_id.name" />',
+                        content_type: 'product',
+                        content_ids: [<t t-foreach="order.order_line" t-as="line">'<t t-esc="line.product_id.id" />',</t>]
+                    }, {
+                        eventID: 'ORDER_<t t-esc="order.id" />'
+                    });
+                }
+            </script>
         </xpath>
     </template>
-
 </odoo>

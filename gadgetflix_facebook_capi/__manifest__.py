@@ -1,6 +1,6 @@
 {
     'name': 'Gadgetflix - Facebook Conversion API',
-    'version': '19.0.0.1',
+    'version': '1.0',
     'category': 'Website/Website',
     'summary': 'Facebook Conversion API (CAPI) and Advanced Pixel Tracking',
     'description': """
@@ -10,13 +10,7 @@
     'depends': ['website_sale', 'sale'],
     'data': [
         'views/res_config_settings_views.xml',
-        'views/website_templates.xml',
     ],
-    'assets': {
-        'web.assets_frontend': [
-            'gadgetflix_facebook_capi/static/src/js/facebook_tracking.js',
-        ],
-    },
     'installable': True,
     'application': False,
     'auto_install': False,
