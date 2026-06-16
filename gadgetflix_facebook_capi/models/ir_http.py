@@ -10,6 +10,14 @@ class IrHttp(models.AbstractModel):
     _inherit = 'ir.http'
 
     @classmethod
+    def _pre_dispatch(cls, rule, arguments):
+        res = super()._pre_dispatch(rule, arguments)
+        # Generate PageView event_id early so the QWeb template can read it.
+        # The same value is later used by _post_dispatch for the CAPI call.
+        request.fb_pv_event_id = f'pv_{int(time.time() * 1000)}'
+        return res
+
+    @classmethod
     def _post_dispatch(cls, response):
         res = super()._post_dispatch(response)
 
@@ -24,30 +32,14 @@ class IrHttp(models.AbstractModel):
             path = request.httprequest.path
             method = request.httprequest.method
 
-            # Fire PageView for all successful HTML GET requests on public pages
+            # Fire PageView CAPI for all successful HTML GET requests on public pages
             if method == 'GET' and hasattr(response, 'status_code') and response.status_code == 200:
                 mimetype = getattr(response, 'mimetype', '') or ''
                 if 'text/html' in mimetype and not path.startswith(('/web', '/odoo', '/logo', '/mail')):
-                    # Generate ONE event_id used by BOTH dataLayer and CAPI
-                    event_id = f'pv_{int(time.time() * 1000)}'
-
-                    # 1) Inject dataLayer.push into the HTML <head>
-                    script = (
-                        '<script>'
-                        'window.dataLayer=window.dataLayer||[];'
-                        'dataLayer.push({event:"meta_pageview",'
-                        f'event_id:"{event_id}"'
-                        '});'
-                        '</script>'
-                    )
-                    try:
-                        body = res.get_data(as_text=True)
-                        res.set_data(body.replace('</head>', script + '</head>'))
-                    except Exception:
-                        pass
-
-                    # 2) Fire CAPI with the SAME event_id
                     from odoo.addons.gadgetflix_facebook_capi.controllers.main import trigger_backend_capi
+                    # Use the SAME event_id that was set in _pre_dispatch
+                    # and rendered into the QWeb dataLayer.push template
+                    event_id = getattr(request, 'fb_pv_event_id', f'pv_{int(time.time() * 1000)}')
                     trigger_backend_capi('PageView', {}, event_id=event_id)
 
         except Exception as e:
