@@ -1,6 +1,6 @@
 {
     'name': 'Gadgetflix - Facebook Conversion API',
-    'version': '1.0',
+    'version': '17.0.1.0.0',
     'category': 'Website/Website',
     'summary': 'Facebook Conversion API (CAPI) and Advanced Pixel Tracking',
     'description': """
