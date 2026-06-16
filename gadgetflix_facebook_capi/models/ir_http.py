@@ -12,9 +12,12 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _pre_dispatch(cls, rule, arguments):
         res = super()._pre_dispatch(rule, arguments)
-        # Generate PageView event_id early so the QWeb template can read it.
-        # The same value is later used by _post_dispatch for the CAPI call.
+        # Set ALL fb event_id defaults here so QWeb templates never hit
+        # missing attribute errors. Controllers will override with real values.
         request.fb_pv_event_id = f'pv_{int(time.time() * 1000)}'
+        request.fb_vc_event_id = ''
+        request.fb_atc_event_id = ''
+        request.fb_checkout_event_id = ''
         return res
 
     @classmethod

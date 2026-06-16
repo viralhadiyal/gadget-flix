@@ -163,12 +163,12 @@ class GadgetflixCapiCart(Cart):
 
     # ---------- Cart page view (/shop/cart) ----------
     @http.route(['/shop/cart'], type='http', auth='public', website=True, sitemap=False)
-    def cart(self, **post):
+    def cart(self, id=None, access_token=None, revive_method='', **post):
         # Generate event_id BEFORE super() so QWeb template can read it
         order = request.cart
         if order and order.id:
             request.fb_atc_event_id = _generate_event_id('cart', order.id)
-        res = super().cart(**post)
+        res = super().cart(id=id, access_token=access_token, revive_method=revive_method, **post)
         return res
 
 
