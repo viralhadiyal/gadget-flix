@@ -1064,14 +1064,21 @@
     }
 
     .gf-ayc-pdp__inner {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         gap: 32px;
+    }
+
+    .gf-ayc-pdp__image-col {
+        min-width: 0 !important;
+        max-width: 100% !important;
     }
 
     .gf-ayc-pdp__image-wrap {
         position: relative;
         top: 0;
         flex-direction: column;
+        min-width: 0 !important;
+        max-width: 100% !important;
     }
 
     .gf-ayc-pdp__thumbs {

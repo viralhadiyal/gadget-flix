@@ -930,13 +930,28 @@ textarea,
     font-weight: 600;
 }
 
+.o_wsale_product_page #product_detail {
+    width: calc(100% - 32px) !important;
+    max-width: 1248px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+
 .o_wsale_product_page #product_detail>.o_wsale_content_contained {
     padding-top: 12px !important;
     padding-bottom: 10px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 }
 
 .o_wsale_product_page #o-carousel-product {
     margin-bottom: 10px !important;
+}
+
+#product_detail.o_wsale_container_lg .o_wsale_product_images {
+    padding: 16px;
 }
 
 @media (max-width: 991px) {
@@ -4707,12 +4722,12 @@ html body .css_quantity .btn:active {
     .o_wsale_product_page #o-carousel-product,
     #gf-ayc-page #o-carousel-product {
         max-width: 100% !important;
+        overflow: visible !important;
+        margin-bottom: 4px !important;
     }
 
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators,
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators.overflow-hidden,
-    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators,
-    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators.overflow-hidden {
+    .o_carousel_product_indicators,
+    .o_carousel_product_indicators.overflow-hidden {
         display: block !important;
         width: 100% !important;
         max-width: 100% !important;
@@ -4721,20 +4736,23 @@ html body .css_quantity .btn:active {
         overflow-y: hidden !important;
         overscroll-behavior-x: contain !important;
         -webkit-overflow-scrolling: touch !important;
-        padding-bottom: 8px !important;
+        height: 76px !important;
+        padding-bottom: 0 !important;
         transform: none !important;
-        margin-top: 4px !important;
+        margin-top: 12px !important;
 
         // Hide scrollbar completely to prevent layout clipping by browser scrollbars
         scrollbar-width: none !important; /* Firefox */
         -ms-overflow-style: none !important;  /* IE/Edge */
         &::-webkit-scrollbar {
+            width: 0 !important;
+            height: 0 !important;
             display: none !important; /* Chrome/Safari/Opera */
+            background: transparent !important;
         }
     }
 
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators,
-    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators {
+    .carousel-indicators {
         position: static !important;
         display: inline-flex !important;
         justify-content: flex-start !important;
@@ -4744,12 +4762,22 @@ html body .css_quantity .btn:active {
         min-width: 100% !important;
         max-width: none !important;
         margin: 0 !important;
-        padding: 0 0 8px 0 !important;
+        padding: 0 !important;
+        height: 56px !important;
         transform: none !important;
+
+        // Hide scrollbar completely to prevent layout clipping by browser scrollbars
+        scrollbar-width: none !important; /* Firefox */
+        -ms-overflow-style: none !important;  /* IE/Edge */
+        &::-webkit-scrollbar {
+            width: 0 !important;
+            height: 0 !important;
+            display: none !important; /* Chrome/Safari/Opera */
+            background: transparent !important;
+        }
     }
 
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li,
-    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li {
+    .carousel-indicators li {
         width: 56px !important;
         height: 56px !important;
         min-width: 56px !important;
@@ -4766,17 +4794,13 @@ html body .css_quantity .btn:active {
         opacity: 1 !important;
     }
 
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li.active,
-    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li.active {
+    .carousel-indicators li.active {
         border-color: #111 !important;
     }
 
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div,
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div>img,
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>img,
-    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div,
-    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div>img,
-    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>img {
+    .carousel-indicators li>div,
+    .carousel-indicators li>div>img,
+    .carousel-indicators li>img {
         display: block !important;
         width: 100% !important;
         height: 100% !important;
