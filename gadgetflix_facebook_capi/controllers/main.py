@@ -167,7 +167,7 @@ class GadgetflixCapiCart(Cart):
         # Generate event_id BEFORE super() so QWeb template can read it
         order = request.cart
         if order and order.id:
-            request.fb_atc_event_id = request.params['fb_atc_event_id'] = _generate_event_id('cart', order.id)
+            request.fb_atc_event_id = _generate_event_id('cart', order.id)
         res = super().cart(id=id, access_token=access_token, revive_method=revive_method, **post)
         return res
 
@@ -179,7 +179,7 @@ class GadgetflixCapiWebsiteSale(WebsiteSale):
     def shop_product(self, product, category='', search='', **kwargs):
         # Generate event_id BEFORE super() so QWeb template can read it
         eid = _generate_event_id('vc', f'{product.id}_{int(time.time() * 1000)}')
-        request.fb_vc_event_id = request.params['fb_vc_event_id'] = eid
+        request.fb_vc_event_id = eid
 
         res = super().shop_product(product, category=category, search=search, **kwargs)
 
@@ -202,7 +202,7 @@ class GadgetflixCapiWebsiteSale(WebsiteSale):
         # Generate event_id BEFORE super() so QWeb template can read it
         order = request.cart
         if order and order.id:
-            request.fb_checkout_event_id = request.params['fb_checkout_event_id'] = _generate_event_id('checkout', order.id)
+            request.fb_checkout_event_id = _generate_event_id('checkout', order.id)
 
         res = super().shop_checkout(try_skip_step=try_skip_step, **query_params)
 

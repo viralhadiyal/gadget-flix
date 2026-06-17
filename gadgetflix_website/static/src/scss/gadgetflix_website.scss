@@ -4661,6 +4661,11 @@ html body .css_quantity .btn:active {
    Product Detail Page - Thumbnail Images (Bottom)
    ============================================================ */
 @media (min-width: 992px) {
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators {
+        margin-top: 4px !important;
+    }
+
     .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li,
     #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li {
         width: 64px !important;
@@ -4671,7 +4676,17 @@ html body .css_quantity .btn:active {
         align-items: center !important;
         justify-content: center !important;
         overflow: hidden !important;
+        border-radius: 8px !important;
+        border: 1px solid #d8d8d8 !important;
         padding: 2px !important;
+        text-indent: unset !important;
+        background: #fff !important;
+        opacity: 1 !important;
+    }
+
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li.active,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li.active {
+        border-color: #111 !important;
     }
 
     .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div,
@@ -4695,7 +4710,9 @@ html body .css_quantity .btn:active {
     }
 
     .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators,
-    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators {
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators.overflow-hidden,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators.overflow-hidden {
         display: block !important;
         width: 100% !important;
         max-width: 100% !important;
@@ -4706,6 +4723,7 @@ html body .css_quantity .btn:active {
         -webkit-overflow-scrolling: touch !important;
         padding-bottom: 8px !important;
         transform: none !important;
+        margin-top: 4px !important;
     }
 
     .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators,

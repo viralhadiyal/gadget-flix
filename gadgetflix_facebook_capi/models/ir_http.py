@@ -1,9 +1,18 @@
 import time
 import logging
+import odoo.http
 from odoo import models
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
+
+# Ensure default attributes exist on Request class to prevent QWeb rendering errors
+# on requests that bypass _pre_dispatch (e.g. error/fallback pages)
+odoo.http.Request.fb_pv_event_id = ''
+odoo.http.Request.fb_vc_event_id = ''
+odoo.http.Request.fb_atc_event_id = ''
+odoo.http.Request.fb_checkout_event_id = ''
+
 
 
 class IrHttp(models.AbstractModel):
@@ -12,15 +21,11 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _pre_dispatch(cls, rule, arguments):
         res = super()._pre_dispatch(rule, arguments)
-        # Set ALL fb event_id defaults here so QWeb templates never hit
-        # missing attribute errors. Controllers will override with real values.
-        #request.params['fb_pv_event_id'] = request.fb_pv_event_id = f'pv_{int(time.time() * 1000)}'
-        #request.params.setdefault('fb_vc_event_id', '')
-        #request.params.setdefault('fb_atc_event_id', '')
-        #request.params.setdefault('fb_checkout_event_id', '')
-        request.fb_vc_event_id = ''
-        request.fb_atc_event_id = ''
-        request.fb_checkout_event_id = ''
+        if request:
+            request.fb_pv_event_id = f'pv_{int(time.time() * 1000)}'
+            request.fb_vc_event_id = ''
+            request.fb_atc_event_id = ''
+            request.fb_checkout_event_id = ''
         return res
 
     @classmethod
