@@ -15,6 +15,18 @@
             <attribute name="placeholder">Enter 6-digit pincode</attribute>
             <attribute name="autocomplete">postal-code</attribute>
         </xpath>
+        <xpath expr="//div[@id='div_zip']" position="attributes">
+            <attribute name="class" add="col-lg-6" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='div_city']" position="attributes">
+            <attribute name="class" add="col-lg-6" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='div_state']" position="attributes">
+            <attribute name="class" add="col-lg-6" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='div_country']" position="attributes">
+            <attribute name="class" add="col-lg-6 gf-country-last" separator=" "/>
+        </xpath>
         <xpath expr="//input[@name='city']" position="attributes">
             <attribute name="readonly">readonly</attribute>
             <attribute name="class" add="gf-address-readonly" separator=" "/>
@@ -35,6 +47,18 @@
     <template id="gadgetflix_checkout_address_hide_b2b_fields" inherit_id="website_sale.address_form_fields" priority="80">
         <xpath expr="//t[@name='b2b_fields']" position="attributes">
             <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@id='div_zip']" position="attributes">
+            <attribute name="class" add="col-lg-6" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='div_city']" position="attributes">
+            <attribute name="class" add="col-lg-6" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='div_state']" position="attributes">
+            <attribute name="class" add="col-lg-6" separator=" "/>
+        </xpath>
+        <xpath expr="//div[@id='div_country']" position="attributes">
+            <attribute name="class" add="col-lg-6 gf-country-last" separator=" "/>
         </xpath>
         <xpath expr="//input[@name='city']" position="attributes">
             <attribute name="readonly">readonly</attribute>

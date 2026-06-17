@@ -121,6 +121,8 @@
     <template id="gadgetflix_precart_address_modal" inherit_id="website.layout" name="Gadgetflix Pre-cart Address Modal">
         <xpath expr="//body" position="inside">
             <t t-set="gf_india" t-value="request.env['res.country'].sudo().search([('code', '=', 'IN')], limit=1)"/>
+            <t t-set="gf_precart_partner" t-value="request.env.user.partner_id if not request.env.user._is_public() else False"/>
+            <t t-set="gf_precart_session_address" t-value="request.session.get('gf_pre_cart_address') or {}"/>
             <div id="gf-precart-address-modal" class="gf-precart-modal" hidden="hidden" aria-hidden="true">
                 <div class="gf-precart-modal__backdrop" data-gf-precart-close="1"/>
                 <div class="gf-precart-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="gf-precart-title">
@@ -134,45 +136,52 @@
                     <form class="gf-precart-address-form address_autoformat">
                         <div class="gf-precart-modal__grid">
                             <div id="div_name" class="gf-precart-field gf-precart-field--full">
-                                <label for="gf_pre_cart_name">Name</label>
-                                <input id="gf_pre_cart_name" class="form-control" type="text" name="name" required="required"/>
+                                <label for="gf_pre_cart_name">Full Name <span class="gf-required-asterisk">*</span></label>
+                                <input id="gf_pre_cart_name" class="form-control" type="text" name="name" required="required" t-att-value="(gf_precart_partner and gf_precart_partner.name) or gf_precart_session_address.get('name') or ''"/>
                             </div>
                             <div id="div_email" class="gf-precart-field">
-                                <label for="gf_pre_cart_email">Email</label>
-                                <input id="gf_pre_cart_email" class="form-control" type="email" name="email"/>
+                                <label for="gf_pre_cart_email">Email <span class="gf-required-asterisk">*</span></label>
+                                <input id="gf_pre_cart_email" class="form-control" type="email" name="email" required="required" t-att-value="(gf_precart_partner and gf_precart_partner.email) or gf_precart_session_address.get('email') or ''"/>
                             </div>
                             <div id="div_phone" class="gf-precart-field">
-                                <label for="gf_pre_cart_phone">Phone</label>
-                                <input id="gf_pre_cart_phone" class="form-control" type="tel" name="phone" required="required"/>
+                                <label for="gf_pre_cart_phone">Mobile Number <span class="gf-required-asterisk">*</span></label>
+                                <input id="gf_pre_cart_phone" class="form-control" type="tel" name="phone" required="required" t-att-value="(gf_precart_partner and (gf_precart_partner.phone or gf_precart_partner.mobile)) or gf_precart_session_address.get('phone') or ''"/>
                             </div>
                             <div id="div_street" class="gf-precart-field gf-precart-field--full">
-                                <label for="gf_pre_cart_street">Street and Number</label>
-                                <input id="gf_pre_cart_street" class="form-control" type="text" name="street" required="required"/>
+                                <label for="gf_pre_cart_street">House / Flat No. and Street <span class="gf-required-asterisk">*</span></label>
+                                <input id="gf_pre_cart_street" class="form-control" type="text" name="street" required="required" t-att-value="(gf_precart_partner and gf_precart_partner.street) or gf_precart_session_address.get('street') or ''"/>
                             </div>
                             <div id="div_street2" class="gf-precart-field gf-precart-field--full">
-                                <label for="gf_pre_cart_street2">Apartment, suite, etc.</label>
-                                <input id="gf_pre_cart_street2" class="form-control" type="text" name="street2"/>
+                                <label for="gf_pre_cart_street2">Area / Landmark</label>
+                                <input id="gf_pre_cart_street2" class="form-control" type="text" name="street2" t-att-value="(gf_precart_partner and gf_precart_partner.street2) or gf_precart_session_address.get('street2') or ''"/>
                             </div>
                             <div id="div_zip" class="gf-precart-field">
-                                <label for="gf_pre_cart_zip">Zipcode</label>
-                                <input id="gf_pre_cart_zip" class="form-control" type="text" name="zip" required="required" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit pincode" autocomplete="postal-code"/>
+                                <label for="gf_pre_cart_zip">Pincode <span class="gf-required-asterisk">*</span></label>
+                                <input id="gf_pre_cart_zip" class="form-control" type="text" name="zip" required="required" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit pincode" autocomplete="postal-code" t-att-value="(gf_precart_partner and gf_precart_partner.zip) or gf_precart_session_address.get('zip') or ''"/>
                                 <div class="gf-pincode-status" aria-live="polite"/>
                             </div>
+                            <div id="div_village" class="gf-precart-field gf-village-field">
+                                <label for="gf_pre_cart_village">Locality / Village</label>
+                                <input id="gf_pre_cart_village_readonly" class="form-control gf-address-readonly gf-village-readonly col-form-label" type="text" readonly="readonly" hidden="hidden"/>
+                                <select id="gf_pre_cart_village" class="form-select gf-village-select" disabled="disabled">
+                                    <option value="">Village/locality will appear after pincode</option>
+                                </select>
+                            </div>
                             <div id="div_city" class="gf-precart-field">
-                                <label for="gf_pre_cart_city">City</label>
-                                <input id="gf_pre_cart_city" class="form-control gf-address-readonly" type="text" name="city" readonly="readonly" required="required"/>
+                                <label for="gf_pre_cart_city">City / District <span class="gf-required-asterisk">*</span></label>
+                                <input id="gf_pre_cart_city" class="form-control gf-address-readonly" type="text" name="city" readonly="readonly" required="required" t-att-value="(gf_precart_partner and gf_precart_partner.city) or gf_precart_session_address.get('city') or ''"/>
                             </div>
                             <div id="div_state" class="gf-precart-field">
-                                <label for="gf_pre_cart_state">State</label>
+                                <label for="gf_pre_cart_state">State <span class="gf-required-asterisk">*</span></label>
                                 <select id="gf_pre_cart_state" class="form-select gf-address-readonly" name="state_id" required="required" aria-readonly="true">
                                     <option value="">State...</option>
                                     <t t-if="gf_india" t-foreach="gf_india.state_ids.sorted('name')" t-as="state">
-                                        <option t-att-value="state.id" t-out="state.name"/>
+                                        <option t-att-value="state.id" t-att-selected="state.id == ((gf_precart_partner and gf_precart_partner.state_id.id) or gf_precart_session_address.get('state_id'))" t-out="state.name"/>
                                     </t>
                                 </select>
                             </div>
-                            <div id="div_country" class="gf-precart-field">
-                                <label for="gf_pre_cart_country">Country</label>
+                            <div id="div_country" class="gf-precart-field gf-precart-field--full">
+                                <label for="gf_pre_cart_country">Country <span class="gf-required-asterisk">*</span></label>
                                 <select id="gf_pre_cart_country" class="form-select gf-address-readonly" name="country_id" required="required" aria-readonly="true">
                                     <option t-if="gf_india" t-att-value="gf_india.id" code="IN" selected="selected">India</option>
                                 </select>
@@ -181,10 +190,18 @@
                         <div class="gf-precart-modal__error" data-gf-precart-error="1" hidden="hidden"/>
                         <div class="gf-precart-modal__actions">
                             <button type="submit" class="gf-precart-modal__submit gf-precart-modal__submit--secondary" data-gf-precart-next="cart">
-                                Continue Shopping
+                                <span class="gf-precart-modal__btn-label">Continue Shopping</span>
+                                <span class="gf-precart-modal__btn-loading">
+                                    <i class="fa fa-spinner fa-spin" aria-hidden="true"/>
+                                    Adding...
+                                </span>
                             </button>
                             <button type="submit" class="gf-precart-modal__submit" data-gf-precart-next="checkout">
-                                Checkout
+                                <span class="gf-precart-modal__btn-label">Checkout</span>
+                                <span class="gf-precart-modal__btn-loading">
+                                    <i class="fa fa-spinner fa-spin" aria-hidden="true"/>
+                                    Adding...
+                                </span>
                             </button>
                         </div>
                     </form>

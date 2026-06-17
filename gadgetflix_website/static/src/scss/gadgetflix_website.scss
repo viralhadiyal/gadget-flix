@@ -4603,6 +4603,9 @@ textarea,
    ============================================================ */
 
 .gf-pincode-status {
+    flex: 0 0 100%;
+    width: 100%;
+    grid-column: 1 / -1;
     min-height: 18px;
     margin-top: 5px;
     color: #6b7280;
@@ -4635,6 +4638,51 @@ textarea,
 
 select.gf-address-readonly {
     pointer-events: none;
+}
+
+form.address_autoformat:not(.gf-precart-address-form) #div_zip,
+form.address_autoformat:not(.gf-precart-address-form) #div_city,
+form.address_autoformat:not(.gf-precart-address-form) #div_state,
+form.address_autoformat:not(.gf-precart-address-form) #div_country {
+    flex: 0 0 auto;
+    width: 50%;
+    max-width: 50%;
+    align-self: flex-start;
+    display: flex;
+    flex-direction: column;
+}
+
+form.address_autoformat:not(.gf-precart-address-form) #div_zip > label,
+form.address_autoformat:not(.gf-precart-address-form) #div_city > label,
+form.address_autoformat:not(.gf-precart-address-form) #div_state > label,
+form.address_autoformat:not(.gf-precart-address-form) #div_country > label {
+    min-height: 24px;
+    margin-bottom: 4px;
+    line-height: 20px;
+}
+
+form.address_autoformat:not(.gf-precart-address-form) #div_zip > .form-control,
+form.address_autoformat:not(.gf-precart-address-form) #div_city > .form-control,
+form.address_autoformat:not(.gf-precart-address-form) #div_state > .form-select,
+form.address_autoformat:not(.gf-precart-address-form) #div_country > .form-select {
+    min-height: 38px;
+}
+
+form #div_zip .gf-pincode-status {
+    width: 100%;
+    max-width: 100%;
+}
+
+[name="invoice_sending_method"],
+[name="invoice_edi_format"],
+label[for="invoice_sending_method"],
+label[for="invoice_edi_format"] {
+    display: none !important;
+}
+
+.row:has([name="invoice_sending_method"]),
+.row:has([name="invoice_edi_format"]) {
+    display: none !important;
 }
 
 .gf-precart-modal-open {
@@ -4736,6 +4784,15 @@ select.gf-address-readonly {
     font-weight: 700;
 }
 
+.gf-required-asterisk {
+    color: #dc2626;
+    font-weight: 900;
+}
+
+.gf-precart-address-form .gf-required-asterisk {
+    color: #111827;
+}
+
 .gf-precart-field .form-control,
 .gf-precart-field .form-select {
     min-height: 42px;
@@ -4777,6 +4834,21 @@ select.gf-address-readonly {
     color: #111827;
 }
 
+.gf-precart-modal__btn-loading {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+}
+
+.gf-precart-modal__actions--loading .gf-precart-modal__btn-label {
+    display: none;
+}
+
+.gf-precart-modal__actions--loading .gf-precart-modal__btn-loading {
+    display: inline-flex;
+}
+
 .gf-precart-modal__submit:disabled {
     opacity: 0.55;
     cursor: progress;
@@ -4808,6 +4880,14 @@ select.gf-address-readonly {
 
     .gf-precart-modal__actions {
         grid-template-columns: minmax(0, 1fr);
+    }
+
+    form.address_autoformat:not(.gf-precart-address-form) #div_zip,
+    form.address_autoformat:not(.gf-precart-address-form) #div_city,
+    form.address_autoformat:not(.gf-precart-address-form) #div_state,
+    form.address_autoformat:not(.gf-precart-address-form) #div_country {
+        width: 100%;
+        max-width: 100%;
     }
 }
 

@@ -562,10 +562,118 @@
         });
     };
 
+    const initIndianAddressLabels = function () {
+        const labelMap = {
+            name: "Full Name",
+            email: "Email",
+            phone: "Mobile Number",
+            street: "House / Flat No. and Street",
+            street2: "Area / Landmark",
+            zip: "Pincode",
+            city: "City / District",
+            state_id: "State",
+            country_id: "Country",
+        };
+
+        document.querySelectorAll("form.address_autoformat:not(.gf-precart-address-form)").forEach(function (form) {
+            Object.keys(labelMap).forEach(function (fieldName) {
+                const field = form.querySelector('[name="' + fieldName + '"]');
+                if (!field || !field.id) {
+                    return;
+                }
+
+                const label = form.querySelector('label[for="' + field.id + '"]');
+                if (!label || label.dataset.gfIndianLabel === "true") {
+                    return;
+                }
+
+                const isRequired = field.hasAttribute("required") || label.textContent.includes("*");
+                label.textContent = labelMap[fieldName];
+                if (isRequired) {
+                    label.appendChild(document.createTextNode(" "));
+                    const asterisk = document.createElement("span");
+                    asterisk.className = "gf-required-asterisk";
+                    asterisk.textContent = "*";
+                    label.appendChild(asterisk);
+                }
+                label.dataset.gfIndianLabel = "true";
+            });
+        });
+    };
+
+    const initInvoicePreferenceCleanup = function () {
+        document.querySelectorAll('[name="invoice_sending_method"], [name="invoice_edi_format"]').forEach(function (field) {
+            const row = field.closest(".row");
+            if (row) {
+                row.remove();
+                return;
+            }
+
+            const wrapper = field.closest(".mb-3, .col-xl-6, .col-lg-6, div");
+            if (wrapper) {
+                wrapper.remove();
+            }
+        });
+    };
+
+    const getAddressFormVillage = function (form) {
+        if (!form || !form.classList.contains("gf-precart-address-form")) {
+            return "";
+        }
+
+        const villageReadonly = form.querySelector(".gf-village-readonly");
+        if (villageReadonly && !villageReadonly.hidden) {
+            return villageReadonly.value.trim();
+        }
+
+        const villageSelect = form.querySelector(".gf-village-select");
+        if (villageSelect && !villageSelect.hidden && !villageSelect.disabled) {
+            return villageSelect.value.trim();
+        }
+
+        return "";
+    };
+
+    const appendVillageToAddressStreet2 = function (form) {
+        const street2Input = form && form.querySelector('[name="street2"]');
+        const villageName = getAddressFormVillage(form);
+        if (!street2Input || !villageName) {
+            return;
+        }
+
+        const street2 = street2Input.value.trim();
+        if (street2 === villageName || street2.endsWith(", " + villageName)) {
+            return;
+        }
+
+        street2Input.value = street2 ? street2 + ", " + villageName : villageName;
+        street2Input.dispatchEvent(new Event("input", { bubbles: true }));
+        street2Input.dispatchEvent(new Event("change", { bubbles: true }));
+    };
+
+    const initAddressLocalitySubmitSync = function () {
+        if (document.documentElement.dataset.gfAddressLocalitySubmitBound === "true") {
+            return;
+        }
+
+        document.documentElement.dataset.gfAddressLocalitySubmitBound = "true";
+        document.addEventListener("submit", function (event) {
+            const form = event.target && event.target.closest && event.target.closest("form.address_autoformat");
+            appendVillageToAddressStreet2(form);
+        }, true);
+        document.addEventListener("click", function (event) {
+            const button = event.target && event.target.closest && event.target.closest('button[type="submit"], input[type="submit"]');
+            const form = button && button.closest("form.address_autoformat");
+            appendVillageToAddressStreet2(form);
+        }, true);
+    };
+
     const initPincodeAddressLookup = function () {
         document.querySelectorAll("form.address_autoformat").forEach(function (form) {
+            const hasPopupAddressForm = form.classList.contains("gf-precart-address-form");
             const zipInput = form.querySelector('input[name="zip"]');
             const cityInput = form.querySelector('input[name="city"]');
+            const street2Input = form.querySelector('input[name="street2"]');
             const stateSelect = form.querySelector('select[name="state_id"]');
             const countrySelect = form.querySelector('select[name="country_id"]');
 
@@ -587,14 +695,34 @@
             let statusEl = zipDiv ? zipDiv.querySelector(".gf-pincode-status") : null;
             let debounceTimer = null;
             let lastLookup = "";
+            let lastPostOffice = null;
             let abortController = null;
             let allowProgrammaticLocationChange = false;
+            let villageDiv = form.querySelector("#div_village");
+            let villageSelect = form.querySelector(".gf-village-select");
+            let villageReadonly = form.querySelector(".gf-village-readonly");
 
             if (zipDiv && !statusEl) {
                 statusEl = document.createElement("div");
                 statusEl.className = "gf-pincode-status";
                 statusEl.setAttribute("aria-live", "polite");
                 zipInput.after(statusEl);
+            }
+
+            if (!villageDiv && zipDiv && hasPopupAddressForm) {
+                villageDiv = document.createElement("div");
+                villageDiv.id = "div_village";
+                villageDiv.className = "gf-village-field";
+                villageDiv.innerHTML = [
+                    '<label for="gf_dynamic_village" class="col-form-label">Locality / Village</label>',
+                    '<input id="gf_dynamic_village_readonly" class="form-control gf-address-readonly gf-village-readonly col-form-label" type="text" readonly hidden>',
+                    '<select id="gf_dynamic_village" class="col-form-label form-select gf-village-select" disabled>',
+                    '<option value="">Village/locality will appear after pincode</option>',
+                    '</select>',
+                ].join("");
+                zipDiv.after(villageDiv);
+                villageSelect = villageDiv.querySelector(".gf-village-select");
+                villageReadonly = villageDiv.querySelector(".gf-village-readonly");
             }
 
             const enforceAddressFieldOrder = function () {
@@ -605,8 +733,17 @@
                 if (street2Div && street2Div.parentElement === zipDiv.parentElement) {
                     street2Div.after(zipDiv);
                 }
-                if (cityDiv && cityDiv.parentElement === zipDiv.parentElement) {
-                    zipDiv.after(cityDiv);
+                if (hasPopupAddressForm && villageDiv && villageDiv.parentElement === zipDiv.parentElement) {
+                    zipDiv.after(villageDiv);
+                }
+                if (hasPopupAddressForm && statusEl && villageDiv && villageDiv.parentElement === zipDiv.parentElement && statusEl.parentElement !== villageDiv.parentElement) {
+                    villageDiv.after(statusEl);
+                }
+
+                const cityAnchor = hasPopupAddressForm && villageDiv ? villageDiv : zipDiv;
+                const statusAnchor = statusEl && statusEl.parentElement === cityAnchor.parentElement ? statusEl : cityAnchor;
+                if (cityDiv && statusAnchor && cityDiv.parentElement === statusAnchor.parentElement) {
+                    statusAnchor.after(cityDiv);
                 }
                 if (stateDiv && cityDiv && stateDiv.parentElement === cityDiv.parentElement) {
                     cityDiv.after(stateDiv);
@@ -638,6 +775,23 @@
 
             const normalize = function (value) {
                 return (value || "").toString().trim().toLowerCase();
+            };
+
+            const getSelectedVillage = function () {
+                if (villageReadonly && !villageReadonly.hidden) {
+                    return villageReadonly.value.trim();
+                }
+                if (villageSelect && !villageSelect.hidden) {
+                    return villageSelect.value.trim();
+                }
+                return "";
+            };
+
+            const appendVillageToStreet2 = function () {
+                appendVillageToAddressStreet2(form);
+                if (street2Input) {
+                    dispatchFieldChange(street2Input);
+                }
             };
 
             const selectCountryIndia = function () {
@@ -695,19 +849,73 @@
                 });
             };
 
-            const fillAddressFromPincode = function (postOffice) {
+            const fillVillageOptions = function (postOffices, shouldEnforceOrder) {
+                if (!hasPopupAddressForm || !villageDiv || !villageSelect) {
+                    return;
+                }
+
+                const names = Array.from(new Set((postOffices || []).map(function (office) {
+                    return office && office.Name;
+                }).filter(Boolean)));
+
+                villageSelect.options.length = 1;
+                villageSelect.value = "";
+                villageSelect.options[0].textContent = names.length ? "Select village/locality..." : "Village/locality will appear after pincode";
+                villageSelect.hidden = false;
+                villageSelect.disabled = !names.length;
+                if (villageReadonly) {
+                    villageReadonly.value = "";
+                    villageReadonly.hidden = true;
+                }
+
+                names.forEach(function (name) {
+                    villageSelect.appendChild(new Option(name, name));
+                });
+
+                if (names.length === 1 && villageReadonly) {
+                    villageReadonly.value = names[0];
+                    villageReadonly.hidden = false;
+                    villageSelect.hidden = true;
+                    villageSelect.disabled = true;
+                    villageSelect.value = names[0];
+                } else if (names.length) {
+                    villageSelect.value = names[0];
+                    villageSelect.hidden = false;
+                    villageSelect.disabled = false;
+                }
+
+                if (shouldEnforceOrder !== false) {
+                    enforceAddressFieldOrder();
+                }
+            };
+
+            const fillAddressFromPincode = function (postOffices) {
+                const postOffice = postOffices && postOffices[0];
                 if (!postOffice) {
                     return;
                 }
 
+                lastPostOffice = postOffice;
                 selectCountryIndia();
                 cityInput.value = postOffice.District || postOffice.Name || "";
                 dispatchFieldChange(cityInput);
                 selectStateByName(postOffice.State || "", 0);
-                setStatus("Location found: " + [postOffice.District, postOffice.State, postOffice.Country].filter(Boolean).join(", "), "success");
+                fillVillageOptions(postOffices);
+                setStatus("Location found: " + [(hasPopupAddressForm && getSelectedVillage()), postOffice.District, postOffice.State, postOffice.Country].filter(Boolean).join(", "), "success");
             };
 
+            if (hasPopupAddressForm && villageSelect && !villageSelect.dataset.gfVillageBound) {
+                villageSelect.dataset.gfVillageBound = "true";
+                villageSelect.addEventListener("change", function () {
+                    if (!lastPostOffice) {
+                        return;
+                    }
+                    setStatus("Location found: " + [getSelectedVillage(), lastPostOffice.District, lastPostOffice.State, lastPostOffice.Country].filter(Boolean).join(", "), "success");
+                });
+            }
+
             const lookupPincode = function () {
+                const shouldRestoreZipFocus = document.activeElement === zipInput;
                 const pincode = zipInput.value.replace(/\D/g, "").slice(0, 6);
 
                 if (zipInput.value !== pincode) {
@@ -716,6 +924,7 @@
 
                 if (pincode.length < 6) {
                     lastLookup = "";
+                    fillVillageOptions([], false);
                     setStatus("", "");
                     return;
                 }
@@ -731,7 +940,7 @@
                 }
 
                 abortController = new AbortController();
-                setStatus("Fetching city and state...", "loading");
+                setStatus("Fetching city, state and locality...", "loading");
 
                 window.fetch("https://api.postalpincode.in/pincode/" + encodeURIComponent(pincode), {
                     method: "GET",
@@ -743,14 +952,20 @@
                     return response.json();
                 }).then(function (payload) {
                     const result = Array.isArray(payload) ? payload[0] : null;
-                    const postOffice = result && result.Status === "Success" && result.PostOffice && result.PostOffice[0];
+                    const postOffices = result && result.Status === "Success" && result.PostOffice;
 
-                    if (!postOffice) {
+                    if (!postOffices || !postOffices.length) {
+                        fillVillageOptions([]);
                         setStatus("No city/state found for this pincode.", "error");
                         return;
                     }
 
-                    fillAddressFromPincode(postOffice);
+                    fillAddressFromPincode(postOffices);
+                    if (shouldRestoreZipFocus) {
+                        window.setTimeout(function () {
+                            zipInput.focus({ preventScroll: true });
+                        }, 0);
+                    }
                 }).catch(function (error) {
                     if (error.name === "AbortError") {
                         return;
@@ -771,6 +986,7 @@
             countrySelect.addEventListener("change", function () {
                 window.setTimeout(enforceAddressFieldOrder, 700);
             });
+            form.addEventListener("submit", appendVillageToStreet2);
             lockSelect(stateSelect);
             lockSelect(countrySelect);
 
@@ -985,6 +1201,7 @@
         const form = modal.querySelector(".gf-precart-address-form");
         const errorEl = modal.querySelector("[data-gf-precart-error]");
         const submitButtons = modal.querySelectorAll(".gf-precart-modal__submit");
+        const actionsEl = modal.querySelector(".gf-precart-modal__actions");
         let nextAction = "cart";
         let pendingAction = null;
         let bypassNextAdd = false;
@@ -1022,8 +1239,18 @@
             errorEl.hidden = !message;
         };
 
+        const setLoading = function (loading) {
+            if (actionsEl) {
+                actionsEl.classList.toggle("gf-precart-modal__actions--loading", loading);
+            }
+            submitButtons.forEach(function (button) {
+                button.disabled = loading;
+            });
+        };
+
         const openModal = function () {
             setError("");
+            nextAction = "cart";
             modal.hidden = false;
             modal.setAttribute("aria-hidden", "false");
             document.documentElement.classList.add("gf-precart-modal-open");
@@ -1043,6 +1270,27 @@
             if (clearPending !== false) {
                 pendingAction = null;
             }
+        };
+
+        const appendLocalityToStreet2 = function (values) {
+            const villageSelect = form.querySelector(".gf-village-select");
+            const villageReadonly = form.querySelector(".gf-village-readonly");
+            const locality = (
+                villageReadonly && !villageReadonly.hidden ? villageReadonly.value.trim() :
+                villageSelect && !villageSelect.hidden ? villageSelect.value.trim() :
+                ""
+            );
+            if (!locality) {
+                return;
+            }
+
+            const street2 = (values.street2 || "").trim();
+            if (street2 === locality || street2.endsWith(", " + locality)) {
+                values.street2 = street2;
+                return;
+            }
+
+            values.street2 = street2 ? street2 + ", " + locality : locality;
         };
 
         const replayPendingAction = function () {
@@ -1091,11 +1339,76 @@
             }, 450);
         };
 
+        const getPendingForm = function () {
+            if (!pendingAction) {
+                return null;
+            }
+            if (pendingAction.form) {
+                return pendingAction.form;
+            }
+            return pendingAction.target ? pendingAction.target.closest("form") : null;
+        };
+
+        const addPendingProductToCart = function () {
+            const productForm = getPendingForm();
+            if (!productForm) {
+                return Promise.reject(new Error("No product form found."));
+            }
+
+            const productTemplateInput = productForm.querySelector('[name="product_template_id"]');
+            const productInput = productForm.querySelector('[name="product_id"]');
+            const quantityInput = productForm.querySelector('[name="add_qty"], [name="quantity"]');
+            const productTemplateId = parseInt(productTemplateInput && productTemplateInput.value, 10);
+            const productId = parseInt(productInput && productInput.value, 10);
+            const quantity = parseFloat((quantityInput && quantityInput.value) || "1") || 1;
+
+            if (!productTemplateId || !productId) {
+                return Promise.reject(new Error("Please select a valid product option."));
+            }
+
+            return jsonrpc("/shop/cart/add", {
+                product_template_id: productTemplateId,
+                product_id: productId,
+                quantity: quantity,
+            }).then(function (result) {
+                if (!result || (!result.quantity && !result.cart_quantity)) {
+                    throw new Error("Product could not be added to cart.");
+                }
+                return result;
+            });
+        };
+
+        const updateCartCount = function (result) {
+            if (!result || result.cart_quantity === undefined) {
+                return;
+            }
+
+            window.sessionStorage.setItem("website_sale_cart_quantity", result.cart_quantity);
+            document.querySelectorAll(".my_cart_quantity").forEach(function (element) {
+                element.textContent = result.cart_quantity;
+                element.classList.toggle("d-none", !result.cart_quantity);
+            });
+        };
+
+        const addPendingProductAndStay = function () {
+            return addPendingProductToCart().then(function (result) {
+                updateCartCount(result);
+                closeModal(false);
+                pendingAction = null;
+                return result;
+            }).catch(function (error) {
+                setError(error.message || "Could not add product to cart. Please try again.");
+                throw error;
+            });
+        };
+
         const replayPendingActionAndCheckout = function () {
-            replayPendingAction();
-            window.setTimeout(function () {
+            return addPendingProductToCart().then(function () {
                 window.location.href = "/shop/checkout";
-            }, 500);
+            }).catch(function (error) {
+                setError(error.message || "Could not add product to cart. Please try again.");
+                throw error;
+            });
         };
 
         const isAddToCartTarget = function (target) {
@@ -1190,10 +1503,9 @@
             formData.forEach(function (value, key) {
                 values[key] = value;
             });
+            appendLocalityToStreet2(values);
 
-            submitButtons.forEach(function (button) {
-                button.disabled = true;
-            });
+            setLoading(true);
 
             jsonrpc("/gadgetflix/precart/address_save", values).then(function (result) {
                 if (!result.success) {
@@ -1202,18 +1514,17 @@
                 }
 
                 addressReady = true;
-                closeModal(false);
                 if (nextAction === "checkout") {
-                    replayPendingActionAndCheckout();
+                    return replayPendingActionAndCheckout();
                 } else {
-                    replayPendingAction();
+                    return addPendingProductAndStay();
                 }
             }).catch(function () {
-                setError("Could not save address. Please try again.");
+                if (!errorEl || !errorEl.textContent) {
+                    setError("Could not save address. Please try again.");
+                }
             }).finally(function () {
-                submitButtons.forEach(function (button) {
-                    button.disabled = false;
-                });
+                setLoading(false);
             });
         });
 
@@ -1246,6 +1557,9 @@
         initCartPreview();
         initAddressToggleCleanup();
         initAddressCountryCleanup();
+        initIndianAddressLabels();
+        initInvoicePreferenceCleanup();
+        initAddressLocalitySubmitSync();
         initPincodeAddressLookup();
         initAutoDeliveryFetcher();
         initPreCartAddressGate();

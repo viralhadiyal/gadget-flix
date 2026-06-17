@@ -44,6 +44,7 @@ class WebsiteSaleShop(Delivery):
 
         return all([
             partner_sudo.name,
+            partner_sudo.email,
             partner_sudo.phone,
             partner_sudo.street,
             partner_sudo.zip,
@@ -53,7 +54,7 @@ class WebsiteSaleShop(Delivery):
         ])
 
     def _gf_prepare_precart_address_values(self, address):
-        required_fields = ['name', 'phone', 'street', 'zip', 'city', 'state_id', 'country_id']
+        required_fields = ['name', 'email', 'phone', 'street', 'zip', 'city', 'state_id', 'country_id']
         invalid_fields = [field for field in required_fields if not address.get(field)]
         if invalid_fields:
             return False, invalid_fields, {}
@@ -152,13 +153,7 @@ class WebsiteSaleShop(Delivery):
             return {'needs_address': True}
 
         partner_sudo = (order_sudo.partner_shipping_id if order_sudo else user.partner_id).sudo()
-        if self._gf_partner_has_checkout_address(partner_sudo):
-            return {'needs_address': False}
-        if order_sudo and self._gf_apply_session_address_if_available(order_sudo):
-            return {'needs_address': False}
-        if not order_sudo and request.session.get('gf_pre_cart_address'):
-            return {'needs_address': False, 'has_session_address': True}
-        return {'needs_address': True}
+        return {'needs_address': not self._gf_partner_has_checkout_address(partner_sudo)}
 
     @route('/gadgetflix/precart/address_save', type='jsonrpc', auth='public', website=True, sitemap=False)
     def gadgetflix_precart_address_save(self, **address):
