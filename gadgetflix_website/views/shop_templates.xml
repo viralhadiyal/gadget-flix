@@ -159,6 +159,8 @@
                         <t t-foreach="[1, 2, 3, 4]" t-as="i">
                             <span class="m-item"><i class="fa fa-truck me-2" aria-hidden="true"/> Free Shipping Across India</span>
                             <span class="bullet">•</span>
+                            <span class="m-item"><i class="fa fa-money me-2" aria-hidden="true"/> Cash On Delivery Available</span>
+                            <span class="bullet">•</span>
                             <span class="m-item"><i class="fa fa-shield me-2" aria-hidden="true"/> Safe &amp; Secure Payments</span>
                             <span class="bullet">•</span>
                             <span class="m-item"><i class="fa fa-star me-2" aria-hidden="true"/> Trusted By Thousands Of Customers</span>
