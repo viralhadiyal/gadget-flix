@@ -14,10 +14,10 @@ class IrHttp(models.AbstractModel):
         res = super()._pre_dispatch(rule, arguments)
         # Set ALL fb event_id defaults here so QWeb templates never hit
         # missing attribute errors. Controllers will override with real values.
-        request.params['fb_pv_event_id'] = request.fb_pv_event_id = f'pv_{int(time.time() * 1000)}'
-        request.params.setdefault('fb_vc_event_id', '')
-        request.params.setdefault('fb_atc_event_id', '')
-        request.params.setdefault('fb_checkout_event_id', '')
+        #request.params['fb_pv_event_id'] = request.fb_pv_event_id = f'pv_{int(time.time() * 1000)}'
+        #request.params.setdefault('fb_vc_event_id', '')
+        #request.params.setdefault('fb_atc_event_id', '')
+        #request.params.setdefault('fb_checkout_event_id', '')
         request.fb_vc_event_id = ''
         request.fb_atc_event_id = ''
         request.fb_checkout_event_id = ''
