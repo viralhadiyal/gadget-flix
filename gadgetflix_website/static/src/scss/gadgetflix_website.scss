@@ -4647,6 +4647,16 @@ html body .css_quantity .btn:active {
     }
 }
 
+@media (max-width: 480px) {
+
+    .o_wsale_product_page #o-carousel-product .carousel-inner img,
+    #gf-ayc-page #o-carousel-product .carousel-inner img,
+    .o_wsale_product_page .product_detail_img {
+        height: 320px !important;
+        max-height: 46vh !important;
+    }
+}
+
 /* ============================================================
    Product Detail Page - Thumbnail Images (Bottom)
    ============================================================ */
