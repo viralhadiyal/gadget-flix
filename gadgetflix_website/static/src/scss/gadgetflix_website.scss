@@ -4668,7 +4668,7 @@ select.gf-address-readonly {
     max-width: 620px;
     max-height: calc(100vh - 36px);
     overflow: auto;
-    padding: 22px;
+    padding: 0 22px 22px;
     border-radius: 8px;
     background: #fff;
     box-shadow: 0 24px 70px rgba(0, 0, 0, 0.24);
@@ -4677,6 +4677,7 @@ select.gf-address-readonly {
 .gf-precart-modal__close {
     position: absolute;
     top: 12px;
+    z-index: 3;
     right: 12px;
     width: 34px;
     height: 34px;
@@ -4690,8 +4691,17 @@ select.gf-address-readonly {
 }
 
 .gf-precart-modal__header {
-    padding-right: 42px;
-    margin-bottom: 18px;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    margin: 0 -22px 18px;
+    padding: 22px 64px 14px 22px;
+    border-bottom: 1px solid #eef0f3;
+    background: #fff;
+}
+
+.gf-precart-address-form {
+    padding-top: 0;
 }
 
 .gf-precart-modal__header h3 {
@@ -4781,8 +4791,14 @@ select.gf-address-readonly {
     .gf-precart-modal__dialog {
         width: 100%;
         max-height: 88vh;
-        padding: 20px 16px;
+        padding: 0 16px 16px;
         border-radius: 8px 8px 0 0;
+    }
+
+    .gf-precart-modal__header {
+        margin-left: -16px;
+        margin-right: -16px;
+        padding: 20px 58px 13px 16px;
     }
 
     .gf-precart-modal__grid {

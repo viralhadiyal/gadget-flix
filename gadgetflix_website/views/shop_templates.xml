@@ -184,7 +184,7 @@
                                 Continue Shopping
                             </button>
                             <button type="submit" class="gf-precart-modal__submit" data-gf-precart-next="checkout">
-                                Initiate Checkout
+                                Checkout
                             </button>
                         </div>
                     </form>

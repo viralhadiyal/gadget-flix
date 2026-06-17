@@ -145,17 +145,19 @@ class WebsiteSaleShop(Delivery):
             partner_sudo = order_sudo.partner_shipping_id if order_sudo else request.env['res.partner'].sudo()
             if self._gf_partner_has_checkout_address(partner_sudo):
                 return {'needs_address': False}
-            order_sudo = order_sudo or request.website._create_cart()
-            if self._gf_apply_session_address_if_available(order_sudo):
+            if order_sudo and self._gf_apply_session_address_if_available(order_sudo):
                 return {'needs_address': False}
+            if not order_sudo and request.session.get('gf_pre_cart_address'):
+                return {'needs_address': False, 'has_session_address': True}
             return {'needs_address': True}
 
         partner_sudo = (order_sudo.partner_shipping_id if order_sudo else user.partner_id).sudo()
         if self._gf_partner_has_checkout_address(partner_sudo):
             return {'needs_address': False}
-        order_sudo = order_sudo or request.website._create_cart()
-        if self._gf_apply_session_address_if_available(order_sudo):
+        if order_sudo and self._gf_apply_session_address_if_available(order_sudo):
             return {'needs_address': False}
+        if not order_sudo and request.session.get('gf_pre_cart_address'):
+            return {'needs_address': False, 'has_session_address': True}
         return {'needs_address': True}
 
     @route('/gadgetflix/precart/address_save', type='jsonrpc', auth='public', website=True, sitemap=False)
@@ -177,6 +179,16 @@ class WebsiteSaleShop(Delivery):
         partner_sudo = self._gf_apply_precart_address_to_order(order_sudo, partner_values)
 
         return {'success': True, 'partner_id': partner_sudo.id}
+
+    @route('/gadgetflix/precart/apply_session_address', type='jsonrpc', auth='public', website=True, sitemap=False)
+    def gadgetflix_precart_apply_session_address(self):
+        """Apply cached address to an existing cart without creating a cart during status checks."""
+        order_sudo = request.cart
+        if not order_sudo:
+            return {'success': False, 'error': 'No cart found.'}
+        if self._gf_partner_has_checkout_address(order_sudo.partner_shipping_id):
+            return {'success': True}
+        return {'success': bool(self._gf_apply_session_address_if_available(order_sudo))}
 
     @route(
         '/shop/checkout', type='http', methods=['GET'], auth='public', website=True, sitemap=False, list_as_website_content=_lt("Shop Checkout")

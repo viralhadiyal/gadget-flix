@@ -1084,6 +1084,13 @@
             }
         };
 
+        const replayPendingActionWithSessionAddress = function () {
+            replayPendingAction();
+            window.setTimeout(function () {
+                jsonrpc("/gadgetflix/precart/apply_session_address", {});
+            }, 450);
+        };
+
         const replayPendingActionAndCheckout = function () {
             replayPendingAction();
             window.setTimeout(function () {
@@ -1116,7 +1123,11 @@
                 if (!result.needs_address) {
                     addressReady = true;
                     pendingAction = actionToReplay;
-                    replayPendingAction();
+                    if (result.has_session_address) {
+                        replayPendingActionWithSessionAddress();
+                    } else {
+                        replayPendingAction();
+                    }
                     return;
                 }
 
@@ -1150,7 +1161,11 @@
                 if (!result.needs_address) {
                     addressReady = true;
                     pendingAction = actionToReplay;
-                    replayPendingAction();
+                    if (result.has_session_address) {
+                        replayPendingActionWithSessionAddress();
+                    } else {
+                        replayPendingAction();
+                    }
                     return;
                 }
 
