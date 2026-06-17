@@ -4689,19 +4689,37 @@ html body .css_quantity .btn:active {
 }
 
 @media (max-width: 991px) {
+    .o_wsale_product_page #o-carousel-product,
+    #gf-ayc-page #o-carousel-product {
+        max-width: 100% !important;
+    }
+
     .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators,
     #gf-ayc-page #o-carousel-product .o_carousel_product_indicators {
+        display: block !important;
+        width: 100% !important;
         max-width: 100% !important;
+        min-width: 0 !important;
         overflow-x: auto !important;
         overflow-y: hidden !important;
+        overscroll-behavior-x: contain !important;
+        -webkit-overflow-scrolling: touch !important;
         padding-bottom: 8px !important;
+        transform: none !important;
     }
 
     .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators,
     #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators {
+        position: static !important;
+        display: inline-flex !important;
         justify-content: flex-start !important;
         flex-wrap: nowrap !important;
         gap: 8px !important;
+        width: max-content !important;
+        min-width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
         transform: none !important;
     }
 

@@ -9,8 +9,8 @@
            2. Graph API payload → CAPI (server)
          Meta deduplicates using the matching event_id.
 
-         All request.fb_* attributes are pre-set in ir_http._pre_dispatch
-         with safe defaults, so no hasattr checks are needed.
+         Browser event IDs are stored in request.params because error handlers
+         can render this layout before custom request attributes are set.
          ============================================================ -->
 
     <!-- ==================== PageView ==================== -->
@@ -18,10 +18,11 @@
     <template id="facebook_datalayer_pageview" inherit_id="website.layout">
         <xpath expr="//head" position="inside">
             <script type="text/javascript">
+                <t t-set="fb_pv_event_id" t-value="request.params.get('fb_pv_event_id', '') or ''"/>
                 window.dataLayer = window.dataLayer || [];
                 dataLayer.push({
                     event: 'meta_pageview',
-                    event_id: '<t t-esc="request.fb_pv_event_id"/>'
+                    event_id: '<t t-esc="fb_pv_event_id"/>' || ('pv_' + Date.now())
                 });
             </script>
         </xpath>
@@ -31,7 +32,8 @@
     <!-- Product detail page — event_id set by shop_product controller -->
     <template id="facebook_datalayer_view_content" inherit_id="website_sale.product">
         <xpath expr="//section[@id='product_detail']" position="after">
-            <t t-if="request.fb_vc_event_id">
+            <t t-set="fb_vc_event_id" t-value="request.params.get('fb_vc_event_id', '') or ''"/>
+            <t t-if="fb_vc_event_id">
                 <script type="text/javascript">
                     window.dataLayer = window.dataLayer || [];
                     dataLayer.push({
@@ -40,7 +42,7 @@
                         content_name: '<t t-esc="product.name"/>',
                         value: <t t-esc="combination_info['price']"/>,
                         currency: '<t t-esc="website.currency_id.name"/>',
-                        event_id: '<t t-esc="request.fb_vc_event_id"/>'
+                        event_id: '<t t-esc="fb_vc_event_id"/>'
                     });
                 </script>
             </t>
@@ -51,14 +53,15 @@
     <!-- /shop/cart page — event_id set by cart controller -->
     <template id="facebook_datalayer_add_to_cart" inherit_id="website_sale.cart">
         <xpath expr="//div[@id='shop_cart']" position="before">
-            <t t-if="request.fb_atc_event_id">
+            <t t-set="fb_atc_event_id" t-value="request.params.get('fb_atc_event_id', '') or ''"/>
+            <t t-if="fb_atc_event_id">
                 <script type="text/javascript">
                     window.dataLayer = window.dataLayer || [];
                     dataLayer.push({
                         event: 'add_to_cart',
                         value: <t t-esc="website_sale_order.amount_total"/>,
                         currency: '<t t-esc="website_sale_order.currency_id.name"/>',
-                        event_id: '<t t-esc="request.fb_atc_event_id"/>'
+                        event_id: '<t t-esc="fb_atc_event_id"/>'
                     });
                 </script>
             </t>
@@ -69,7 +72,8 @@
     <!-- /shop/checkout — event_id set by shop_checkout controller -->
     <template id="facebook_datalayer_checkout" inherit_id="website_sale.checkout_layout">
         <xpath expr="//div[hasclass('oe_website_sale')]" position="after">
-            <t t-if="request.fb_checkout_event_id">
+            <t t-set="fb_checkout_event_id" t-value="request.params.get('fb_checkout_event_id', '') or ''"/>
+            <t t-if="fb_checkout_event_id">
                 <script type="text/javascript">
                     window.dataLayer = window.dataLayer || [];
                     if (window.location.pathname.indexOf('/shop/checkout') !== -1 ||
@@ -78,7 +82,7 @@
                             event: 'initiate_checkout',
                             value: <t t-esc="website_sale_order.amount_total"/>,
                             currency: '<t t-esc="website_sale_order.currency_id.name"/>',
-                            event_id: '<t t-esc="request.fb_checkout_event_id"/>'
+                            event_id: '<t t-esc="fb_checkout_event_id"/>'
                         });
                     }
                 </script>
