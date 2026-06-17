@@ -38,6 +38,146 @@ class WebsiteSaleShop(Delivery):
     #   • Prepaid – Prepaid (paid online via payment provider)
     # =========================================================
 
+    def _gf_partner_has_checkout_address(self, partner_sudo):
+        if not partner_sudo:
+            return False
+
+        return all([
+            partner_sudo.name,
+            partner_sudo.phone,
+            partner_sudo.street,
+            partner_sudo.zip,
+            partner_sudo.city,
+            partner_sudo.state_id,
+            partner_sudo.country_id,
+        ])
+
+    def _gf_prepare_precart_address_values(self, address):
+        required_fields = ['name', 'phone', 'street', 'zip', 'city', 'state_id', 'country_id']
+        invalid_fields = [field for field in required_fields if not address.get(field)]
+        if invalid_fields:
+            return False, invalid_fields, {}
+
+        State = request.env['res.country.state'].sudo()
+        Country = request.env['res.country'].sudo()
+
+        try:
+            state_sudo = State.browse(int(address['state_id'])).exists()
+            country_sudo = Country.browse(int(address['country_id'])).exists()
+        except (TypeError, ValueError):
+            state_sudo = State
+            country_sudo = Country
+
+        if not state_sudo or not country_sudo:
+            return False, ['state_id', 'country_id'], {}
+
+        return True, [], {
+            'name': (address.get('name') or '').strip(),
+            'email': (address.get('email') or '').strip(),
+            'phone': (address.get('phone') or '').strip(),
+            'street': (address.get('street') or '').strip(),
+            'street2': (address.get('street2') or '').strip(),
+            'zip': (address.get('zip') or '').strip(),
+            'city': (address.get('city') or '').strip(),
+            'state_id': state_sudo.id,
+            'country_id': country_sudo.id,
+            'type': 'contact',
+        }
+
+    def _gf_store_precart_address_in_session(self, partner_values, partner_id=False):
+        request.session['gf_pre_cart_address'] = {
+            'name': partner_values.get('name') or '',
+            'email': partner_values.get('email') or '',
+            'phone': partner_values.get('phone') or '',
+            'street': partner_values.get('street') or '',
+            'street2': partner_values.get('street2') or '',
+            'zip': partner_values.get('zip') or '',
+            'city': partner_values.get('city') or '',
+            'state_id': partner_values.get('state_id') or False,
+            'country_id': partner_values.get('country_id') or False,
+        }
+        if partner_id:
+            request.session['gf_pre_cart_partner_id'] = partner_id
+
+    def _gf_apply_precart_address_to_order(self, order_sudo, partner_values):
+        Partner = request.env['res.partner'].sudo()
+        partner_sudo = Partner
+
+        if request.env.user._is_public():
+            session_partner_id = request.session.get('gf_pre_cart_partner_id')
+            if session_partner_id:
+                partner_sudo = Partner.browse(int(session_partner_id)).exists()
+            if partner_sudo:
+                partner_sudo.write(partner_values)
+            else:
+                partner_sudo = Partner.create(partner_values)
+        else:
+            partner_sudo = request.env.user.partner_id.sudo()
+            partner_sudo.write(partner_values)
+
+        order_sudo._update_address(
+            partner_sudo.id,
+            {'partner_id', 'partner_invoice_id', 'partner_shipping_id'},
+        )
+        self._gf_store_precart_address_in_session(partner_values, partner_sudo.id)
+
+        if order_sudo._is_anonymous_cart():
+            order_sudo.message_unsubscribe(order_sudo.website_id.partner_id.ids)
+
+        return partner_sudo
+
+    def _gf_apply_session_address_if_available(self, order_sudo):
+        session_address = request.session.get('gf_pre_cart_address') or {}
+        is_valid, _invalid_fields, partner_values = self._gf_prepare_precart_address_values(session_address)
+        if not is_valid:
+            return False
+
+        self._gf_apply_precart_address_to_order(order_sudo, partner_values)
+        return True
+
+    @route('/gadgetflix/precart/address_status', type='jsonrpc', auth='public', website=True, sitemap=False)
+    def gadgetflix_precart_address_status(self):
+        """Return whether an address popup is required before adding to cart."""
+        user = request.env.user
+        order_sudo = request.cart
+
+        if user._is_public():
+            partner_sudo = order_sudo.partner_shipping_id if order_sudo else request.env['res.partner'].sudo()
+            if self._gf_partner_has_checkout_address(partner_sudo):
+                return {'needs_address': False}
+            order_sudo = order_sudo or request.website._create_cart()
+            if self._gf_apply_session_address_if_available(order_sudo):
+                return {'needs_address': False}
+            return {'needs_address': True}
+
+        partner_sudo = (order_sudo.partner_shipping_id if order_sudo else user.partner_id).sudo()
+        if self._gf_partner_has_checkout_address(partner_sudo):
+            return {'needs_address': False}
+        order_sudo = order_sudo or request.website._create_cart()
+        if self._gf_apply_session_address_if_available(order_sudo):
+            return {'needs_address': False}
+        return {'needs_address': True}
+
+    @route('/gadgetflix/precart/address_save', type='jsonrpc', auth='public', website=True, sitemap=False)
+    def gadgetflix_precart_address_save(self, **address):
+        """Create/update the cart customer address before the product is added."""
+        is_valid, invalid_fields, partner_values = self._gf_prepare_precart_address_values(address)
+        if not is_valid:
+            return {
+                'success': False,
+                'invalid_fields': invalid_fields,
+                'error': (
+                    'Please enter a valid pincode so city, state and country can be filled.'
+                    if {'state_id', 'country_id'} & set(invalid_fields)
+                    else 'Please complete the required address fields.'
+                ),
+            }
+
+        order_sudo = request.cart or request.website._create_cart()
+        partner_sudo = self._gf_apply_precart_address_to_order(order_sudo, partner_values)
+
+        return {'success': True, 'partner_id': partner_sudo.id}
+
     @route(
         '/shop/checkout', type='http', methods=['GET'], auth='public', website=True, sitemap=False, list_as_website_content=_lt("Shop Checkout")
     )

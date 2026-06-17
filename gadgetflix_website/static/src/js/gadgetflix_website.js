@@ -562,6 +562,224 @@
         });
     };
 
+    const initPincodeAddressLookup = function () {
+        document.querySelectorAll("form.address_autoformat").forEach(function (form) {
+            const zipInput = form.querySelector('input[name="zip"]');
+            const cityInput = form.querySelector('input[name="city"]');
+            const stateSelect = form.querySelector('select[name="state_id"]');
+            const countrySelect = form.querySelector('select[name="country_id"]');
+
+            if (!zipInput || !cityInput || !stateSelect || !countrySelect || zipInput.dataset.gfPincodeBound === "true") {
+                return;
+            }
+
+            zipInput.dataset.gfPincodeBound = "true";
+            zipInput.setAttribute("inputmode", "numeric");
+            zipInput.setAttribute("maxlength", "6");
+            zipInput.setAttribute("placeholder", "Enter 6-digit pincode");
+            zipInput.setAttribute("autocomplete", "postal-code");
+
+            const zipDiv = zipInput.closest("#div_zip") || zipInput.parentElement;
+            const street2Div = form.querySelector("#div_street2");
+            const cityDiv = form.querySelector("#div_city");
+            const stateDiv = form.querySelector("#div_state");
+            const countryDiv = form.querySelector("#div_country");
+            let statusEl = zipDiv ? zipDiv.querySelector(".gf-pincode-status") : null;
+            let debounceTimer = null;
+            let lastLookup = "";
+            let abortController = null;
+            let allowProgrammaticLocationChange = false;
+
+            if (zipDiv && !statusEl) {
+                statusEl = document.createElement("div");
+                statusEl.className = "gf-pincode-status";
+                statusEl.setAttribute("aria-live", "polite");
+                zipInput.after(statusEl);
+            }
+
+            const enforceAddressFieldOrder = function () {
+                if (!zipDiv || !zipDiv.parentElement) {
+                    return;
+                }
+
+                if (street2Div && street2Div.parentElement === zipDiv.parentElement) {
+                    street2Div.after(zipDiv);
+                }
+                if (cityDiv && cityDiv.parentElement === zipDiv.parentElement) {
+                    zipDiv.after(cityDiv);
+                }
+                if (stateDiv && cityDiv && stateDiv.parentElement === cityDiv.parentElement) {
+                    cityDiv.after(stateDiv);
+                }
+                if (countryDiv && stateDiv && countryDiv.parentElement === stateDiv.parentElement) {
+                    stateDiv.after(countryDiv);
+                }
+            };
+
+            const setStatus = function (message, type) {
+                if (!statusEl) {
+                    return;
+                }
+
+                statusEl.textContent = message || "";
+                statusEl.classList.toggle("gf-pincode-status--loading", type === "loading");
+                statusEl.classList.toggle("gf-pincode-status--success", type === "success");
+                statusEl.classList.toggle("gf-pincode-status--error", type === "error");
+            };
+
+            const dispatchFieldChange = function (field) {
+                allowProgrammaticLocationChange = true;
+                field.dispatchEvent(new Event("input", { bubbles: true }));
+                field.dispatchEvent(new Event("change", { bubbles: true }));
+                window.setTimeout(function () {
+                    allowProgrammaticLocationChange = false;
+                }, 0);
+            };
+
+            const normalize = function (value) {
+                return (value || "").toString().trim().toLowerCase();
+            };
+
+            const selectCountryIndia = function () {
+                const previousValue = countrySelect.value;
+                const indiaOption = Array.from(countrySelect.options).find(function (option) {
+                    return option.getAttribute("code") === "IN" || normalize(option.textContent) === "india";
+                });
+
+                if (indiaOption && countrySelect.value !== indiaOption.value) {
+                    countrySelect.dataset.gfPreviousValue = previousValue;
+                    countrySelect.value = indiaOption.value;
+                    dispatchFieldChange(countrySelect);
+                }
+            };
+
+            const selectStateByName = function (stateName, attempt) {
+                const previousValue = stateSelect.value;
+                const targetState = normalize(stateName);
+                const stateOption = Array.from(stateSelect.options).find(function (option) {
+                    return normalize(option.textContent) === targetState;
+                });
+
+                if (stateOption) {
+                    stateSelect.dataset.gfPreviousValue = previousValue;
+                    stateSelect.value = stateOption.value;
+                    dispatchFieldChange(stateSelect);
+                    return;
+                }
+
+                if ((attempt || 0) < 5) {
+                    window.setTimeout(function () {
+                        selectStateByName(stateName, (attempt || 0) + 1);
+                    }, 180);
+                }
+            };
+
+            const lockSelect = function (select) {
+                select.dataset.gfPreviousValue = select.value;
+                select.addEventListener("mousedown", function (event) {
+                    event.preventDefault();
+                });
+                select.addEventListener("keydown", function (event) {
+                    if (["Tab", "Shift"].includes(event.key)) {
+                        return;
+                    }
+                    event.preventDefault();
+                });
+                select.addEventListener("change", function () {
+                    if (allowProgrammaticLocationChange) {
+                        select.dataset.gfPreviousValue = select.value;
+                        return;
+                    }
+
+                    select.value = select.dataset.gfPreviousValue || "";
+                });
+            };
+
+            const fillAddressFromPincode = function (postOffice) {
+                if (!postOffice) {
+                    return;
+                }
+
+                selectCountryIndia();
+                cityInput.value = postOffice.District || postOffice.Name || "";
+                dispatchFieldChange(cityInput);
+                selectStateByName(postOffice.State || "", 0);
+                setStatus("Location found: " + [postOffice.District, postOffice.State, postOffice.Country].filter(Boolean).join(", "), "success");
+            };
+
+            const lookupPincode = function () {
+                const pincode = zipInput.value.replace(/\D/g, "").slice(0, 6);
+
+                if (zipInput.value !== pincode) {
+                    zipInput.value = pincode;
+                }
+
+                if (pincode.length < 6) {
+                    lastLookup = "";
+                    setStatus("", "");
+                    return;
+                }
+
+                if (pincode === lastLookup) {
+                    return;
+                }
+
+                lastLookup = pincode;
+
+                if (abortController) {
+                    abortController.abort();
+                }
+
+                abortController = new AbortController();
+                setStatus("Fetching city and state...", "loading");
+
+                window.fetch("https://api.postalpincode.in/pincode/" + encodeURIComponent(pincode), {
+                    method: "GET",
+                    signal: abortController.signal,
+                }).then(function (response) {
+                    if (!response.ok) {
+                        throw new Error("Pincode lookup failed");
+                    }
+                    return response.json();
+                }).then(function (payload) {
+                    const result = Array.isArray(payload) ? payload[0] : null;
+                    const postOffice = result && result.Status === "Success" && result.PostOffice && result.PostOffice[0];
+
+                    if (!postOffice) {
+                        setStatus("No city/state found for this pincode.", "error");
+                        return;
+                    }
+
+                    fillAddressFromPincode(postOffice);
+                }).catch(function (error) {
+                    if (error.name === "AbortError") {
+                        return;
+                    }
+                    setStatus("Could not fetch pincode details. Please enter city/state manually.", "error");
+                });
+            };
+
+            enforceAddressFieldOrder();
+            window.setTimeout(enforceAddressFieldOrder, 700);
+
+            zipInput.addEventListener("input", function () {
+                window.clearTimeout(debounceTimer);
+                debounceTimer = window.setTimeout(lookupPincode, 350);
+            });
+
+            zipInput.addEventListener("blur", lookupPincode);
+            countrySelect.addEventListener("change", function () {
+                window.setTimeout(enforceAddressFieldOrder, 700);
+            });
+            lockSelect(stateSelect);
+            lockSelect(countrySelect);
+
+            if (zipInput.value) {
+                lookupPincode();
+            }
+        });
+    };
+
     const initAutoDeliveryFetcher = function () {
         const checkoutDiv = document.getElementById("shop_checkout");
         if (!checkoutDiv) {
@@ -758,6 +976,252 @@
         bindPromoForm();
     };
 
+    const initPreCartAddressGate = function () {
+        const modal = document.getElementById("gf-precart-address-modal");
+        if (!modal || modal.dataset.gfPrecartBound === "true") {
+            return;
+        }
+
+        const form = modal.querySelector(".gf-precart-address-form");
+        const errorEl = modal.querySelector("[data-gf-precart-error]");
+        const submitButtons = modal.querySelectorAll(".gf-precart-modal__submit");
+        let nextAction = "cart";
+        let pendingAction = null;
+        let bypassNextAdd = false;
+        let addressReady = false;
+
+        modal.dataset.gfPrecartBound = "true";
+
+        const jsonrpc = function (url, params) {
+            return window.fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json",
+                },
+                credentials: "same-origin",
+                body: JSON.stringify({
+                    jsonrpc: "2.0",
+                    method: "call",
+                    id: Math.random(),
+                    params: params || {},
+                }),
+            }).then(function (response) {
+                return response.json();
+            }).then(function (payload) {
+                return payload.result || {};
+            });
+        };
+
+        const setError = function (message) {
+            if (!errorEl) {
+                return;
+            }
+
+            errorEl.textContent = message || "";
+            errorEl.hidden = !message;
+        };
+
+        const openModal = function () {
+            setError("");
+            modal.hidden = false;
+            modal.setAttribute("aria-hidden", "false");
+            document.documentElement.classList.add("gf-precart-modal-open");
+
+            const firstInput = form.querySelector('input[name="name"]');
+            if (firstInput) {
+                window.setTimeout(function () {
+                    firstInput.focus();
+                }, 80);
+            }
+        };
+
+        const closeModal = function (clearPending) {
+            modal.hidden = true;
+            modal.setAttribute("aria-hidden", "true");
+            document.documentElement.classList.remove("gf-precart-modal-open");
+            if (clearPending !== false) {
+                pendingAction = null;
+            }
+        };
+
+        const replayPendingAction = function () {
+            if (!pendingAction) {
+                return;
+            }
+
+            const action = pendingAction;
+            pendingAction = null;
+            bypassNextAdd = true;
+
+            const submitForm = function (form) {
+                if (!form) {
+                    return false;
+                }
+
+                if (form.requestSubmit) {
+                    form.requestSubmit();
+                } else {
+                    form.submit();
+                }
+                return true;
+            };
+
+            if (action.type === "submit" && action.form) {
+                submitForm(action.form);
+                return;
+            }
+
+            if (action.target) {
+                const targetForm = action.target.closest("form");
+                const formAction = targetForm && targetForm.getAttribute("action");
+                if (formAction && formAction.includes("/shop/cart/update")) {
+                    action.target.click();
+                    return;
+                }
+
+                action.target.click();
+            }
+        };
+
+        const replayPendingActionAndCheckout = function () {
+            replayPendingAction();
+            window.setTimeout(function () {
+                window.location.href = "/shop/checkout";
+            }, 500);
+        };
+
+        const isAddToCartTarget = function (target) {
+            return target && target.closest(
+                "#add_to_cart, .o_we_buy_now, #products_grid .o_wsale_product_btn .a-submit, .s_add_to_cart_btn"
+            );
+        };
+
+        const capturePendingClick = function (event) {
+            const target = isAddToCartTarget(event.target);
+            if (!target || modal.contains(target)) {
+                return;
+            }
+
+            if (bypassNextAdd || addressReady) {
+                bypassNextAdd = false;
+                return;
+            }
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            const actionToReplay = { type: "click", target: target };
+
+            jsonrpc("/gadgetflix/precart/address_status", {}).then(function (result) {
+                if (!result.needs_address) {
+                    addressReady = true;
+                    pendingAction = actionToReplay;
+                    replayPendingAction();
+                    return;
+                }
+
+                pendingAction = actionToReplay;
+                openModal();
+            }).catch(function () {
+                pendingAction = actionToReplay;
+                openModal();
+            });
+        };
+
+        const capturePendingSubmit = function (event) {
+            const action = event.target && event.target.getAttribute("action");
+            if (!action || !action.includes("/shop/cart/update")) {
+                return;
+            }
+
+            if (bypassNextAdd || addressReady) {
+                bypassNextAdd = false;
+                return;
+            }
+
+            event.preventDefault();
+            event.stopImmediatePropagation();
+            const submitButton = event.target.querySelector("#add_to_cart");
+            const actionToReplay = submitButton
+                ? { type: "click", target: submitButton }
+                : { type: "submit", form: event.target };
+
+            jsonrpc("/gadgetflix/precart/address_status", {}).then(function (result) {
+                if (!result.needs_address) {
+                    addressReady = true;
+                    pendingAction = actionToReplay;
+                    replayPendingAction();
+                    return;
+                }
+
+                pendingAction = actionToReplay;
+                openModal();
+            }).catch(function () {
+                pendingAction = actionToReplay;
+                openModal();
+            });
+        };
+
+        form.addEventListener("submit", function (event) {
+            event.preventDefault();
+            setError("");
+
+            if (!form.reportValidity()) {
+                return;
+            }
+
+            const formData = new FormData(form);
+            const values = {};
+            formData.forEach(function (value, key) {
+                values[key] = value;
+            });
+
+            submitButtons.forEach(function (button) {
+                button.disabled = true;
+            });
+
+            jsonrpc("/gadgetflix/precart/address_save", values).then(function (result) {
+                if (!result.success) {
+                    setError(result.error || "Please complete your address.");
+                    return;
+                }
+
+                addressReady = true;
+                closeModal(false);
+                if (nextAction === "checkout") {
+                    replayPendingActionAndCheckout();
+                } else {
+                    replayPendingAction();
+                }
+            }).catch(function () {
+                setError("Could not save address. Please try again.");
+            }).finally(function () {
+                submitButtons.forEach(function (button) {
+                    button.disabled = false;
+                });
+            });
+        });
+
+        submitButtons.forEach(function (button) {
+            button.addEventListener("click", function () {
+                nextAction = button.dataset.gfPrecartNext || "cart";
+            });
+        });
+
+        modal.querySelectorAll("[data-gf-precart-close]").forEach(function (button) {
+            button.addEventListener("click", closeModal);
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && !modal.hidden) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener("click", capturePendingClick, true);
+        document.addEventListener("submit", capturePendingSubmit, true);
+    };
+
     const init = function () {
         initMobileMenu();
         initAccessoriesMenus();
@@ -767,7 +1231,9 @@
         initCartPreview();
         initAddressToggleCleanup();
         initAddressCountryCleanup();
+        initPincodeAddressLookup();
         initAutoDeliveryFetcher();
+        initPreCartAddressGate();
     };
 
     if (document.readyState === "loading") {

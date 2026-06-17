@@ -73,7 +73,7 @@
                             <!-- Bundle & Save -->
                             <div class="gf-ayc-bundle-compact mb-3">
                                 <h6 class="gf-ayc-sec-title mb-1">🔥 Bundle &amp; save more</h6>
-                                <p class="gf-ayc-bundle-subtitle">Buy covers for different devices and still enjoy the same offer.</p>
+                                <p class="gf-ayc-bundle-subtitle">Offer applies only to Anti-Yellow cases, even when you choose different device models.</p>
                                 <div class="d-flex gap-2 align-items-stretch">
                                     <div class="gf-ayc-bundle-card flex-fill" data-qty="1">
                                         <div class="b-qty">1 Case</div>
@@ -211,6 +211,11 @@
                             <!-- Divider -->
                             <hr class="gf-ayc-pdp__divider"/>
 
+                            <!-- Payment options -->
+                            <div class="gf-payment-strip-wrap gf-payment-strip-wrap--ayc">
+                                <t t-call="gadgetflix_website.gadgetflix_payment_strip"/>
+                            </div>
+
                             <form action="/shop/cart/update" method="POST" class="js_add_cart_variants oe_website_sale">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <input type="hidden" name="product_id" id="gf-ayc-product-id-input" t-att-value="product_variant.id if product_variant else ''"/>
@@ -228,7 +233,7 @@
                                                 <i class="oi oi-plus text-600"></i>
                                             </button>
                                         </div>
-                                        <button type="submit" id="add_to_cart" class="gf-ayc-buy__cart-btn flex-grow-1" disabled="disabled">
+                                        <button type="button" id="add_to_cart" class="gf-ayc-buy__cart-btn flex-grow-1" disabled="disabled">
                                             <i class="fa fa-shopping-cart me-2" aria-hidden="true"/>
                                             <span>Add to Cart</span>
                                         </button>
@@ -769,6 +774,18 @@
                                 class="gf-ayc-sticky-bar__btn" disabled="disabled">
                             Add to Cart
                         </button>
+                    </div>
+                    <div class="gf-ayc-sticky-bar__payments" aria-label="Available payment options">
+                        <span>
+                            <i class="fa fa-money" aria-hidden="true"/>
+                            Cash on Delivery
+                        </span>
+                        <span class="gf-ayc-sticky-payment-separator"/>
+                        <span>
+                            <i class="fa fa-credit-card" aria-hidden="true"/>
+                            Online Payment
+                        </span>
+                        <strong>Available</strong>
                     </div>
                 </div>
             </div><!-- /#gf-ayc-page -->

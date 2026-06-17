@@ -5,11 +5,52 @@
         <xpath expr="//t[@name='b2b_fields']" position="attributes">
             <attribute name="t-if">False</attribute>
         </xpath>
+        <xpath expr="//div[@id='div_country']/div[contains(@class, 'd-none')]" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+            <attribute name="style">display: none !important;</attribute>
+        </xpath>
+        <xpath expr="//input[@name='zip']" position="attributes">
+            <attribute name="inputmode">numeric</attribute>
+            <attribute name="maxlength">6</attribute>
+            <attribute name="placeholder">Enter 6-digit pincode</attribute>
+            <attribute name="autocomplete">postal-code</attribute>
+        </xpath>
+        <xpath expr="//input[@name='city']" position="attributes">
+            <attribute name="readonly">readonly</attribute>
+            <attribute name="class" add="gf-address-readonly" separator=" "/>
+        </xpath>
+        <xpath expr="//select[@name='state_id']" position="attributes">
+            <attribute name="class" add="gf-address-readonly" separator=" "/>
+            <attribute name="aria-readonly">true</attribute>
+        </xpath>
+        <xpath expr="//select[@name='country_id']" position="attributes">
+            <attribute name="class" add="gf-address-readonly" separator=" "/>
+            <attribute name="aria-readonly">true</attribute>
+        </xpath>
+        <xpath expr="//input[@name='zip']" position="after">
+            <div class="gf-pincode-status" aria-live="polite"/>
+        </xpath>
     </template>
 
     <template id="gadgetflix_checkout_address_hide_b2b_fields" inherit_id="website_sale.address_form_fields" priority="80">
         <xpath expr="//t[@name='b2b_fields']" position="attributes">
             <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//input[@name='city']" position="attributes">
+            <attribute name="readonly">readonly</attribute>
+            <attribute name="class" add="gf-address-readonly" separator=" "/>
+        </xpath>
+        <xpath expr="//select[@name='state_id']" position="attributes">
+            <attribute name="class" add="gf-address-readonly" separator=" "/>
+            <attribute name="aria-readonly">true</attribute>
+        </xpath>
+        <xpath expr="//select[@name='country_id']" position="attributes">
+            <attribute name="class" add="gf-address-readonly" separator=" "/>
+            <attribute name="aria-readonly">true</attribute>
+        </xpath>
+        <xpath expr="//div[@id='div_country']/div[contains(@class, 'd-none')]" position="attributes">
+            <attribute name="class" add="d-none" separator=" "/>
+            <attribute name="style">display: none !important;</attribute>
         </xpath>
     </template>
 
@@ -39,7 +80,9 @@
                 #use_delivery_as_billing_label,
                 label[for="use_delivery_as_billing"],
                 #use_delivery_as_billing,
-                #use_delivery_as_billing + span {
+                #use_delivery_as_billing + span,
+                form.address_autoformat #div_country .form-text,
+                form.address_autoformat #div_country div:has(.form-text) {
                     display: none !important;
                 }
             </style>

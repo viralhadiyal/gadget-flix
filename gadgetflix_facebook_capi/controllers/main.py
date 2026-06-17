@@ -218,26 +218,6 @@ class GadgetflixCapiWebsiteSale(WebsiteSale):
             _logger.warning("CAPI InitiateCheckout failed: %s", e)
         return res
 
-    # ---------- Address submit (AddPaymentInfo) ----------
-    @http.route(['/shop/address/submit'], type='http', methods=['POST'], auth='public', website=True, sitemap=False)
-    def shop_address_submit(self, partner_id=None, address_type='billing',
-                            use_delivery_as_billing=None, callback=None, **form_data):
-        res = super().shop_address_submit(
-            partner_id=partner_id, address_type=address_type,
-            use_delivery_as_billing=use_delivery_as_billing,
-            callback=callback, **form_data
-        )
-        try:
-            order = request.cart
-            if order and order.amount_total > 0:
-                trigger_backend_capi('AddPaymentInfo', {
-                    'value': float(order.amount_total),
-                    'currency': order.currency_id.name
-                }, event_id=_generate_event_id('payment', order.id))
-        except Exception as e:
-            _logger.warning("CAPI shop_address_submit failed: %s", e)
-        return res
-
 
 class GadgetflixCapiPaymentPortal(PaymentPortal):
     @http.route('/shop/payment/transaction/<int:order_id>', type='jsonrpc', auth='public', website=True)
