@@ -1080,4 +1080,10 @@
         </xpath>
     </template>
 
+    <template id="gf_carousel_product_indicators_bottom" inherit_id="website_sale.carousel_product_indicators_bottom" name="Gadgetflix – Carousel Product Indicators Bottom without overflow-hidden">
+        <xpath expr="//t[@t-set='indicators_div_class']" position="attributes">
+            <attribute name="t-value">'pt-2'</attribute>
+        </xpath>
+    </template>
+
 </odoo>

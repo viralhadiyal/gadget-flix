@@ -4724,6 +4724,13 @@ html body .css_quantity .btn:active {
         padding-bottom: 8px !important;
         transform: none !important;
         margin-top: 4px !important;
+
+        // Hide scrollbar completely to prevent layout clipping by browser scrollbars
+        scrollbar-width: none !important; /* Firefox */
+        -ms-overflow-style: none !important;  /* IE/Edge */
+        &::-webkit-scrollbar {
+            display: none !important; /* Chrome/Safari/Opera */
+        }
     }
 
     .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators,
