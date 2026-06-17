@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 2. Intercept payment submit button clicks
-    //    Push AddShippingInfo and AddPaymentInfo to dataLayer when user clicks Pay
+    //    Push AddPaymentInfo to dataLayer when user clicks Pay
     document.addEventListener("click", function (event) {
         var target = event.target.closest('button[name="o_payment_submit_button"]');
         if (target) {
@@ -45,13 +45,6 @@ document.addEventListener("DOMContentLoaded", function () {
             var val = orderDataEl ? parseFloat(orderDataEl.dataset.orderTotal) : 0.0;
             var cur = orderDataEl ? orderDataEl.dataset.orderCurrency : 'USD';
             var orderId = orderDataEl ? orderDataEl.dataset.orderId : '';
-
-            dataLayer.push({
-                event: 'add_shipping_info',
-                value: val,
-                currency: cur,
-                event_id: 'ship_' + orderId + '_' + Date.now()
-            });
 
             dataLayer.push({
                 event: 'add_payment_info',

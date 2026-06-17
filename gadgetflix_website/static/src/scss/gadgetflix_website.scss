@@ -4628,6 +4628,7 @@ html body .css_quantity .btn:active {
    Product Detail Page - Main Image Sizing
    ============================================================ */
 .o_wsale_product_page #o-carousel-product .carousel-inner img,
+#gf-ayc-page #o-carousel-product .carousel-inner img,
 .o_wsale_product_page .product_detail_img {
     height: 600px !important;
     max-height: 65vh !important;
@@ -4639,6 +4640,7 @@ html body .css_quantity .btn:active {
 @media (max-width: 768px) {
 
     .o_wsale_product_page #o-carousel-product .carousel-inner img,
+    #gf-ayc-page #o-carousel-product .carousel-inner img,
     .o_wsale_product_page .product_detail_img {
         height: 400px !important;
         max-height: 50vh !important;
@@ -4649,7 +4651,8 @@ html body .css_quantity .btn:active {
    Product Detail Page - Thumbnail Images (Bottom)
    ============================================================ */
 @media (min-width: 992px) {
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li {
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li {
         width: 64px !important;
         height: 64px !important;
         min-width: 64px !important;
@@ -4663,11 +4666,63 @@ html body .css_quantity .btn:active {
 
     .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div,
     .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div>img,
-    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>img {
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>img,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div>img,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>img {
         width: 100% !important;
         height: 100% !important;
         object-fit: contain !important;
         aspect-ratio: 1 / 1 !important;
+        border-radius: inherit !important;
+    }
+}
+
+@media (max-width: 991px) {
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators {
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        padding-bottom: 8px !important;
+    }
+
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators {
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+        gap: 8px !important;
+        transform: none !important;
+    }
+
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li {
+        width: 56px !important;
+        height: 56px !important;
+        min-width: 56px !important;
+        border-radius: 8px !important;
+        border: 1px solid #d8d8d8 !important;
+        padding: 2px !important;
+        text-indent: unset !important;
+        background: #fff !important;
+        opacity: 1 !important;
+    }
+
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li.active,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li.active {
+        border-color: #111 !important;
+    }
+
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div,
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div>img,
+    .o_wsale_product_page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>img,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>div>img,
+    #gf-ayc-page #o-carousel-product .o_carousel_product_indicators .carousel-indicators li>img {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
         border-radius: inherit !important;
     }
 }

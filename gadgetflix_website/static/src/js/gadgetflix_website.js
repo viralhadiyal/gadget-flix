@@ -866,6 +866,27 @@
         if (stickyPrice) stickyPrice.textContent = f;
     };
 
+    const initProductCarousel = function () {
+        const carouselEl = document.querySelector("#gf-ayc-product-media #o-carousel-product");
+        if (!carouselEl) return;
+
+        carouselEl.querySelectorAll(".carousel-control-prev, .carousel-control-next").forEach(function (control) {
+            control.setAttribute("href", "#o-carousel-product");
+            control.setAttribute("data-bs-target", "#o-carousel-product");
+        });
+        carouselEl.querySelectorAll(".carousel-indicators [data-bs-slide-to]").forEach(function (indicator) {
+            indicator.setAttribute("data-bs-target", "#o-carousel-product");
+        });
+
+        if (window.bootstrap && window.bootstrap.Carousel) {
+            window.bootstrap.Carousel.getOrCreateInstance(carouselEl, {
+                interval: false,
+                ride: false,
+                touch: true,
+            });
+        }
+    };
+
 
 
     // ── Custom Dropdown helper ─────────────────────────────────────────────
@@ -1048,10 +1069,14 @@
 
         // update carousel
         if (item.dataset.carouselHtml) {
-            const carouselContainer = document.getElementById("o-carousel-product");
+            const mediaContainer = document.getElementById("gf-ayc-product-media");
+            const carouselContainer = mediaContainer ? mediaContainer.querySelector("#o-carousel-product") : document.getElementById("o-carousel-product");
             if (carouselContainer) {
                 carouselContainer.outerHTML = item.dataset.carouselHtml;
+            } else if (mediaContainer) {
+                mediaContainer.innerHTML = item.dataset.carouselHtml;
             }
+            initProductCarousel();
         }
         setButtonsDisabled(!state.activeVariantId);
 
@@ -1150,6 +1175,7 @@
             if (productTemplateInput) productTemplateInput.value = state.activeProductId || "";
         }
     }
+    initProductCarousel();
 
     // ── Reviews "Read More" logic ──────────────────────────────────────────
     const initReadMore = function () {
@@ -1196,4 +1222,3 @@
     setTimeout(initReadMore, 500);
     setTimeout(initReadMore, 1500);
 })();
-

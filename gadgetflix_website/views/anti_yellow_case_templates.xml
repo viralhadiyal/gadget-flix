@@ -22,7 +22,7 @@
 
                         <!-- ── LEFT: Product image ──────────────────── -->
                         <div class="gf-ayc-pdp__image-col">
-                            <div class="gf-ayc-pdp__image-wrap" id="o-carousel-product">
+                            <div class="gf-ayc-pdp__image-wrap" id="gf-ayc-product-media">
                                 <t t-call="website_sale.shop_product_images"/>
                             </div>
                         </div>
