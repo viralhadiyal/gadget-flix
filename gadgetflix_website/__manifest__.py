@@ -12,7 +12,10 @@
     "depends": [
         "account",
         "sale",
+        "sale_loyalty",
+        "sale_stock",
         "stock",
+        "stock_delivery",
         "website_sale",
         "website_sale_wishlist",
         "website_mass_mailing",

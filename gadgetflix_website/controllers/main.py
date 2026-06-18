@@ -9,6 +9,7 @@ from werkzeug.exceptions import Forbidden, NotFound
 from werkzeug.urls import url_decode, url_encode, url_parse
 from odoo.fields import Command, Domain
 from odoo import http, fields, tools
+from odoo.exceptions import AccessError, MissingError, UserError
 from odoo.http import request, route
 from odoo.tools import SQL, clean_context, float_round, groupby, lazy, str2bool
 from odoo.tools.translate import LazyTranslate, _
@@ -205,6 +206,42 @@ class WebsiteSaleShop(Delivery):
         if self._gf_partner_has_checkout_address(order_sudo.partner_shipping_id):
             return {'success': True}
         return {'success': bool(self._gf_apply_session_address_if_available(order_sudo))}
+
+    def _gf_sale_order_has_done_delivery(self, order_sudo):
+        return bool(order_sudo.picking_ids.filtered(
+            lambda picking: picking.picking_type_id.code == 'outgoing' and picking.state == 'done'
+        ))
+
+    @route('/my/orders/<int:order_id>/cancel', type='http', auth='public', methods=['POST'], website=True)
+    def gadgetflix_portal_order_cancel(self, order_id, access_token=None, **kwargs):
+        try:
+            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
+        except (AccessError, MissingError):
+            return request.redirect('/my')
+
+        if order_sudo.state == 'cancel':
+            return request.redirect(order_sudo.get_portal_url(query_string='&message=gf_cancel_ok'))
+
+        if self._gf_sale_order_has_done_delivery(order_sudo):
+            return request.redirect(order_sudo.get_portal_url(query_string='&message=gf_cancel_delivery_done'))
+
+        try:
+            order_sudo.action_cancel()
+            order_sudo.order_line.currency_id
+            order_sudo.message_post(
+                author_id=(
+                    order_sudo.partner_id.id
+                    if request.env.user._is_public()
+                    else request.env.user.partner_id.id
+                ),
+                body=_('Order cancelled by customer from the portal.'),
+                message_type='comment',
+                subtype_xmlid='mail.mt_comment',
+            )
+        except UserError:
+            return request.redirect(order_sudo.get_portal_url(query_string='&message=gf_cancel_failed'))
+
+        return request.redirect(order_sudo.get_portal_url(query_string='&message=gf_cancel_ok'))
 
     @route(
         '/shop/checkout', type='http', methods=['GET'], auth='public', website=True, sitemap=False, list_as_website_content=_lt("Shop Checkout")

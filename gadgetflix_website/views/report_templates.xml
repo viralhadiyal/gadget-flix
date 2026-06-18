@@ -32,7 +32,12 @@
         <xpath expr="//div[@id='informations']/div[@name='incoterm_id']" position="attributes">
             <attribute name="t-if">False</attribute>
         </xpath>
-        <xpath expr="//div[@id='payment_term']" position="replace"/>
+        <xpath expr="//div[@id='payment_term']/div[@class='justify-text']" position="replace"/>
+        <xpath expr="//div[@id='payment_term']/t[@t-set='payment_term_details']" position="replace"/>
+        <xpath expr="//div[@id='payment_term']/div[contains(@class, 'mb-3')][span[@id='payment_terms_note_id']]" position="replace"/>
+        <xpath expr="//p[@name='payment_communication']/parent::div" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
     </template>
 
     <template id="gadgetflix_report_delivery_document" inherit_id="stock.report_delivery_document">
@@ -46,6 +51,59 @@
         <xpath expr="//div[@name='signature']" position="attributes">
             <attribute name="t-if">False</attribute>
         </xpath>
+    </template>
+
+    <template id="gadgetflix_report_delivery_document_stock_delivery" inherit_id="stock_delivery.report_delivery_document2">
+        <xpath expr="//div[@t-if='o.carrier_id']" position="replace"/>
+        <xpath expr="//div[@t-if='o.shipping_weight']" position="replace"/>
+    </template>
+
+    <template id="gadgetflix_portal_record_sidebar" inherit_id="portal.portal_record_sidebar">
+        <xpath expr="//div[@id='sidebar_content']/div[contains(@class, 'text-center') and contains(@class, 'text-muted')]" position="replace"/>
+    </template>
+
+    <template id="gadgetflix_sale_order_portal_template" inherit_id="sale.sale_order_portal_template">
+        <xpath expr="//div[@id='sale_order_sidebar_button']/div[@id='print_invoice_sidebar_button']" position="after">
+            <form
+                t-if="sale_order.state != 'cancel' and not sale_order.picking_ids.filtered(lambda picking: picking.picking_type_id.code == 'outgoing' and picking.state == 'done')"
+                method="POST"
+                t-attf-action="/my/orders/#{sale_order.id}/cancel?access_token=#{sale_order.access_token}"
+                onsubmit="return confirm('Are you sure you want to cancel this order?');"
+            >
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                <button type="submit" class="btn btn-outline-danger w-100">
+                    <i class="fa fa-times me-1"/>
+                    Cancel Order
+                </button>
+            </form>
+        </xpath>
+        <xpath expr="//div[@t-if=&quot;message == 'sign_ok'&quot;]" position="replace"/>
+        <xpath expr="//div[@t-if=&quot;message == 'cant_reject'&quot;]" position="replace"/>
+        <xpath expr="//t[@t-set='current_tx']/following-sibling::t[t[@t-call='payment.state_header']][1]" position="replace"/>
+        <xpath expr="//div[@t-if=&quot;sale_order.state == 'cancel'&quot;]" position="replace"/>
+        <xpath expr="//div[@t-if='sale_order.is_expired']" position="replace"/>
+        <xpath expr="//button[@id='portal_connect_software_modal_btn']/parent::div" position="replace"/>
+        <xpath expr="//div[@id='sale_portal_connect_software_modal']" position="replace"/>
+    </template>
+
+    <template id="gadgetflix_portal_invoice_page" inherit_id="account.portal_invoice_page">
+        <xpath expr="//div[contains(@class, 'my-1') and @t-if=&quot;payment_state in ('not_paid', 'partial')&quot;]" position="replace"/>
+        <xpath expr="//t[contains(@t-if, 'installment_state') and h5[@name='installment_title']]" position="replace"/>
+        <xpath expr="//div[contains(@class, 'small') and contains(@t-if, 'payment_state')]" position="replace"/>
+        <xpath expr="//t[@t-if='error or warning']" position="replace"/>
+        <xpath expr="//t[@t-if='success and (not error and not warning)']" position="replace"/>
+    </template>
+
+    <template id="gadgetflix_sale_order_portal_content" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//section[h4[normalize-space()='Payment terms']]" position="replace"/>
+    </template>
+
+    <template id="gadgetflix_sale_order_portal_loyalty_content" inherit_id="sale_loyalty.sale_order_portal_content_inherit">
+        <xpath expr="//t[@t-call='sale_loyalty.sale_order_portal_loyalty_content']" position="replace"/>
+    </template>
+
+    <template id="gadgetflix_sale_order_portal_delivery_orders" inherit_id="sale_stock.sale_order_portal_content_inherit_sale_stock">
+        <xpath expr="//div[@t-if='delivery_orders']" position="replace"/>
     </template>
 
 </odoo>
