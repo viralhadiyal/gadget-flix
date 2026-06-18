@@ -28,6 +28,9 @@ _lt = LazyTranslate(__name__)
 
 
 class WebsiteSaleShop(Delivery):
+    _GF_MIN_STREET_LENGTH = 10
+    _GF_MIN_STREET2_LENGTH = 5
+
     # =========================================================
     # 2-Step Checkout Override
     # Step 1 → /shop/cart   (Order Summary)
@@ -38,6 +41,9 @@ class WebsiteSaleShop(Delivery):
     #   • Prepaid – Prepaid (paid online via payment provider)
     # =========================================================
 
+    def _gf_address_text_length(self, value):
+        return len(''.join((value or '').split()))
+
     def _gf_partner_has_checkout_address(self, partner_sudo):
         if not partner_sudo:
             return False
@@ -47,6 +53,9 @@ class WebsiteSaleShop(Delivery):
             partner_sudo.email,
             partner_sudo.phone,
             partner_sudo.street,
+            partner_sudo.street2,
+            self._gf_address_text_length(partner_sudo.street) >= self._GF_MIN_STREET_LENGTH,
+            self._gf_address_text_length(partner_sudo.street2) >= self._GF_MIN_STREET2_LENGTH,
             partner_sudo.zip,
             partner_sudo.city,
             partner_sudo.state_id,
@@ -54,10 +63,17 @@ class WebsiteSaleShop(Delivery):
         ])
 
     def _gf_prepare_precart_address_values(self, address):
-        required_fields = ['name', 'email', 'phone', 'street', 'zip', 'city', 'state_id', 'country_id']
+        required_fields = ['name', 'email', 'phone', 'street', 'street2', 'zip', 'city', 'state_id', 'country_id']
         invalid_fields = [field for field in required_fields if not address.get(field)]
         if invalid_fields:
             return False, invalid_fields, {}
+
+        street = (address.get('street') or '').strip()
+        street2 = (address.get('street2') or '').strip()
+        if self._gf_address_text_length(street) < self._GF_MIN_STREET_LENGTH:
+            return False, ['street'], {}
+        if self._gf_address_text_length(street2) < self._GF_MIN_STREET2_LENGTH:
+            return False, ['street2'], {}
 
         State = request.env['res.country.state'].sudo()
         Country = request.env['res.country'].sudo()
@@ -76,8 +92,8 @@ class WebsiteSaleShop(Delivery):
             'name': (address.get('name') or '').strip(),
             'email': (address.get('email') or '').strip(),
             'phone': (address.get('phone') or '').strip(),
-            'street': (address.get('street') or '').strip(),
-            'street2': (address.get('street2') or '').strip(),
+            'street': street,
+            'street2': street2,
             'zip': (address.get('zip') or '').strip(),
             'city': (address.get('city') or '').strip(),
             'state_id': state_sudo.id,
@@ -149,7 +165,10 @@ class WebsiteSaleShop(Delivery):
             if order_sudo and self._gf_apply_session_address_if_available(order_sudo):
                 return {'needs_address': False}
             if not order_sudo and request.session.get('gf_pre_cart_address'):
-                return {'needs_address': False, 'has_session_address': True}
+                session_address = request.session.get('gf_pre_cart_address') or {}
+                is_valid, _invalid_fields, _partner_values = self._gf_prepare_precart_address_values(session_address)
+                if is_valid:
+                    return {'needs_address': False, 'has_session_address': True}
             return {'needs_address': True}
 
         partner_sudo = (order_sudo.partner_shipping_id if order_sudo else user.partner_id).sudo()
@@ -166,6 +185,8 @@ class WebsiteSaleShop(Delivery):
                 'error': (
                     'Please enter a valid pincode so city, state and country can be filled.'
                     if {'state_id', 'country_id'} & set(invalid_fields)
+                    else 'Please complete your address details properly.'
+                    if {'street', 'street2'} & set(invalid_fields)
                     else 'Please complete the required address fields.'
                 ),
             }

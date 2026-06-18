@@ -4630,6 +4630,19 @@ textarea,
     color: #b91c1c;
 }
 
+.gf-address-street-error {
+    width: 100%;
+    margin-top: 5px;
+    color: #b91c1c;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.gf-address-street-error:empty {
+    display: none;
+}
+
 .gf-address-readonly {
     background-color: #f3f4f6 !important;
     color: #4b5563 !important;
@@ -4725,8 +4738,8 @@ label[for="invoice_edi_format"] {
 .gf-precart-modal__close {
     position: absolute;
     top: 12px;
-    z-index: 3;
     right: 12px;
+    z-index: 1;
     width: 34px;
     height: 34px;
     display: inline-flex;

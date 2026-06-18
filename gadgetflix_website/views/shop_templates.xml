@@ -126,10 +126,10 @@
             <div id="gf-precart-address-modal" class="gf-precart-modal" hidden="hidden" aria-hidden="true">
                 <div class="gf-precart-modal__backdrop" data-gf-precart-close="1"/>
                 <div class="gf-precart-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="gf-precart-title">
-                    <button type="button" class="gf-precart-modal__close" data-gf-precart-close="1" aria-label="Close">
-                        <i class="fa fa-times" aria-hidden="true"/>
-                    </button>
                     <div class="gf-precart-modal__header">
+                        <button type="button" class="gf-precart-modal__close" data-gf-precart-close="1" aria-label="Close">
+                            <i class="fa fa-times" aria-hidden="true"/>
+                        </button>
                         <h3 id="gf-precart-title">Delivery Address</h3>
                         <p>Enter your address once. We will add the product to cart after saving it.</p>
                     </div>

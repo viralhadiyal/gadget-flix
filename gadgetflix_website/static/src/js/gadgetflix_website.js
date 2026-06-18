@@ -601,6 +601,114 @@
         });
     };
 
+    const gfAddressFieldRules = [
+        {
+            name: "street",
+            wrapperSelector: "#div_street",
+            minLength: 10,
+            message: "Please fill address detail proper. (Minimum 10 characters)",
+        },
+        {
+            name: "street2",
+            wrapperSelector: "#div_street2",
+            minLength: 5,
+            message: "Please fill area / landmark detail proper. (Minimum 5 characters)",
+        },
+    ];
+
+    const getAddressValidationMessageEl = function (fieldInput, rule) {
+        const fieldWrap = fieldInput.closest(rule.wrapperSelector) || fieldInput.parentElement;
+        if (!fieldWrap) {
+            return null;
+        }
+
+        let messageEl = fieldWrap.querySelector(".gf-address-street-error");
+        if (!messageEl) {
+            messageEl = document.createElement("div");
+            messageEl.className = "gf-address-street-error";
+            messageEl.setAttribute("aria-live", "polite");
+            fieldInput.insertAdjacentElement("afterend", messageEl);
+        }
+        return messageEl;
+    };
+
+    const validateAddressField = function (fieldInput, rule, showMessage) {
+        const messageEl = getAddressValidationMessageEl(fieldInput, rule);
+        const fieldLength = fieldInput.value.replace(/\s/g, "").length;
+        const isValid = fieldLength >= rule.minLength;
+
+        fieldInput.classList.toggle("is-invalid", !isValid && showMessage);
+        fieldInput.setAttribute("aria-invalid", (!isValid && showMessage) ? "true" : "false");
+        if (messageEl) {
+            messageEl.textContent = !isValid && showMessage ? rule.message : "";
+        }
+        return isValid;
+    };
+
+    const validateAddressFormDetails = function (form, showMessage) {
+        if (!form) {
+            return true;
+        }
+
+        const invalidField = gfAddressFieldRules.map(function (rule) {
+            const fieldInput = form.querySelector('input[name="' + rule.name + '"]');
+            if (!fieldInput || validateAddressField(fieldInput, rule, showMessage)) {
+                return null;
+            }
+            return fieldInput;
+        }).find(Boolean);
+
+        if (invalidField && showMessage) {
+            invalidField.focus();
+        }
+        return !invalidField;
+    };
+
+    const initAddressStreetValidation = function () {
+        document.querySelectorAll("form.address_autoformat").forEach(function (form) {
+            gfAddressFieldRules.forEach(function (rule) {
+                const fieldInput = form.querySelector('input[name="' + rule.name + '"]');
+                if (!fieldInput || fieldInput.dataset.gfStreetValidationBound === "true") {
+                    return;
+                }
+
+                fieldInput.dataset.gfStreetValidationBound = "true";
+                fieldInput.addEventListener("input", function () {
+                    validateAddressField(fieldInput, rule, false);
+                });
+                fieldInput.addEventListener("blur", function () {
+                    validateAddressField(fieldInput, rule, true);
+                });
+            });
+        });
+
+        if (
+            document.documentElement.dataset.gfStreetValidationObserverBound !== "true" &&
+            "MutationObserver" in window
+        ) {
+            document.documentElement.dataset.gfStreetValidationObserverBound = "true";
+            new MutationObserver(initAddressStreetValidation).observe(document.body, {
+                childList: true,
+                subtree: true,
+            });
+        }
+
+        if (document.documentElement.dataset.gfStreetSubmitValidationBound === "true") {
+            return;
+        }
+
+        document.documentElement.dataset.gfStreetSubmitValidationBound = "true";
+        document.addEventListener("submit", function (event) {
+            const form = event.target && event.target.closest && event.target.closest("form.address_autoformat");
+            if (!form || validateAddressFormDetails(form, true)) {
+                return;
+            }
+
+            event.preventDefault();
+            event.stopPropagation();
+        }, true);
+    };
+
     const initInvoicePreferenceCleanup = function () {
         document.querySelectorAll('[name="invoice_sending_method"], [name="invoice_edi_format"]').forEach(function (field) {
             const row = field.closest(".row");
@@ -642,7 +750,7 @@
         }
 
         const street2 = street2Input.value.trim();
-        if (street2 === villageName || street2.endsWith(", " + villageName)) {
+        if (street2.toLowerCase().includes(villageName.toLowerCase())) {
             return;
         }
 
@@ -1285,7 +1393,7 @@
             }
 
             const street2 = (values.street2 || "").trim();
-            if (street2 === locality || street2.endsWith(", " + locality)) {
+            if (street2.toLowerCase().includes(locality.toLowerCase())) {
                 values.street2 = street2;
                 return;
             }
@@ -1498,6 +1606,11 @@
                 return;
             }
 
+            if (!validateAddressFormDetails(form, true)) {
+                setError("Please complete your address details properly.");
+                return;
+            }
+
             const formData = new FormData(form);
             const values = {};
             formData.forEach(function (value, key) {
@@ -1558,6 +1671,7 @@
         initAddressToggleCleanup();
         initAddressCountryCleanup();
         initIndianAddressLabels();
+        initAddressStreetValidation();
         initInvoicePreferenceCleanup();
         initAddressLocalitySubmitSync();
         initPincodeAddressLookup();

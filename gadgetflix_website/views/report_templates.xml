@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="gadgetflix_report_saleorder_document" inherit_id="sale.report_saleorder_document">
+        <xpath expr="//div[@id='informations']/div[@name='informations_reference']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[@name='expiration_date']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[@t-if='doc.user_id.name']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@name='signature']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//p[span[@t-field='doc.payment_term_id.note']]" position="replace"/>
+        <xpath expr="//p[@id='fiscal_position_remark']" position="replace"/>
+        <xpath expr="//a[contains(@t-att-href, 'portal_url')]/parent::div" position="replace"/>
+    </template>
+
+    <template id="gadgetflix_report_invoice_document" inherit_id="account.report_invoice_document">
+        <xpath expr="//div[@id='informations']/div[@name='due_date']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[@name='customer_code']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[@name='reference']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[@name='incoterm_id']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@id='payment_term']" position="replace"/>
+    </template>
+
+    <template id="gadgetflix_report_delivery_document" inherit_id="stock.report_delivery_document">
+        <xpath expr="//t[@t-set='information_block']" position="replace"/>
+        <xpath expr="//div[@id='informations']/div[@name='div_contact']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@id='informations']/div[@name='div_operator']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+        <xpath expr="//div[@name='signature']" position="attributes">
+            <attribute name="t-if">False</attribute>
+        </xpath>
+    </template>
+
+</odoo>

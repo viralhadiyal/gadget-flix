@@ -10,6 +10,9 @@
     "version": "19.0.0.1",
     "category": "Website/Website",
     "depends": [
+        "account",
+        "sale",
+        "stock",
         "website_sale",
         "website_sale_wishlist",
         "website_mass_mailing",
@@ -25,6 +28,7 @@
         "views/address_templates.xml",
         "views/portal_templates.xml",
         "views/mix_match_offer_views.xml",
+        "views/report_templates.xml",
     ],
     "assets": {
         "web.assets_frontend": [
