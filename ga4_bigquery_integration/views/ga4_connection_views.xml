@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ga4_connection_list" model="ir.ui.view">
+        <field name="name">ga4.connection.list</field>
+        <field name="model">ga4.connection</field>
+        <field name="arch" type="xml">
+            <list string="GA4 Connections">
+                <field name="name"/>
+                <field name="property_id"/>
+                <field name="bigquery_project_id"/>
+                <field name="bigquery_dataset_id"/>
+                <field name="sync_start_date"/>
+                <field name="last_report_sync_date"/>
+                <field name="last_bigquery_sync_date"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ga4_connection_form" model="ir.ui.view">
+        <field name="name">ga4.connection.form</field>
+        <field name="model">ga4.connection</field>
+        <field name="arch" type="xml">
+            <form string="GA4 Connection">
+                <header>
+                    <button name="action_sync_reports" string="Sync Reports" type="object" class="btn-primary"/>
+                    <button name="action_sync_bigquery_events" string="Sync Raw Events" type="object"/>
+                    <button name="action_sync_all" string="Sync All" type="object"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_reports" type="object" class="oe_stat_button" icon="fa-line-chart">
+                            <field name="report_count" widget="statinfo" string="Reports"/>
+                        </button>
+                        <button name="action_view_raw_events" type="object" class="oe_stat_button" icon="fa-database">
+                            <field name="raw_event_count" widget="statinfo" string="Raw Events"/>
+                        </button>
+                        <button name="action_view_sync_logs" type="object" class="oe_stat_button" icon="fa-history">
+                            <field name="sync_log_count" widget="statinfo" string="Logs"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group string="GA4">
+                            <field name="name"/>
+                            <field name="active"/>
+                            <field name="property_id"/>
+                            <field name="sync_start_date"/>
+                            <field name="last_report_sync_date" readonly="1"/>
+                        </group>
+                        <group string="BigQuery">
+                            <div class="alert alert-info" colspan="2">
+                                BigQuery is optional. Without BigQuery, only GA4 report data will sync. Raw event-level data sync requires BigQuery Project ID and Dataset ID.
+                            </div>
+                            <field name="bigquery_project_id"/>
+                            <field name="bigquery_dataset_id"/>
+                            <field name="bigquery_table_prefix"/>
+                            <field name="bigquery_batch_limit"/>
+                            <field name="last_bigquery_sync_date" readonly="1"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Google Service Account JSON">
+                            <field name="service_account_json" 
+                                   placeholder='{"type": "service_account", ...}'/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_ga4_connection" model="ir.actions.act_window">
+        <field name="name">GA4 Connections</field>
+        <field name="res_model">ga4.connection</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

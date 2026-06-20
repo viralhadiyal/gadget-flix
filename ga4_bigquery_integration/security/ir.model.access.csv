@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_ga4_connection_user,ga4.connection.user,model_ga4_connection,base.group_user,1,1,1,1
+access_ga4_report_user,ga4.report.user,model_ga4_report,base.group_user,1,1,1,1
+access_ga4_raw_event_user,ga4.raw.event.user,model_ga4_raw_event,base.group_user,1,1,1,1
+access_ga4_sync_log_user,ga4.sync.log.user,model_ga4_sync_log,base.group_user,1,1,1,1

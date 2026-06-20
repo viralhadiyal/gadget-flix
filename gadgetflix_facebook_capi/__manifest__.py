@@ -2,6 +2,7 @@
     'name': 'Gadgetflix - Facebook Conversion API',
     'version': '1.0',
     'category': 'Website/Website',
+    "author": "Gadgetflix",
     'summary': 'Facebook Conversion API (CAPI) and Advanced Pixel Tracking',
     'description': """
         Sends server-side Purchase events to Facebook Conversion API to bypass adblockers.

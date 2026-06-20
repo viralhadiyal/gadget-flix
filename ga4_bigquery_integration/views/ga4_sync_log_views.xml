@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_ga4_sync_log_list" model="ir.ui.view">
+        <field name="name">ga4.sync.log.list</field>
+        <field name="model">ga4.sync.log</field>
+        <field name="arch" type="xml">
+            <list string="GA4 Sync Logs" create="0" edit="0">
+                <field name="start_datetime"/>
+                <field name="end_datetime"/>
+                <field name="connection_id"/>
+                <field name="sync_type"/>
+                <field name="trigger_type"/>
+                <field name="status"/>
+                <field name="date_from"/>
+                <field name="date_to"/>
+                <field name="records_fetched"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="view_ga4_sync_log_form" model="ir.ui.view">
+        <field name="name">ga4.sync.log.form</field>
+        <field name="model">ga4.sync.log</field>
+        <field name="arch" type="xml">
+            <form string="GA4 Sync Log" create="0" edit="0">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="connection_id"/>
+                            <field name="sync_type"/>
+                            <field name="trigger_type"/>
+                            <field name="status"/>
+                        </group>
+                        <group>
+                            <field name="date_from"/>
+                            <field name="date_to"/>
+                            <field name="start_datetime"/>
+                            <field name="end_datetime"/>
+                            <field name="records_fetched"/>
+                        </group>
+                    </group>
+                    <group string="Error">
+                        <field name="error_message" nolabel="1"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_ga4_sync_log_search" model="ir.ui.view">
+        <field name="name">ga4.sync.log.search</field>
+        <field name="model">ga4.sync.log</field>
+        <field name="arch" type="xml">
+            <search string="GA4 Sync Logs">
+                <field name="connection_id"/>
+                <field name="sync_type"/>
+                <field name="status"/>
+                <filter name="group_status" string="Status" context="{'group_by': 'status'}"/>
+                <filter name="group_sync_type" string="Sync Type" context="{'group_by': 'sync_type'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="action_ga4_sync_log" model="ir.actions.act_window">
+        <field name="name">GA4 Sync Logs</field>
+        <field name="res_model">ga4.sync.log</field>
+        <field name="view_mode">list,form</field>
+        <field name="search_view_id" ref="view_ga4_sync_log_search"/>
+    </record>
+</odoo>
