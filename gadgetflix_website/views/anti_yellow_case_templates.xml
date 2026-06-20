@@ -783,9 +783,9 @@
 <!--                        <span class="gf-ayc-sticky-payment-separator"/>-->
                         <span>
                             <i class="fa fa-credit-card" aria-hidden="true"/>
-                            Online Payment
+                            Pay Online via Razorpay
                         </span>
-                        <strong>Available</strong>
+<!--                        <strong>Available</strong>-->
                     </div>
                 </div>
             </div><!-- /#gf-ayc-page -->
