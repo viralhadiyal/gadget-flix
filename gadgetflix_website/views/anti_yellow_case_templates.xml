@@ -41,7 +41,7 @@
                                     </span>
                                 </div>
                                 <h1 class="gf-ayc-pdp__title">Anti-Yellow Magsafe Clear Case<span id="gf-ayc-title-model"></span></h1>
-                                
+
                                 <!-- Ratings -->
                                 <div class="gf-ayc-ratings d-flex align-items-center gap-2 mt-2 mb-2">
                                     <div class="stars" style="color: #fbbc04; font-size: 1rem;">
@@ -207,7 +207,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <!-- Divider -->
                             <hr class="gf-ayc-pdp__divider"/>
 
@@ -446,9 +446,9 @@
                             <h2>Engineered for Perfection</h2>
                             <p>Hover over the cards to explore what makes our clear case the best in class.</p>
                         </div>
-                        
+
                         <div class="gf-ayc-accordion-wrapper">
-                            
+
                             <!-- Accordion Item 1 -->
                             <div class="gf-ayc-accordion-item">
                                 <video autoplay="autoplay" loop="loop" muted="muted" playsinline="playsinline">
@@ -536,7 +536,7 @@
                                  <span class="gf-badge mb-3">MATERIAL SCIENCE</span>
                                  <h2 class="gf-ayc-eng-heading">Three Layers of Invisible Protection</h2>
                                  <p class="gf-ayc-eng-desc">Standard clear cases are made from single-layer cheap TPU that easily absorbs oils and yellows. We fused three specialized material layers to create the ultimate clear case.</p>
-                                 
+
                                  <div class="gf-ayc-layers-list">
                                      <div class="gf-ayc-layer-item">
                                          <div class="layer-indicator">01</div>
@@ -587,7 +587,7 @@
                              <h2>Clarity That Stands the Test of Time</h2>
                              <p>Most clear cases look good on Day 1. Here is how Gadgetflix compares to standard clear cases over a 6-month timeline.</p>
                          </div>
-                         
+
                          <div class="gf-ayc-comp-grid">
                              <!-- Header Row -->
                              <div class="comp-row comp-header">
@@ -595,21 +595,21 @@
                                  <div class="comp-col">Standard Clear Case</div>
                                  <div class="comp-col highlight">Gadgetflix Anti-Yellow Case</div>
                              </div>
-                             
+
                              <!-- Row 1 -->
                              <div class="comp-row">
                                  <div class="comp-col comp-day font-weight-bold">Day 1</div>
                                  <div class="comp-col text-muted" data-label="Standard Clear Case">Crystal clear, looks great.</div>
                                  <div class="comp-col highlight text-success font-weight-bold" data-label="Gadgetflix Anti-Yellow Case">✓ Crystal clear, high-gloss shine.</div>
                              </div>
-                             
+
                              <!-- Row 2 -->
                              <div class="comp-row">
                                  <div class="comp-col comp-day font-weight-bold">Day 90</div>
                                  <div class="comp-col text-muted" data-label="Standard Clear Case">Slight greasy yellow tint around edges.</div>
                                  <div class="comp-col highlight text-success font-weight-bold" data-label="Gadgetflix Anti-Yellow Case">✓ 100% Clear, zero color change.</div>
                              </div>
-                             
+
                              <!-- Row 3 -->
                              <div class="comp-row">
                                  <div class="comp-col comp-day font-weight-bold">Day 180</div>
@@ -776,11 +776,11 @@
                         </button>
                     </div>
                     <div class="gf-ayc-sticky-bar__payments" aria-label="Available payment options">
-                        <span>
-                            <i class="fa fa-money" aria-hidden="true"/>
-                            Cash on Delivery
-                        </span>
-                        <span class="gf-ayc-sticky-payment-separator"/>
+<!--                        <span>-->
+<!--                            <i class="fa fa-money" aria-hidden="true"/>-->
+<!--                            Cash on Delivery-->
+<!--                        </span>-->
+<!--                        <span class="gf-ayc-sticky-payment-separator"/>-->
                         <span>
                             <i class="fa fa-credit-card" aria-hidden="true"/>
                             Online Payment

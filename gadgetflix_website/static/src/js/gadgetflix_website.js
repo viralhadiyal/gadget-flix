@@ -1203,6 +1203,9 @@
                     if (mobileSummary) {
                         mobileSummary.innerHTML = data.cart_summary_content + data.total;
                     }
+                    if (data.amount_total_raw !== undefined) {
+                        updateCartSummaries(data);
+                    }
                     bindPromoForm();
                 }
             }).catch(function (err) {
@@ -1212,7 +1215,11 @@
 
         const handlePromoSubmit = function (event) {
             event.preventDefault();
-            const form = event.currentTarget;
+            event.stopPropagation();
+            const form = event.currentTarget.closest('form[name="coupon_code"]');
+            if (!form) {
+                return;
+            }
             const input = form.querySelector('input[name="promo"]');
             const promoCode = input ? input.value.trim() : "";
 
@@ -1220,29 +1227,73 @@
                 return;
             }
 
-            let errorAlert = form.parentElement.querySelector(".js_promo_error_alert");
-            if (!errorAlert) {
-                errorAlert = document.createElement("div");
-                errorAlert.className = "alert alert-danger text-start small mt-2 js_promo_error_alert";
-                form.parentElement.appendChild(errorAlert);
+            const getCurrentForm = function () {
+                if (form.isConnected) {
+                    return form;
+                }
+                const forms = Array.from(document.querySelectorAll('form[name="coupon_code"]'));
+                return forms.find(function (couponForm) {
+                    return !couponForm.closest(".gf-mobile-checkout-coupon");
+                }) || forms[0] || form;
+            };
+
+            const getMobileMessages = function (couponForm) {
+                const mobileCoupon = couponForm.closest(".gf-mobile-checkout-coupon");
+                return mobileCoupon ? mobileCoupon.querySelector("[data-gf-mobile-coupon-messages]") : null;
+            };
+
+            const showPromoMessage = function (type, message) {
+                const currentForm = getCurrentForm();
+                const mobileMessages = getMobileMessages(currentForm);
+                if (mobileMessages) {
+                    mobileMessages.innerHTML = "";
+                    const alert = document.createElement("div");
+                    alert.className = "alert alert-" + type + " text-start small mt-2 mb-0";
+                    alert.setAttribute("role", "alert");
+                    alert.textContent = message;
+                    mobileMessages.appendChild(alert);
+                    return;
+                }
+
+                let inlineAlert = currentForm.parentElement.querySelector(".js_promo_error_alert");
+                if (!inlineAlert) {
+                    inlineAlert = document.createElement("div");
+                    currentForm.parentElement.appendChild(inlineAlert);
+                }
+                inlineAlert.className = "alert alert-" + type + " text-start small mt-2 js_promo_error_alert";
+                inlineAlert.textContent = message;
+                inlineAlert.classList.remove("d-none");
+            };
+
+            const mobileMessages = getMobileMessages(form);
+            if (mobileMessages) {
+                mobileMessages.innerHTML = "";
+            } else {
+                const inlineAlert = form.parentElement.querySelector(".js_promo_error_alert");
+                if (inlineAlert) {
+                    inlineAlert.classList.add("d-none");
+                }
             }
-            errorAlert.classList.add("d-none");
 
             jsonrpc("/gadgetflix/cart/apply_promo", "call", {
                 promo: promoCode,
             }).then(function (res) {
                 if (res && res.result) {
                     if (res.result.success) {
-                        refreshCartSummary();
+                        const successMessage = res.result.message || "Promo code applied successfully.";
+                        refreshCartSummary().then(function () {
+                            showPromoMessage("success", successMessage);
+                        });
                     } else {
-                        errorAlert.textContent = res.result.error || "Failed to apply promo code.";
-                        errorAlert.classList.remove("d-none");
+                        const errorMessage = res.result.error || "Failed to apply promo code.";
+                        refreshCartSummary().then(function () {
+                            showPromoMessage("danger", errorMessage);
+                        });
                     }
                 }
             }).catch(function (err) {
                 console.error("Failed to apply promo code:", err);
-                errorAlert.textContent = "An error occurred while applying the promo code.";
-                errorAlert.classList.remove("d-none");
+                showPromoMessage("danger", "An error occurred while applying the promo code.");
             });
         };
 
@@ -1250,6 +1301,11 @@
             document.querySelectorAll('form[name="coupon_code"]').forEach(function (form) {
                 form.removeEventListener("submit", handlePromoSubmit);
                 form.addEventListener("submit", handlePromoSubmit);
+
+                form.querySelectorAll(".a-submit").forEach(function (button) {
+                    button.removeEventListener("click", handlePromoSubmit);
+                    button.addEventListener("click", handlePromoSubmit);
+                });
             });
         };
 
@@ -1661,6 +1717,57 @@
         document.addEventListener("submit", capturePendingSubmit, true);
     };
 
+    const initHomeOfferPopup = function () {
+        const popup = document.querySelector("[data-gf-home-offer-popup]");
+        if (!popup || popup.dataset.gfHomeOfferBound === "true") {
+            return;
+        }
+
+        popup.dataset.gfHomeOfferBound = "true";
+        const storageKey = "gadgetflix_offer_popup_seen";
+
+        try {
+            if (window.localStorage.getItem(storageKey) === "1") {
+                return;
+            }
+        } catch (error) {
+            // Continue without persistence when storage is unavailable.
+        }
+
+        const markSeen = function () {
+            try {
+                window.localStorage.setItem(storageKey, "1");
+            } catch (error) {
+                // Ignore storage errors; closing should still work.
+            }
+        };
+
+        const closePopup = function () {
+            markSeen();
+            popup.hidden = true;
+            popup.setAttribute("aria-hidden", "true");
+            document.documentElement.classList.remove("gf-home-offer-popup-open");
+        };
+
+        const openPopup = function () {
+            popup.hidden = false;
+            popup.setAttribute("aria-hidden", "false");
+            document.documentElement.classList.add("gf-home-offer-popup-open");
+        };
+
+        popup.querySelectorAll("[data-gf-home-offer-close]").forEach(function (button) {
+            button.addEventListener("click", closePopup);
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && !popup.hidden) {
+                closePopup();
+            }
+        });
+
+        window.setTimeout(openPopup, 600);
+    };
+
     const init = function () {
         initMobileMenu();
         initAccessoriesMenus();
@@ -1677,6 +1784,7 @@
         initPincodeAddressLookup();
         initAutoDeliveryFetcher();
         initPreCartAddressGate();
+        initHomeOfferPopup();
     };
 
     if (document.readyState === "loading") {

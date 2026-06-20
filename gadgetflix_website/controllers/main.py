@@ -771,12 +771,16 @@ class WebsiteSaleShop(Delivery):
             pricelist_sudo = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
             if pricelist_sudo and request.website.is_pricelist_available(pricelist_sudo.id):
                 order_sudo._apply_pricelist(pricelist=pricelist_sudo)
-                payload = {'result': {'success': True}}
+                request.session.pop('error_promo_code', None)
+                request.session['successful_code'] = promo
+                payload = {'result': {'success': True, 'message': _("You have successfully applied the following code: %s") % promo}}
                 return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
             else:
+                request.session['error_promo_code'] = _("Invalid or expired promo code.")
                 payload = {'result': {'success': False, 'error': _("Invalid or expired promo code.")}}
                 return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
         elif coupon_status.get('error'):
+            request.session['error_promo_code'] = coupon_status['error']
             payload = {'result': {'success': False, 'error': coupon_status['error']}}
             return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
 
@@ -790,9 +794,11 @@ class WebsiteSaleShop(Delivery):
                 try:
                     reward_status = order_sudo._apply_program_reward(reward, coupon)
                     if 'error' in reward_status:
+                        request.session['error_promo_code'] = reward_status['error']
                         payload = {'result': {'success': False, 'error': reward_status['error']}}
                         return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
                 except Exception as e:
+                    request.session['error_promo_code'] = str(e)
                     payload = {'result': {'success': False, 'error': str(e)}}
                     return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
 
@@ -804,7 +810,9 @@ class WebsiteSaleShop(Delivery):
                     else:
                         order_sudo._remove_delivery_line()
 
-        payload = {'result': {'success': True}}
+        request.session.pop('error_promo_code', None)
+        request.session['successful_code'] = promo
+        payload = {'result': {'success': True, 'message': _("You have successfully applied the following code: %s") % promo}}
         return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])
 
     @route('/gadgetflix/cart/summary_html', type='http', auth='public', methods=['GET', 'POST'], csrf=False, website=True)
@@ -833,6 +841,7 @@ class WebsiteSaleShop(Delivery):
                 'success': True,
                 'cart_summary_content': cart_summary_content.decode('utf-8') if isinstance(cart_summary_content, bytes) else cart_summary_content,
                 'total': total_content.decode('utf-8') if isinstance(total_content, bytes) else total_content,
+                'amount_total_raw': order_sudo.amount_total,
             }
         }
         return request.make_response(json.dumps(payload), headers=[('Content-Type', 'application/json')])

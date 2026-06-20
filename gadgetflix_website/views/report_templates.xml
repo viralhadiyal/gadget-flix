@@ -32,9 +32,9 @@
         <xpath expr="//div[@id='informations']/div[@name='incoterm_id']" position="attributes">
             <attribute name="t-if">False</attribute>
         </xpath>
-        <xpath expr="//div[@id='payment_term']/div[@class='justify-text']" position="replace"/>
+        <xpath expr="//div[@id='payment_term']/div[hasclass('justify-text')]" position="replace"/>
         <xpath expr="//div[@id='payment_term']/t[@t-set='payment_term_details']" position="replace"/>
-        <xpath expr="//div[@id='payment_term']/div[contains(@class, 'mb-3')][span[@id='payment_terms_note_id']]" position="replace"/>
+        <xpath expr="//div[@id='payment_term']/div[hasclass('mb-3')][span[@id='payment_terms_note_id']]" position="replace"/>
         <xpath expr="//p[@name='payment_communication']/parent::div" position="attributes">
             <attribute name="t-if">False</attribute>
         </xpath>
@@ -59,7 +59,7 @@
     </template>
 
     <template id="gadgetflix_portal_record_sidebar" inherit_id="portal.portal_record_sidebar">
-        <xpath expr="//div[@id='sidebar_content']/div[contains(@class, 'text-center') and contains(@class, 'text-muted')]" position="replace"/>
+        <xpath expr="//div[@id='sidebar_content']/div[hasclass('text-center', 'text-muted')]" position="replace"/>
     </template>
 
     <template id="gadgetflix_sale_order_portal_template" inherit_id="sale.sale_order_portal_template">
@@ -87,9 +87,9 @@
     </template>
 
     <template id="gadgetflix_portal_invoice_page" inherit_id="account.portal_invoice_page">
-        <xpath expr="//div[contains(@class, 'my-1') and @t-if=&quot;payment_state in ('not_paid', 'partial')&quot;]" position="replace"/>
+        <xpath expr="//div[hasclass('my-1') and @t-if=&quot;payment_state in ('not_paid', 'partial')&quot;]" position="replace"/>
         <xpath expr="//t[contains(@t-if, 'installment_state') and h5[@name='installment_title']]" position="replace"/>
-        <xpath expr="//div[contains(@class, 'small') and contains(@t-if, 'payment_state')]" position="replace"/>
+        <xpath expr="//div[hasclass('small') and contains(@t-if, 'payment_state')]" position="replace"/>
         <xpath expr="//t[@t-if='error or warning']" position="replace"/>
         <xpath expr="//t[@t-if='success and (not error and not warning)']" position="replace"/>
     </template>

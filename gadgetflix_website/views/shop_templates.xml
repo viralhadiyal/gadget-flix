@@ -21,7 +21,8 @@
         </xpath>
     </template>
 
-    <template id="gadgetflix_filter_radio_and_multi_attributes" inherit_id="website_sale.filter_radio_and_multi_attributes"
+    <template id="gadgetflix_filter_radio_and_multi_attributes"
+              inherit_id="website_sale.filter_radio_and_multi_attributes"
               name="Gadgetflix Radio and Multi attributes in Filter">
         <xpath expr="//t[@t-set='sorted_values']" position="attributes">
             <attribute name="t-value">sorted(a.value_ids.filtered(lambda value: value.id in available_value_ids_by_attribute.get(a.id, avialable_value_ids or [])), key=lambda v: v.id not in attrib_set)</attribute>
@@ -63,12 +64,15 @@
 
         <!-- XPath 1b: Force the ul to display even if all attributes are single-value (so our custom text renders) -->
         <xpath expr="//ul[contains(@t-attf-class, 'o_wsale_product_page_variants')][1]" position="attributes">
-            <attribute name="t-attf-class">o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled js_add_cart_variants #{ul_class}</attribute>
+            <attribute name="t-attf-class">o_wsale_product_page_variants d-flex flex-column gap-4 list-unstyled
+                js_add_cart_variants #{ul_class}
+            </attribute>
         </xpath>
 
         <!-- XPath 2: Inject a clean, simple text display for single-value attributes BEFORE the hidden original li -->
         <xpath expr="//li[@name='variant_attribute']" position="before">
-            <li t-if="single and not ptavs[0].is_custom and attribute.display_type != 'multi'" class="gf-single-value-attr">
+            <li t-if="single and not ptavs[0].is_custom and attribute.display_type != 'multi'"
+                class="gf-single-value-attr">
                 <div class="gf-single-display">
                     <strong t-field="attribute.name" class="gf-single-display-strong"/>
                     <span class="gf-single-display-sep">-</span>
@@ -91,18 +95,18 @@
                 <i class="fa fa-shield" aria-hidden="true"/>
                 Secure Payment Options
             </div>
-            <div class="gf-payment-strip">
-                <span class="gf-payment-strip__item">
-                    <i class="fa fa-money" aria-hidden="true"/>
-                    <span>
-                        <strong>Cash on Delivery</strong>
-                        <small>Pay when delivered</small>
-                    </span>
-                </span>
+            <div class="">
+                <!--        <span class="gf-payment-strip__item">-->
+                <!--            <i class="fa fa-money" aria-hidden="true"/>-->
+                <!--            <span>-->
+                <!--                <strong>Cash on Delivery</strong>-->
+                <!--                <small>Pay when delivered</small>-->
+                <!--            </span>-->
+                <!--        </span>-->
                 <span class="gf-payment-strip__item">
                     <i class="fa fa-credit-card" aria-hidden="true"/>
                     <span>
-                        <strong>Online Payment</strong>
+                        <strong>Pay Online via Razorpay</strong>
                         <small>UPI, cards and more</small>
                     </span>
                 </span>
@@ -110,7 +114,8 @@
         </div>
     </template>
 
-    <template id="gadgetflix_product_payment_strip" inherit_id="website_sale.cta_wrapper" name="Gadgetflix Payment Strip on Product Page">
+    <template id="gadgetflix_product_payment_strip" inherit_id="website_sale.cta_wrapper"
+              name="Gadgetflix Payment Strip on Product Page">
         <xpath expr="//div[@id='add_to_cart_wrap']" position="before">
             <div class="gf-payment-strip-wrap gf-payment-strip-wrap--pdp">
                 <t t-call="gadgetflix_website.gadgetflix_payment_strip"/>
@@ -118,16 +123,20 @@
         </xpath>
     </template>
 
-    <template id="gadgetflix_precart_address_modal" inherit_id="website.layout" name="Gadgetflix Pre-cart Address Modal">
+    <template id="gadgetflix_precart_address_modal" inherit_id="website.layout"
+              name="Gadgetflix Pre-cart Address Modal">
         <xpath expr="//body" position="inside">
             <t t-set="gf_india" t-value="request.env['res.country'].sudo().search([('code', '=', 'IN')], limit=1)"/>
-            <t t-set="gf_precart_partner" t-value="request.env.user.partner_id if not request.env.user._is_public() else False"/>
+            <t t-set="gf_precart_partner"
+               t-value="request.env.user.partner_id if not request.env.user._is_public() else False"/>
             <t t-set="gf_precart_session_address" t-value="request.session.get('gf_pre_cart_address') or {}"/>
             <div id="gf-precart-address-modal" class="gf-precart-modal" hidden="hidden" aria-hidden="true">
                 <div class="gf-precart-modal__backdrop" data-gf-precart-close="1"/>
-                <div class="gf-precart-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="gf-precart-title">
+                <div class="gf-precart-modal__dialog" role="dialog" aria-modal="true"
+                     aria-labelledby="gf-precart-title">
                     <div class="gf-precart-modal__header">
-                        <button type="button" class="gf-precart-modal__close" data-gf-precart-close="1" aria-label="Close">
+                        <button type="button" class="gf-precart-modal__close" data-gf-precart-close="1"
+                                aria-label="Close">
                             <i class="fa fa-times" aria-hidden="true"/>
                         </button>
                         <h3 id="gf-precart-title">Delivery Address</h3>
@@ -136,60 +145,100 @@
                     <form class="gf-precart-address-form address_autoformat">
                         <div class="gf-precart-modal__grid">
                             <div id="div_name" class="gf-precart-field gf-precart-field--full">
-                                <label for="gf_pre_cart_name">Full Name <span class="gf-required-asterisk">*</span></label>
-                                <input id="gf_pre_cart_name" class="form-control" type="text" name="name" required="required" t-att-value="(gf_precart_partner and gf_precart_partner.name) or gf_precart_session_address.get('name') or ''"/>
+                                <label for="gf_pre_cart_name">Full Name
+                                    <span class="gf-required-asterisk">*</span>
+                                </label>
+                                <input id="gf_pre_cart_name" class="form-control" type="text" name="name"
+                                       required="required"
+                                       t-att-value="(gf_precart_partner and gf_precart_partner.name) or gf_precart_session_address.get('name') or ''"/>
                             </div>
                             <div id="div_email" class="gf-precart-field">
-                                <label for="gf_pre_cart_email">Email <span class="gf-required-asterisk">*</span></label>
-                                <input id="gf_pre_cart_email" class="form-control" type="email" name="email" required="required" t-att-value="(gf_precart_partner and gf_precart_partner.email) or gf_precart_session_address.get('email') or ''"/>
+                                <label for="gf_pre_cart_email">Email
+                                    <span class="gf-required-asterisk">*</span>
+                                </label>
+                                <input id="gf_pre_cart_email" class="form-control" type="email" name="email"
+                                       required="required"
+                                       t-att-value="(gf_precart_partner and gf_precart_partner.email) or gf_precart_session_address.get('email') or ''"/>
                             </div>
                             <div id="div_phone" class="gf-precart-field">
-                                <label for="gf_pre_cart_phone">Mobile Number <span class="gf-required-asterisk">*</span></label>
-                                <input id="gf_pre_cart_phone" class="form-control" type="tel" name="phone" required="required" t-att-value="(gf_precart_partner and (gf_precart_partner.phone or gf_precart_partner.mobile)) or gf_precart_session_address.get('phone') or ''"/>
+                                <label for="gf_pre_cart_phone">Mobile Number
+                                    <span class="gf-required-asterisk">*</span>
+                                </label>
+                                <input id="gf_pre_cart_phone" class="form-control" type="tel" name="phone"
+                                       required="required"
+                                       t-att-value="(gf_precart_partner and gf_precart_partner.phone) or gf_precart_session_address.get('phone') or ''"/>
                             </div>
                             <div id="div_street" class="gf-precart-field gf-precart-field--full">
-                                <label for="gf_pre_cart_street">House / Flat No. and Street <span class="gf-required-asterisk">*</span></label>
-                                <input id="gf_pre_cart_street" class="form-control" type="text" name="street" required="required" t-att-value="(gf_precart_partner and gf_precart_partner.street) or gf_precart_session_address.get('street') or ''"/>
+                                <label for="gf_pre_cart_street">House / Flat No. and Street
+                                    <span class="gf-required-asterisk">*</span>
+                                </label>
+                                <input id="gf_pre_cart_street" class="form-control" type="text" name="street"
+                                       required="required"
+                                       t-att-value="(gf_precart_partner and gf_precart_partner.street) or gf_precart_session_address.get('street') or ''"/>
                             </div>
                             <div id="div_street2" class="gf-precart-field gf-precart-field--full">
                                 <label for="gf_pre_cart_street2">Area / Landmark</label>
-                                <input id="gf_pre_cart_street2" class="form-control" type="text" name="street2" t-att-value="(gf_precart_partner and gf_precart_partner.street2) or gf_precart_session_address.get('street2') or ''"/>
+                                <input id="gf_pre_cart_street2" class="form-control" type="text" name="street2"
+                                       t-att-value="(gf_precart_partner and gf_precart_partner.street2) or gf_precart_session_address.get('street2') or ''"/>
                             </div>
                             <div id="div_zip" class="gf-precart-field">
-                                <label for="gf_pre_cart_zip">Pincode <span class="gf-required-asterisk">*</span></label>
-                                <input id="gf_pre_cart_zip" class="form-control" type="text" name="zip" required="required" inputmode="numeric" maxlength="6" placeholder="Enter 6-digit pincode" autocomplete="postal-code" t-att-value="(gf_precart_partner and gf_precart_partner.zip) or gf_precart_session_address.get('zip') or ''"/>
+                                <label for="gf_pre_cart_zip">Pincode
+                                    <span class="gf-required-asterisk">*</span>
+                                </label>
+                                <input id="gf_pre_cart_zip" class="form-control" type="text" name="zip"
+                                       required="required" inputmode="numeric" maxlength="6"
+                                       placeholder="Enter 6-digit pincode" autocomplete="postal-code"
+                                       t-att-value="(gf_precart_partner and gf_precart_partner.zip) or gf_precart_session_address.get('zip') or ''"/>
                                 <div class="gf-pincode-status" aria-live="polite"/>
                             </div>
                             <div id="div_village" class="gf-precart-field gf-village-field">
                                 <label for="gf_pre_cart_village">Locality / Village</label>
-                                <input id="gf_pre_cart_village_readonly" class="form-control gf-address-readonly gf-village-readonly col-form-label" type="text" readonly="readonly" hidden="hidden"/>
-                                <select id="gf_pre_cart_village" class="form-select gf-village-select" disabled="disabled">
+                                <input id="gf_pre_cart_village_readonly"
+                                       class="form-control gf-address-readonly gf-village-readonly col-form-label"
+                                       type="text" readonly="readonly" hidden="hidden"/>
+                                <select id="gf_pre_cart_village" class="form-select gf-village-select"
+                                        disabled="disabled">
                                     <option value="">Village/locality will appear after pincode</option>
                                 </select>
                             </div>
                             <div id="div_city" class="gf-precart-field">
-                                <label for="gf_pre_cart_city">City / District <span class="gf-required-asterisk">*</span></label>
-                                <input id="gf_pre_cart_city" class="form-control gf-address-readonly" type="text" name="city" readonly="readonly" required="required" t-att-value="(gf_precart_partner and gf_precart_partner.city) or gf_precart_session_address.get('city') or ''"/>
+                                <label for="gf_pre_cart_city">City / District
+                                    <span class="gf-required-asterisk">*</span>
+                                </label>
+                                <input id="gf_pre_cart_city" class="form-control gf-address-readonly" type="text"
+                                       name="city" readonly="readonly" required="required"
+                                       t-att-value="(gf_precart_partner and gf_precart_partner.city) or gf_precart_session_address.get('city') or ''"/>
                             </div>
                             <div id="div_state" class="gf-precart-field">
-                                <label for="gf_pre_cart_state">State <span class="gf-required-asterisk">*</span></label>
-                                <select id="gf_pre_cart_state" class="form-select gf-address-readonly" name="state_id" required="required" aria-readonly="true">
+                                <label for="gf_pre_cart_state">State
+                                    <span class="gf-required-asterisk">*</span>
+                                </label>
+                                <select id="gf_pre_cart_state" class="form-select gf-address-readonly" name="state_id"
+                                        required="required" aria-readonly="true">
                                     <option value="">State...</option>
                                     <t t-if="gf_india" t-foreach="gf_india.state_ids.sorted('name')" t-as="state">
-                                        <option t-att-value="state.id" t-att-selected="state.id == ((gf_precart_partner and gf_precart_partner.state_id.id) or gf_precart_session_address.get('state_id'))" t-out="state.name"/>
+                                        <option t-att-value="state.id"
+                                                t-att-selected="state.id == ((gf_precart_partner and gf_precart_partner.state_id.id) or gf_precart_session_address.get('state_id'))"
+                                                t-out="state.name"/>
                                     </t>
                                 </select>
                             </div>
                             <div id="div_country" class="gf-precart-field gf-precart-field--full">
-                                <label for="gf_pre_cart_country">Country <span class="gf-required-asterisk">*</span></label>
-                                <select id="gf_pre_cart_country" class="form-select gf-address-readonly" name="country_id" required="required" aria-readonly="true">
-                                    <option t-if="gf_india" t-att-value="gf_india.id" code="IN" selected="selected">India</option>
+                                <label for="gf_pre_cart_country">Country
+                                    <span class="gf-required-asterisk">*</span>
+                                </label>
+                                <select id="gf_pre_cart_country" class="form-select gf-address-readonly"
+                                        name="country_id" required="required" aria-readonly="true">
+                                    <option t-if="gf_india" t-att-value="gf_india.id" code="IN" selected="selected">
+                                        India
+                                    </option>
                                 </select>
                             </div>
                         </div>
                         <div class="gf-precart-modal__error" data-gf-precart-error="1" hidden="hidden"/>
                         <div class="gf-precart-modal__actions">
-                            <button type="submit" class="gf-precart-modal__submit gf-precart-modal__submit--secondary" data-gf-precart-next="cart">
+                            <button type="submit" class="gf-precart-modal__submit gf-precart-modal__submit--secondary"
+                                    data-gf-precart-next="cart">
                                 <span class="gf-precart-modal__btn-label">Continue Shopping</span>
                                 <span class="gf-precart-modal__btn-loading">
                                     <i class="fa fa-spinner fa-spin" aria-hidden="true"/>
@@ -205,6 +254,51 @@
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="gadgetflix_offer_popup" inherit_id="website.layout"
+              name="Gadgetflix One-time Offer Popup">
+        <xpath expr="//body" position="inside">
+            <t t-set="gf_current_path" t-value="request.httprequest.path"/>
+            <div t-if="gf_current_path == '/'"
+                 id="gf-home-offer-popup"
+                 class="gf-home-offer-popup"
+                 hidden="hidden"
+                 aria-hidden="true"
+                 data-gf-home-offer-popup="1">
+                <div class="gf-home-offer-popup__backdrop" data-gf-home-offer-close="1"/>
+                <div class="gf-home-offer-popup__dialog"
+                     role="dialog"
+                     aria-modal="true"
+                     aria-labelledby="gf-home-offer-popup-title">
+                    <button type="button"
+                            class="gf-home-offer-popup__close"
+                            data-gf-home-offer-close="1"
+                            aria-label="Close offer">
+                        <i class="fa fa-times" aria-hidden="true"/>
+                    </button>
+                    <div class="gf-home-offer-popup__shine" aria-hidden="true"/>
+                    <div class="gf-home-offer-popup__deal">
+                        <span>10%</span>
+                        <strong>OFF</strong>
+                    </div>
+                    <h2 id="gf-home-offer-popup-title">GadgetFlix Off Fest</h2>
+                    <p>Save on GadgetFlix anti-yellow cases with this limited discount. This offer applies only to anti-yellow case products.</p>
+                    <div class="gf-home-offer-popup__code" aria-label="Discount code">
+                        <span>Use code</span>
+                        <strong>GF10</strong>
+                    </div>
+                    <div class="gf-home-offer-popup__perks">
+                        <span><i class="fa fa-check-circle" aria-hidden="true"/> Premium picks</span>
+                        <span><i class="fa fa-check-circle" aria-hidden="true"/> Fast checkout</span>
+                    </div>
+                    <button type="button" class="gf-home-offer-popup__button" data-gf-home-offer-close="1">
+                        Claim Discount
+                        <i class="fa fa-arrow-right" aria-hidden="true"/>
+                    </button>
                 </div>
             </div>
         </xpath>
@@ -262,7 +356,8 @@
         </t>
     </template>
 
-    <template id="gadgetflix_header_search_without_categories" inherit_id="website.header_search_box_input" name="Gadgetflix Header Search Without Categories">
+    <template id="gadgetflix_header_search_without_categories" inherit_id="website.header_search_box_input"
+              name="Gadgetflix Header Search Without Categories">
         <xpath expr="//t[@t-call='website.website_search_box_input']" position="attributes">
             <attribute name="display_description.f">false</attribute>
             <attribute name="display_extra_link.f">false</attribute>
@@ -270,8 +365,10 @@
     </template>
 
     <template id="gadgetflix_header" name="Gadgetflix Header">
-        <t t-set="cart_qty" t-value="(request.session['website_sale_cart_quantity'] if 'website_sale_cart_quantity' in request.session else request.cart.cart_quantity) or 0"/>
-        <t t-set="cart_lines" t-value="request.cart.order_line.filtered(lambda line: not line.display_type and line.product_id and line.product_uom_qty) if cart_qty else []"/>
+        <t t-set="cart_qty"
+           t-value="(request.session['website_sale_cart_quantity'] if 'website_sale_cart_quantity' in request.session else request.cart.cart_quantity) or 0"/>
+        <t t-set="cart_lines"
+           t-value="request.cart.order_line.filtered(lambda line: not line.display_type and line.product_id and line.product_uom_qty) if cart_qty else []"/>
         <t t-set="cart_total" t-value="request.cart.amount_total if cart_qty else 0"/>
         <t t-set="accessory_categories"
            t-value="request.env['product.public.category'].sudo().search([('gadgetflix_show_accessories_menu', '=', True), ('has_published_products', '=', True)], order='sequence, id')"/>
@@ -282,13 +379,25 @@
                 <div class="apple-announcement-container">
                     <div class="marquee-track">
                         <t t-foreach="[1, 2, 3, 4]" t-as="i">
-                            <span class="m-item"><i class="fa fa-truck me-2" aria-hidden="true"/> Free Shipping Across India</span>
+                            <span class="m-item">
+                                <i class="fa fa-truck me-2" aria-hidden="true"/>
+                                Free Shipping Across India
+                            </span>
                             <span class="bullet">•</span>
-                            <span class="m-item"><i class="fa fa-money me-2" aria-hidden="true"/> Cash On Delivery Available</span>
+<!--                            <span class="m-item">-->
+<!--                                <i class="fa fa-money me-2" aria-hidden="true"/>-->
+<!--                                Cash On Delivery Available-->
+<!--                            </span>-->
+<!--                            <span class="bullet">•</span>-->
+                            <span class="m-item">
+                                <i class="fa fa-shield me-2" aria-hidden="true"/>
+                                Safe &amp; Secure Payments
+                            </span>
                             <span class="bullet">•</span>
-                            <span class="m-item"><i class="fa fa-shield me-2" aria-hidden="true"/> Safe &amp; Secure Payments</span>
-                            <span class="bullet">•</span>
-                            <span class="m-item"><i class="fa fa-star me-2" aria-hidden="true"/> Trusted By Thousands Of Customers</span>
+                            <span class="m-item">
+                                <i class="fa fa-star me-2" aria-hidden="true"/>
+                                Trusted By Thousands Of Customers
+                            </span>
                             <span class="bullet">•</span>
                         </t>
                     </div>
@@ -297,7 +406,8 @@
             <!-- Dummy top_menu to prevent Odoo core auto_hide_menu.js from crashing -->
             <div class="top_menu d-none"></div>
             <div class="gf-container gf-header__inner">
-                <button type="button" class="gf-icon-button gf-menu-button" data-gf-menu-toggle="1" aria-label="Open menu" aria-expanded="false">
+                <button type="button" class="gf-icon-button gf-menu-button" data-gf-menu-toggle="1"
+                        aria-label="Open menu" aria-expanded="false">
                     <i class="fa fa-bars" aria-hidden="true"></i>
                 </button>
                 <a href="/" class="gf-brand" aria-label="Home">
@@ -306,7 +416,8 @@
                 <nav class="gf-nav" aria-label="Main navigation">
                     <a href="/home">Home</a>
                     <a href="/">Anti-Yellow Case</a>
-                    <div t-if="shop_by_device_menus" class="gf-nav-dropdown gf-nav-dropdown--devices" data-gf-accessories-menu="1">
+                    <div t-if="shop_by_device_menus" class="gf-nav-dropdown gf-nav-dropdown--devices"
+                         data-gf-accessories-menu="1">
                         <button type="button"
                                 class="gf-nav-menu-button"
                                 data-gf-accessories-toggle="1"
@@ -354,31 +465,40 @@
                     </ul>
                     <div class="gf-cart-menu" data-gf-cart-preview="1">
                         <li class="o_wsale_my_cart gf-my-cart-li">
-                        <a href="/shop/cart"
-                           class="gf-icon-button gf-cart-link"
-                           aria-label="Cart"
-                           aria-haspopup="dialog"
-                           aria-expanded="false">
-                            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
-                            <sup t-attf-class="my_cart_quantity gf-cart-count #{'d-none' if cart_qty == 0 else ''}" t-out="cart_qty"/>
-                        </a>
+                            <a href="/shop/cart"
+                               class="gf-icon-button gf-cart-link"
+                               aria-label="Cart"
+                               aria-haspopup="dialog"
+                               aria-expanded="false">
+                                <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                                <sup t-attf-class="my_cart_quantity gf-cart-count #{'d-none' if cart_qty == 0 else ''}"
+                                     t-out="cart_qty"/>
+                            </a>
                         </li>
-                        <div class="gf-cart-preview" data-gf-cart-preview-panel="1" role="dialog" aria-label="Cart details">
+                        <div class="gf-cart-preview" data-gf-cart-preview-panel="1" role="dialog"
+                             aria-label="Cart details">
                             <div class="gf-cart-preview__header">
                                 <strong>Cart details</strong>
                             </div>
                             <div class="gf-cart-preview__lines" data-gf-cart-preview-lines="1">
                                 <t t-if="cart_lines">
                                     <t t-foreach="cart_lines" t-as="line">
-                                        <a class="gf-cart-preview__line" t-att-href="line.product_id.product_tmpl_id.website_url or '/shop/cart'">
+                                        <a class="gf-cart-preview__line"
+                                           t-att-href="line.product_id.product_tmpl_id.website_url or '/shop/cart'">
                                             <span class="gf-cart-preview__image">
-                                                <img t-att-src="'/web/image/product.product/%s/image_128' % line.product_id.id" t-att-alt="line.product_id.display_name" loading="lazy" decoding="async"/>
+                                                <img t-att-src="'/web/image/product.product/%s/image_128' % line.product_id.id"
+                                                     t-att-alt="line.product_id.display_name" loading="lazy"
+                                                     decoding="async"/>
                                             </span>
                                             <span class="gf-cart-preview__info">
-                                                <span class="gf-cart-preview__name" t-out="line.product_id.display_name"/>
+                                                <span class="gf-cart-preview__name"
+                                                      t-out="line.product_id.display_name"/>
                                                 <span class="gf-cart-preview__meta">
-                                                    <span>Qty <t t-out="line.product_uom_qty"/></span>
-                                                    <span t-out="line.price_total" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                                    <span>Qty
+                                                        <t t-out="line.product_uom_qty"/>
+                                                    </span>
+                                                    <span t-out="line.price_total"
+                                                          t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                                                 </span>
                                             </span>
                                         </a>
@@ -388,7 +508,8 @@
                             </div>
                             <div class="gf-cart-preview__footer">
                                 <span>Total</span>
-                                <strong data-gf-cart-preview-total="1" t-out="cart_total" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                                <strong data-gf-cart-preview-total="1" t-out="cart_total"
+                                        t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
                             </div>
                             <div class="gf-cart-preview__actions">
                                 <a href="/shop/cart">View Cart</a>
@@ -406,13 +527,20 @@
                                 aria-controls="gf_profile_panel">
                             <i class="fa fa-user" aria-hidden="true"></i>
                         </button>
-                        <div id="gf_profile_panel" class="gf-profile-panel" data-gf-profile-panel="1" role="menu" aria-label="Account menu">
+                        <div id="gf_profile_panel" class="gf-profile-panel" data-gf-profile-panel="1" role="menu"
+                             aria-label="Account menu">
                             <div class="gf-profile-panel__header">
                                 <strong>Welcome</strong>
                                 <span>Access your GadgetFlix account</span>
                             </div>
-                            <a href="/web/login" role="menuitem"><i class="fa fa-sign-in" aria-hidden="true"></i><span>Sign in</span></a>
-                            <a href="/web/signup" role="menuitem"><i class="fa fa-user-plus" aria-hidden="true"></i><span>Sign up</span></a>
+                            <a href="/web/login" role="menuitem">
+                                <i class="fa fa-sign-in" aria-hidden="true"></i>
+                                <span>Sign in</span>
+                            </a>
+                            <a href="/web/signup" role="menuitem">
+                                <i class="fa fa-user-plus" aria-hidden="true"></i>
+                                <span>Sign up</span>
+                            </a>
                         </div>
                     </div>
                     <div t-else="" class="gf-profile-menu" data-gf-profile-menu="1">
@@ -425,17 +553,37 @@
                                 aria-controls="gf_profile_panel">
                             <i class="fa fa-user" aria-hidden="true"></i>
                         </button>
-                        <div id="gf_profile_panel" class="gf-profile-panel" data-gf-profile-panel="1" role="menu" aria-label="Account menu">
+                        <div id="gf_profile_panel" class="gf-profile-panel" data-gf-profile-panel="1" role="menu"
+                             aria-label="Account menu">
                             <div class="gf-profile-panel__header">
                                 <strong t-out="request.env.user.name"/>
-                                <span t-if="request.env.user.partner_id.email" t-out="request.env.user.partner_id.email"/>
+                                <span t-if="request.env.user.partner_id.email"
+                                      t-out="request.env.user.partner_id.email"/>
                             </div>
-                            <a href="/my/account" role="menuitem"><i class="fa fa-user" aria-hidden="true"></i><span>Profile</span></a>
-                            <a href="/my/orders" role="menuitem"><i class="fa fa-shopping-bag" aria-hidden="true"></i><span>Orders</span></a>
-                            <a href="/my/invoices?filterby=invoices" role="menuitem"><i class="fa fa-file-text-o" aria-hidden="true"></i><span>Invoices</span></a>
-                            <a href="/my/addresses" role="menuitem"><i class="fa fa-map-marker" aria-hidden="true"></i><span>Addresses</span></a>
-                            <a href="/my/security" role="menuitem"><i class="fa fa-lock" aria-hidden="true"></i><span>Security</span></a>
-                            <a href="/web/session/logout?redirect=/" role="menuitem"><i class="fa fa-sign-out" aria-hidden="true"></i><span>Sign out</span></a>
+                            <a href="/my/account" role="menuitem">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                                <span>Profile</span>
+                            </a>
+                            <a href="/my/orders" role="menuitem">
+                                <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                                <span>Orders</span>
+                            </a>
+                            <a href="/my/invoices?filterby=invoices" role="menuitem">
+                                <i class="fa fa-file-text-o" aria-hidden="true"></i>
+                                <span>Invoices</span>
+                            </a>
+                            <a href="/my/addresses" role="menuitem">
+                                <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                <span>Addresses</span>
+                            </a>
+                            <a href="/my/security" role="menuitem">
+                                <i class="fa fa-lock" aria-hidden="true"></i>
+                                <span>Security</span>
+                            </a>
+                            <a href="/web/session/logout?redirect=/" role="menuitem">
+                                <i class="fa fa-sign-out" aria-hidden="true"></i>
+                                <span>Sign out</span>
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -444,7 +592,8 @@
                 <div class="gf-container gf-mobile-panel__inner">
                     <a href="/home">Home</a>
                     <a href="/">Anti-Yellow Case</a>
-                    <div t-if="shop_by_device_menus" class="gf-mobile-accessories gf-mobile-devices" data-gf-mobile-accessories-menu="1">
+                    <div t-if="shop_by_device_menus" class="gf-mobile-accessories gf-mobile-devices"
+                         data-gf-mobile-accessories-menu="1">
                         <button type="button"
                                 class="gf-mobile-accessories__toggle"
                                 data-gf-mobile-accessories-toggle="1"
@@ -488,10 +637,16 @@
                         </a>
                         <p>Mobile accessories for protection, charging, storage, and everyday use across India.</p>
                         <div class="gf-socials" aria-label="Social links">
-                            <a t-att-href="website.company_id.social_facebook or '#'" target="_blank" rel="noopener" aria-label="Facebook"><i class="fa fa-facebook" aria-hidden="true"></i></a>
-                            <a t-att-href="website.company_id.social_instagram or '#'" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa fa-instagram" aria-hidden="true"></i></a>
-<!--                            <a t-att-href="website.company_id.social_linkedin or '#'" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa fa-linkedin" aria-hidden="true"></i></a>-->
-<!--                            <a t-att-href="website.company_id.social_twitter or '#'" target="_blank" rel="noopener" aria-label="X"><i class="fa fa-twitter" aria-hidden="true"></i></a>-->
+                            <a t-att-href="website.company_id.social_facebook or '#'" target="_blank" rel="noopener"
+                               aria-label="Facebook">
+                                <i class="fa fa-facebook" aria-hidden="true"></i>
+                            </a>
+                            <a t-att-href="website.company_id.social_instagram or '#'" target="_blank" rel="noopener"
+                               aria-label="Instagram">
+                                <i class="fa fa-instagram" aria-hidden="true"></i>
+                            </a>
+                            <!--                            <a t-att-href="website.company_id.social_linkedin or '#'" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa fa-linkedin" aria-hidden="true"></i></a>-->
+                            <!--                            <a t-att-href="website.company_id.social_twitter or '#'" target="_blank" rel="noopener" aria-label="X"><i class="fa fa-twitter" aria-hidden="true"></i></a>-->
                         </div>
                     </div>
                     <div class="gf-footer__links">
@@ -517,7 +672,9 @@
                             </div>
                             <div class="js_subscribe_wrap">
                                 <label class="visually-hidden" for="gf_footer_newsletter_email">Email</label>
-                                <input id="gf_footer_newsletter_email" class="s_newsletter_subscribe_form_input js_subscribe_value form-control" type="email" name="email" placeholder="Email address"/>
+                                <input id="gf_footer_newsletter_email"
+                                       class="s_newsletter_subscribe_form_input js_subscribe_value form-control"
+                                       type="email" name="email" placeholder="Email address"/>
                                 <a role="button" href="#" class="js_subscribe_btn o_submit">Subscribe</a>
                             </div>
                         </div>
@@ -535,7 +692,8 @@
         </footer>
     </template>
 
-    <template id="gadgetflix_global_layout" inherit_id="website.layout" name="Gadgetflix Global Header Footer" priority="90">
+    <template id="gadgetflix_global_layout" inherit_id="website.layout" name="Gadgetflix Global Header Footer"
+              priority="90">
         <xpath expr="//header" position="replace">
             <t t-if="not no_header" t-call="gadgetflix_website.gadgetflix_header"/>
         </xpath>
@@ -555,15 +713,19 @@
     </template>
 
     <template id="gadgetflix_product_card" name="Gadgetflix Product Card">
-        <t t-set="price_value" t-value="(product_prices.get(product.id, {}) or {'price_reduce': product.list_price}).get('price_reduce') if product_prices else product.list_price"/>
+        <t t-set="price_value"
+           t-value="(product_prices.get(product.id, {}) or {'price_reduce': product.list_price}).get('price_reduce') if product_prices else product.list_price"/>
         <a class="gf-product-card" t-att-href="product.website_url" t-att-title="product.name">
             <span class="gf-product-card__image">
-                <img t-if="product.image_1920" t-att-src="'/web/image/product.template/%s/image_512' % product.id" t-att-alt="product.name" loading="lazy" decoding="async"/>
-                <img t-else="" src="/gadgetflix_website/static/src/img/category_dummy.svg" t-att-alt="product.name" loading="lazy" decoding="async"/>
+                <img t-if="product.image_1920" t-att-src="'/web/image/product.template/%s/image_512' % product.id"
+                     t-att-alt="product.name" loading="lazy" decoding="async"/>
+                <img t-else="" src="/gadgetflix_website/static/src/img/category_dummy.svg" t-att-alt="product.name"
+                     loading="lazy" decoding="async"/>
             </span>
             <span class="gf-product-card__meta">
                 <span class="gf-product-card__title" t-field="product.name"/>
-                <span class="gf-product-card__price" t-out="price_value" t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
+                <span class="gf-product-card__price" t-out="price_value"
+                      t-options="{'widget': 'monetary', 'display_currency': website.currency_id}"/>
             </span>
         </a>
     </template>
@@ -571,14 +733,22 @@
     <template id="gadgetflix_category_card" name="Gadgetflix Category Card">
         <a class="gf-category-card" t-attf-href="/shop/category/#{slug(category)}" t-att-title="category.name">
             <span class="gf-category-card__image">
-                <img t-if="category.cover_image" t-att-src="'/web/image/product.public.category/%s/cover_image' % category.id" t-att-alt="category.name" loading="lazy" decoding="async"/>
-                <img t-elif="category.image_1920" t-att-src="'/web/image/product.public.category/%s/image_1024' % category.id" t-att-alt="category.name" loading="lazy" decoding="async"/>
-                <img t-else="" src="/gadgetflix_website/static/src/img/category_dummy.svg" t-att-alt="category.name" loading="lazy" decoding="async"/>
+                <img t-if="category.cover_image"
+                     t-att-src="'/web/image/product.public.category/%s/cover_image' % category.id"
+                     t-att-alt="category.name" loading="lazy" decoding="async"/>
+                <img t-elif="category.image_1920"
+                     t-att-src="'/web/image/product.public.category/%s/image_1024' % category.id"
+                     t-att-alt="category.name" loading="lazy" decoding="async"/>
+                <img t-else="" src="/gadgetflix_website/static/src/img/category_dummy.svg" t-att-alt="category.name"
+                     loading="lazy" decoding="async"/>
             </span>
             <span class="gf-category-card__content">
                 <span class="gf-category-card__title" t-field="category.name"/>
-                <span class="gf-category-card__description" t-if="category.website_description" t-field="category.website_description"/>
-                <span class="gf-category-card__description" t-else="">Shop practical accessories for phones, watches, laptops, and daily carry.</span>
+                <span class="gf-category-card__description" t-if="category.website_description"
+                      t-field="category.website_description"/>
+                <span class="gf-category-card__description" t-else="">Shop practical accessories for phones, watches,
+                    laptops, and daily carry.
+                </span>
             </span>
         </a>
     </template>
@@ -588,9 +758,14 @@
             <div class="gf-container">
                 <div class="gf-newsletter__panel">
                     <div>
-                        <span class="gf-newsletter__badge mb-3"><i class="fa fa-envelope-o me-2"></i> Exclusive Updates</span>
+                        <span class="gf-newsletter__badge mb-3">
+                            <i class="fa fa-envelope-o me-2"></i>
+                            Exclusive Updates
+                        </span>
                         <h2>Get new accessory drops and offers</h2>
-                        <p>Subscribe for updates on mobile cases, anti-yellow covers, screen protectors, chargers, cables, laptop bags, wallets, and watch accessories.</p>
+                        <p>Subscribe for updates on mobile cases, anti-yellow covers, screen protectors, chargers,
+                            cables, laptop bags, wallets, and watch accessories.
+                        </p>
                     </div>
                     <div class="gf-newsletter__form s_newsletter_subscribe_form s_newsletter_list js_subscribe"
                          data-vxml="001"
@@ -602,7 +777,9 @@
                         </div>
                         <div class="js_subscribe_wrap">
                             <label class="visually-hidden" for="gf_newsletter_email">Email</label>
-                            <input id="gf_newsletter_email" class="s_newsletter_subscribe_form_input js_subscribe_value form-control" type="email" name="email" placeholder="Email address"/>
+                            <input id="gf_newsletter_email"
+                                   class="s_newsletter_subscribe_form_input js_subscribe_value form-control"
+                                   type="email" name="email" placeholder="Email address"/>
                             <a role="button" href="#" class="js_subscribe_btn o_submit">Subscribe</a>
                         </div>
                     </div>
@@ -617,9 +794,12 @@
         </xpath>
         <xpath expr="//h1[hasclass('o_wsale_shop_title')]" position="replace">
             <h1 class="mt-3 o_wsale_shop_title gf-shop-title" t-if="not category and not search">Premium Picks</h1>
-            <p class="gf-shop-subtitle" t-if="not category and not search">Explore stylish, durable, and premium mobile accessories made for protection, performance, and everyday convenience.</p>
+            <p class="gf-shop-subtitle" t-if="not category and not search">Explore stylish, durable, and premium mobile
+                accessories made for protection, performance, and everyday convenience.
+            </p>
         </xpath>
-        <xpath expr="//div[contains(@t-attf-class, 'o_wsale_products_header_search_form_container')]" position="replace"/>
+        <xpath expr="//div[contains(@t-attf-class, 'o_wsale_products_header_search_form_container')]"
+               position="replace"/>
         <xpath expr="//a[@data-bs-target='#o_wsale_search_modal']" position="replace"/>
         <xpath expr="//div[@id='o_wsale_search_modal']" position="replace"/>
         <xpath expr="//t[@t-call='website_sale.pricelist_list']" position="replace"/>
@@ -654,9 +834,14 @@
                            t-attf-class="gf-shop-tab #{category and c.id == category.id and 'active' or ''}"
                            t-att-aria-label="c.name">
                             <span class="gf-shop-tab__image">
-                                <img t-if="c.cover_image" t-att-src="'/web/image/product.public.category/%s/cover_image' % c.id" t-att-alt="c.name" loading="lazy" decoding="async"/>
-                                <img t-elif="c.image_1920" t-att-src="'/web/image/product.public.category/%s/image_128' % c.id" t-att-alt="c.name" loading="lazy" decoding="async"/>
-                                <img t-else="" src="/gadgetflix_website/static/src/img/category_dummy.svg" t-att-alt="c.name" loading="lazy" decoding="async"/>
+                                <img t-if="c.cover_image"
+                                     t-att-src="'/web/image/product.public.category/%s/cover_image' % c.id"
+                                     t-att-alt="c.name" loading="lazy" decoding="async"/>
+                                <img t-elif="c.image_1920"
+                                     t-att-src="'/web/image/product.public.category/%s/image_128' % c.id"
+                                     t-att-alt="c.name" loading="lazy" decoding="async"/>
+                                <img t-else="" src="/gadgetflix_website/static/src/img/category_dummy.svg"
+                                     t-att-alt="c.name" loading="lazy" decoding="async"/>
                             </span>
                             <span t-field="c.name"/>
                         </a>
@@ -666,24 +851,26 @@
         </xpath>
     </template>
 
-    <template id="gadgetflix_product_description" inherit_id="website_sale.product_title" name="Gadgetflix Product Description">
+    <template id="gadgetflix_product_description" inherit_id="website_sale.product_title"
+              name="Gadgetflix Product Description">
         <xpath expr="//div[@t-field='product.description_ecommerce']" position="replace">
             <div class="gf-product-description" data-gf-product-description="1">
                 <div
-                    t-field="product.description_ecommerce"
-                    class="oe_structure mb-2 text-muted gf-product-description__content is-collapsed"
-                    data-gf-product-description-content="1"
-                    placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."
+                        t-field="product.description_ecommerce"
+                        class="oe_structure mb-2 text-muted gf-product-description__content is-collapsed"
+                        data-gf-product-description-content="1"
+                        placeholder="A detailed, formatted description to promote your product on this page. Use '/' to discover more features."
                 />
                 <button
-                    type="button"
-                    class="gf-product-description__toggle"
-                    data-gf-product-description-toggle="1"
-                    hidden="hidden"
-                    aria-expanded="false"
-                    data-more-label="See more"
-                    data-less-label="See less"
-                >See more</button>
+                        type="button"
+                        class="gf-product-description__toggle"
+                        data-gf-product-description-toggle="1"
+                        hidden="hidden"
+                        aria-expanded="false"
+                        data-more-label="See more"
+                        data-less-label="See less"
+                >See more
+                </button>
             </div>
         </xpath>
     </template>
@@ -696,7 +883,9 @@
                         <h1>Shop Smart. Protect Better. Look Premium.</h1>
                         <div class="row">
                             <div class="col-lg-6 col-12">
-                                <p>Discover modern mobile accessories made for daily protection and stylish use — including anti-yellow cases, tempered glass, chargers, cables, power banks, laptop bags, wallets, and watch accessories for every gadget lover.
+                                <p>Discover modern mobile accessories made for daily protection and stylish use —
+                                    including anti-yellow cases, tempered glass, chargers, cables, power banks, laptop
+                                    bags, wallets, and watch accessories for every gadget lover.
                                 </p>
                             </div>
                             <div class="col-lg-6 col-12 align-content-end">
@@ -713,14 +902,17 @@
                 <div class="gf-container">
                     <div class="gf-section__heading">
                         <h2>Featured Products</h2>
-                        <p>Stay ahead with our latest and most popular tech accessories, built for modern lifestyles.</p>
+                        <p>Stay ahead with our latest and most popular tech accessories, built for modern lifestyles.
+                        </p>
                     </div>
                     <div t-if="featured_products" class="gf-scroll-area">
                         <div class="gf-scroll-controls" aria-label="Scroll featured products">
-                            <button type="button" class="gf-scroll-button" data-gf-scroll="prev" aria-label="Previous featured products">
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="prev"
+                                    aria-label="Previous featured products">
                                 <i class="fa fa-angle-left" aria-hidden="true"></i>
                             </button>
-                            <button type="button" class="gf-scroll-button" data-gf-scroll="next" aria-label="Next featured products">
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="next"
+                                    aria-label="Next featured products">
                                 <i class="fa fa-angle-right" aria-hidden="true"></i>
                             </button>
                         </div>
@@ -738,7 +930,9 @@
                 <div class="gf-container">
                     <div class="gf-section__heading">
                         <h2>Shop by Your Need</h2>
-                        <p>Discover categories made to help you quickly choose the best accessories for protection, style, charging, and everyday use.</p>
+                        <p>Discover categories made to help you quickly choose the best accessories for protection,
+                            style, charging, and everyday use.
+                        </p>
                     </div>
                     <div class="gf-category-layout">
                         <article class="gf-category-intro gf-products-motion-card">
@@ -790,7 +984,9 @@
                                     <strong>Shop faster</strong>
                                     <span>Find every product type from the main catalog.</span>
                                 </span>
-                                <a href="/shop" class="gf-button gf-button--light">Browse Products <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                                <a href="/shop" class="gf-button gf-button--light">Browse Products
+                                    <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                                </a>
                             </div>
                         </article>
                         <div t-if="website_categories" class="gf-category-grid">
@@ -808,16 +1004,22 @@
                     <div class="gf-section__heading gf-section__heading--split">
                         <div>
                             <h2>New arrivals</h2>
-                            <p>Explore the latest accessories added to our store — fresh designs, upgraded protection, and smart tech essentials for your everyday use.</p>
+                            <p>Explore the latest accessories added to our store — fresh designs, upgraded protection,
+                                and smart tech essentials for your everyday use.
+                            </p>
                         </div>
-                        <a href="/shop" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                        <a href="/shop" class="gf-button gf-button--light">View shop
+                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        </a>
                     </div>
                     <div t-if="new_arrival_products" class="gf-scroll-area">
                         <div class="gf-scroll-controls" aria-label="Scroll new arrivals">
-                            <button type="button" class="gf-scroll-button" data-gf-scroll="prev" aria-label="Previous new arrivals">
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="prev"
+                                    aria-label="Previous new arrivals">
                                 <i class="fa fa-angle-left" aria-hidden="true"></i>
                             </button>
-                            <button type="button" class="gf-scroll-button" data-gf-scroll="next" aria-label="Next new arrivals">
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="next"
+                                    aria-label="Next new arrivals">
                                 <i class="fa fa-angle-right" aria-hidden="true"></i>
                             </button>
                         </div>
@@ -834,7 +1036,6 @@
     </template>
 
 
-
     <template id="about_page" name="Gadgetflix About Page">
         <t t-call="gadgetflix_website.gadgetflix_page_layout">
             <section class="gf-page-hero gf-about-hero">
@@ -842,8 +1043,12 @@
                     <div>
                         <span class="gf-eyebrow">About us</span>
                         <h1>Accessories that protect, charge, and travel with you.</h1>
-                        <p>Gadgetflix brings practical mobile accessories to shoppers across India, with accessories selected for daily use, device protection, charging, and carry needs.</p>
-                        <a href="/shop" class="gf-button">Explore Products <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                        <p>Gadgetflix brings practical mobile accessories to shoppers across India, with accessories
+                            selected for daily use, device protection, charging, and carry needs.
+                        </p>
+                        <a href="/shop" class="gf-button">Explore Products
+                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        </a>
                     </div>
                     <div class="gf-about-snapshot">
                         <div>
@@ -865,19 +1070,31 @@
                 <div class="gf-container">
                     <div class="gf-about-story">
                         <article>
-                            <span class="gf-story-icon"><i class="fa fa-cube" aria-hidden="true"></i></span>
+                            <span class="gf-story-icon">
+                                <i class="fa fa-cube" aria-hidden="true"></i>
+                            </span>
                             <h2>Carefully organized</h2>
-                            <p>Cases, screen protectors, chargers, cables, bags, wallets, and watch accessories are arranged so customers can shop faster.</p>
+                            <p>Cases, screen protectors, chargers, cables, bags, wallets, and watch accessories are
+                                arranged so customers can shop faster.
+                            </p>
                         </article>
                         <article>
-                            <span class="gf-story-icon"><i class="fa fa-shield" aria-hidden="true"></i></span>
+                            <span class="gf-story-icon">
+                                <i class="fa fa-shield" aria-hidden="true"></i>
+                            </span>
                             <h2>Practical selection</h2>
-                            <p>Every product category is focused on accessories people use every day: protection, power, storage, and style.</p>
+                            <p>Every product category is focused on accessories people use every day: protection, power,
+                                storage, and style.
+                            </p>
                         </article>
                         <article>
-                            <span class="gf-story-icon"><i class="fa fa-refresh" aria-hidden="true"></i></span>
+                            <span class="gf-story-icon">
+                                <i class="fa fa-refresh" aria-hidden="true"></i>
+                            </span>
                             <h2>Fresh experience</h2>
-                            <p>New arrivals and featured picks keep the store updated with current phone models, useful accessories, and seasonal demand.</p>
+                            <p>New arrivals and featured picks keep the store updated with current phone models, useful
+                                accessories, and seasonal demand.
+                            </p>
                         </article>
                     </div>
                 </div>
@@ -887,16 +1104,22 @@
                     <div class="gf-section__heading gf-section__heading--split">
                         <div>
                             <h2>Selected accessories</h2>
-                            <p>A quick preview of cases, chargers, bags, wallets, and protection accessories from the current collection.</p>
+                            <p>A quick preview of cases, chargers, bags, wallets, and protection accessories from the
+                                current collection.
+                            </p>
                         </div>
-                        <a href="/shop" class="gf-button gf-button--light">View shop <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                        <a href="/shop" class="gf-button gf-button--light">View shop
+                            <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                        </a>
                     </div>
                     <div t-if="about_products" class="gf-scroll-area">
                         <div class="gf-scroll-controls" aria-label="Scroll accessories">
-                            <button type="button" class="gf-scroll-button" data-gf-scroll="prev" aria-label="Previous accessories">
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="prev"
+                                    aria-label="Previous accessories">
                                 <i class="fa fa-angle-left" aria-hidden="true"></i>
                             </button>
-                            <button type="button" class="gf-scroll-button" data-gf-scroll="next" aria-label="Next accessories">
+                            <button type="button" class="gf-scroll-button" data-gf-scroll="next"
+                                    aria-label="Next accessories">
                                 <i class="fa fa-angle-right" aria-hidden="true"></i>
                             </button>
                         </div>
@@ -906,7 +1129,9 @@
                             </t>
                         </div>
                     </div>
-                    <p t-else="" class="gf-empty">Select accessories for the About page from each product's Website Sections settings.</p>
+                    <p t-else="" class="gf-empty">Select accessories for the About page from each product's Website
+                        Sections settings.
+                    </p>
                 </div>
             </section>
         </t>
@@ -920,9 +1145,13 @@
                     <div>
                         <span class="gf-eyebrow">Contact us</span>
                         <h1>Talk to our accessory team.</h1>
-                        <p>Reach us for product fit, order support, bulk requirements, partnerships, or store information.</p>
+                        <p>Reach us for product fit, order support, bulk requirements, partnerships, or store
+                            information.
+                        </p>
                         <div class="gf-contact-actions">
-                            <a href="/contactus" class="gf-button">Send message <i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+                            <a href="/contactus" class="gf-button">Send message
+                                <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                            </a>
                             <a href="/shop" class="gf-button gf-button--light">Browse Products</a>
                         </div>
                     </div>
@@ -947,19 +1176,31 @@
             <section class="gf-section gf-contact-band">
                 <div class="gf-container gf-contact-grid">
                     <article>
-                        <span class="gf-story-icon"><i class="fa fa-shopping-bag" aria-hidden="true"></i></span>
+                        <span class="gf-story-icon">
+                            <i class="fa fa-shopping-bag" aria-hidden="true"></i>
+                        </span>
                         <h2>Accessory support</h2>
-                        <p>Ask about phone model fit, case compatibility, screen protector options, charger type, cable length, or watch strap sizing.</p>
+                        <p>Ask about phone model fit, case compatibility, screen protector options, charger type, cable
+                            length, or watch strap sizing.
+                        </p>
                     </article>
                     <article>
-                        <span class="gf-story-icon"><i class="fa fa-truck" aria-hidden="true"></i></span>
+                        <span class="gf-story-icon">
+                            <i class="fa fa-truck" aria-hidden="true"></i>
+                        </span>
                         <h2>Order assistance</h2>
-                        <p>Get help with cart, checkout, delivery questions, invoices, returns, refunds, and post-purchase communication.</p>
+                        <p>Get help with cart, checkout, delivery questions, invoices, returns, refunds, and
+                            post-purchase communication.
+                        </p>
                     </article>
                     <article>
-                        <span class="gf-story-icon"><i class="fa fa-handshake-o" aria-hidden="true"></i></span>
+                        <span class="gf-story-icon">
+                            <i class="fa fa-handshake-o" aria-hidden="true"></i>
+                        </span>
                         <h2>Business inquiries</h2>
-                        <p>Connect with the team for collaborations, bulk accessory requirements, reseller inquiries, or custom catalog discussions.</p>
+                        <p>Connect with the team for collaborations, bulk accessory requirements, reseller inquiries, or
+                            custom catalog discussions.
+                        </p>
                     </article>
                 </div>
             </section>
@@ -975,7 +1216,8 @@
                     <div class="gf-warranty__card-interactive">
                         <div class="gf-warranty__card-inner">
                             <div class="gf-warranty__badge-premium">
-                                <span class="premium-sparkle">✦</span> OFFICIAL GUARANTEE
+                                <span class="premium-sparkle">✦</span>
+                                OFFICIAL GUARANTEE
                             </div>
                             <div class="gf-warranty__card-title">
                                 GADGETFLIX
@@ -986,26 +1228,33 @@
                             </div>
                             <div class="gf-warranty__card-divider"></div>
                             <div class="gf-warranty__card-hologram">
-                                <img src="/gadgetflix_website/static/src/img/trust_seal.png" alt="Anti-Yellow" loading="lazy" decoding="async" height="80" width="100"/>
+                                <img src="/gadgetflix_website/static/src/img/trust_seal.png" alt="Anti-Yellow"
+                                     loading="lazy" decoding="async" height="80" width="100"/>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Right: Info Panel & Claim Process Timeline -->
                     <div class="gf-warranty__info-panel">
                         <div class="gf-warranty__badge-row">
                             <svg class="gf-warranty__brand-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                                <path d="M7 15.5c-1.5 0-2.7-1.2-2.7-2.7S5.5 10 7 10h10c1.5 0 2.7 1.2 2.7 2.8s-1.2 2.7-2.7 2.7H7Z" stroke="currentColor" stroke-width="1.5"/>
-                                <path d="M8 10c.2-2.2 1.9-4 4-4s3.8 1.8 4 4M9 16l-2 3M15 16l2 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M7 15.5c-1.5 0-2.7-1.2-2.7-2.7S5.5 10 7 10h10c1.5 0 2.7 1.2 2.7 2.8s-1.2 2.7-2.7 2.7H7Z"
+                                      stroke="currentColor" stroke-width="1.5"/>
+                                <path d="M8 10c.2-2.2 1.9-4 4-4s3.8 1.8 4 4M9 16l-2 3M15 16l2 3" stroke="currentColor"
+                                      stroke-width="1.5" stroke-linecap="round"/>
                             </svg>
                             <span>Official Warranty Policy</span>
                         </div>
-                        
+
                         <div class="gf-warranty__heading">
-                            <h2>Full Lifetime Warranty for <span class="gf-warranty__accent">Yellowing.</span></h2>
-                            <p>We back every Gadgetflix anti-yellow case with an official warranty. If your case ever develops a yellow tint, we'll replace it with a brand-new one. No hassle, no receipts.</p>
+                            <h2>Full Lifetime Warranty for
+                                <span class="gf-warranty__accent">Yellowing.</span>
+                            </h2>
+                            <p>We back every Gadgetflix anti-yellow case with an official warranty. If your case ever
+                                develops a yellow tint, we'll replace it with a brand-new one. No hassle, no receipts.
+                            </p>
                         </div>
-                        
+
                         <!-- Claim Steps Timeline -->
                         <div class="gf-warranty__timeline">
                             <div class="gf-warranty__step">
@@ -1059,7 +1308,9 @@
                 </div>
 
                 <div class="gf-warranty__disclaimer text-center">
-                    <p>This warranty applies exclusively to Gadgetflix anti-yellow cases. Terms and conditions apply. One free replacement per purchase.</p>
+                    <p>This warranty applies exclusively to Gadgetflix anti-yellow cases. Terms and conditions apply.
+                        One free replacement per purchase.
+                    </p>
                 </div>
             </div>
         </section>
@@ -1076,7 +1327,8 @@
 
     <!-- Step 2 heading in the wizard breadcrumb:
          Hide the separate "Payment" step; keep only Cart + Checkout -->
-    <template id="gf_wizard_checkout_2step" inherit_id="website_sale.wizard_checkout" name="Gadgetflix – 2-step checkout wizard">
+    <template id="gf_wizard_checkout_2step" inherit_id="website_sale.wizard_checkout"
+              name="Gadgetflix – 2-step checkout wizard">
         <!-- Replace the step iterator with a filtered 2-step view:
              only show steps with sequence <= 250 (Cart=0, Checkout=250).
              The Payment step (sequence=999) is absorbed into Checkout. -->
@@ -1097,13 +1349,15 @@
         <!-- After the address/delivery block, inject payment form when gf_combined_checkout flag is set -->
         <xpath expr="//div[@id='shop_checkout']" position="after">
             <t t-if="gf_combined_checkout">
-                
+
                 <!-- ── Payment form (inline) ───────────────────── -->
                 <div id="gf_payment_section" class="mb-4 mt-4">
                     <t t-if="errors">
                         <t t-foreach="errors" t-as="error">
                             <div class="alert alert-danger" t-if="error" role="alert">
-                                <h6><t t-out="error[0]"/></h6>
+                                <h6>
+                                    <t t-out="error[0]"/>
+                                </h6>
                                 <t t-out="error[1]"/>
                             </div>
                         </t>
@@ -1112,22 +1366,48 @@
                     <t t-if="not errors">
                         <t t-if="website_sale_order and website_sale_order.amount_total">
                             <h5 class="mb-3">Payment</h5>
-                            
+
                             <!-- ── Hide Native Odoo Progression Buttons ──────────────── -->
                             <style>
-                                /* Hide the native "Confirm >" link buttons in the Order Summary / sticky mobile footer */
+                                /* Hide the native "Confirm >" link buttons in the Order Summary / sticky mobile footer
+                                */
                                 a[name="website_sale_main_button"],
                                 .o_cart_summary a.btn-primary[href^="/shop/"],
                                 .o_cart_summary_offcanvas a.btn-primary[href^="/shop/"],
                                 .navigation_buttons a.btn-primary[href^="/shop/"],
                                 .o_website_sale_checkout_layout a.btn-primary[href="/shop/confirm_order"],
                                 .o_website_sale_checkout_layout a.btn-primary[href="/shop/payment"] {
-                                    display: none !important;
+                                display: none !important;
                                 }
                             </style>
 
                             <div id="payment_method" class="o_not_editable">
                                 <t t-call="payment.form"/>
+                            </div>
+
+                            <div class="gf-mobile-checkout-coupon d-lg-none mt-3">
+                                <div class="gf-mobile-checkout-coupon__title">Apply coupon code</div>
+                                <div class="coupon_form">
+                                    <t t-call="website_sale.coupon_form"/>
+                                </div>
+                                <div class="gf-mobile-checkout-coupon__messages" data-gf-mobile-coupon-messages="1">
+                                    <t t-if="request.params.get('code_not_available')">
+                                        <div class="alert alert-danger text-start small mt-2 mb-0" role="alert">
+                                            Invalid or expired promo code.
+                                        </div>
+                                    </t>
+                                    <t t-if="website_sale_order.get_promo_code_error(delete=False)">
+                                        <div class="alert alert-danger text-start small mt-2 mb-0" role="alert">
+                                            <t t-out="website_sale_order.get_promo_code_error()"/>
+                                        </div>
+                                    </t>
+                                    <t t-if="website_sale_order.get_promo_code_success_message(delete=False)">
+                                        <div class="alert alert-success text-start small mt-2 mb-0" role="alert">
+                                            You have successfully applied the following code:
+                                            <strong t-out="website_sale_order.get_promo_code_success_message()"/>
+                                        </div>
+                                    </t>
+                                </div>
                             </div>
                         </t>
                         <t t-else="">
@@ -1157,7 +1437,8 @@
     </template>
 
     <!-- Step wizard: rename the checkout step from "Address" to "Payment" -->
-    <template id="gf_step_wizard_payment_rename" inherit_id="website.step_wizard" name="Gadgetflix – Rename checkout step to Payment">
+    <template id="gf_step_wizard_payment_rename" inherit_id="website.step_wizard"
+              name="Gadgetflix – Rename checkout step to Payment">
         <xpath expr="//div[@name='step_name']//span[@t-field='step.name']" position="replace">
             <t t-out="'Payment' if step.step_href == '/shop/checkout' else step.name"/>
         </xpath>
@@ -1169,22 +1450,32 @@
         </xpath>
     </template>
 
+    <template id="gf_hide_mobile_summary_coupon_link" inherit_id="website_sale.checkout_layout"
+              name="Gadgetflix – Hide Mobile Summary Coupon Link">
+        <xpath expr="//div[@id='o_cart_summary_offcanvas']//div[hasclass('offcanvas-footer')]/a[@href='/shop/cart' and hasclass('btn-link')]" position="replace"/>
+    </template>
+
     <!-- Hide promo form on Cart page; show only on Checkout/Payment page -->
-    <template id="gf_hide_promo_on_cart" inherit_id="website_sale.reduction_code" name="Gadgetflix – Hide Promo Code on Cart Page">
+    <template id="gf_hide_promo_on_cart" inherit_id="website_sale.reduction_code"
+              name="Gadgetflix – Hide Promo Code on Cart Page">
         <xpath expr="//tr[@t-if='not hide_promotions']" position="attributes">
-            <attribute name="t-if">not hide_promotions and not request.httprequest.path.startswith('/shop/cart')</attribute>
+            <attribute name="t-if">not hide_promotions and not request.httprequest.path.startswith('/shop/cart')
+            </attribute>
         </xpath>
     </template>
 
     <!-- Hide loyalty/gift card forms on Cart page; show only on Checkout/Payment page -->
-    <template id="gf_hide_loyalty_on_cart" inherit_id="website_sale_loyalty.modify_code_form" name="Gadgetflix – Hide Loyalty/Coupon on Cart Page">
-        <xpath expr="//tr[contains(@class, 'oe_website_sale_gift_card')]" position="attributes">
-            <attribute name="t-if">not hide_promotions and not request.httprequest.path.startswith('/shop/cart')</attribute>
+    <template id="gf_hide_loyalty_on_cart" inherit_id="website_sale_loyalty.modify_code_form"
+              name="Gadgetflix – Hide Loyalty/Coupon on Cart Page">
+        <xpath expr="//tr[hasclass('oe_website_sale_gift_card')]" position="attributes">
+            <attribute name="t-if">not hide_promotions and not request.httprequest.path.startswith('/shop/cart')
+            </attribute>
         </xpath>
     </template>
 
     <!-- Prevent claim reward button from redirecting to cart page when clicked on Checkout/Payment page -->
-    <template id="gf_claim_reward_redirect" inherit_id="website_sale_loyalty.modify_code_form" name="Gadgetflix – Claim Reward Redirect Fix">
+    <template id="gf_claim_reward_redirect" inherit_id="website_sale_loyalty.modify_code_form"
+              name="Gadgetflix – Claim Reward Redirect Fix">
         <xpath expr="//form[@name='claim_reward']" position="inside">
             <input type="hidden" name="r" t-att-value="request.httprequest.path"/>
         </xpath>
@@ -1203,11 +1494,14 @@
             </t>
         </xpath>
         <xpath expr="//div[@name='o_payment_status_alert']" position="attributes">
-            <attribute name="t-attf-class">{{o_payment_status_alert_class}} #{'d-none' if is_processing and alert_style != 'danger' else ''}</attribute>
+            <attribute name="t-attf-class">{{o_payment_status_alert_class}}
+                #{'d-none' if is_processing and alert_style != 'danger' else ''}
+            </attribute>
         </xpath>
     </template>
 
-    <template id="gf_carousel_product_indicators_bottom" inherit_id="website_sale.carousel_product_indicators_bottom" name="Gadgetflix – Carousel Product Indicators Bottom without overflow-hidden">
+    <template id="gf_carousel_product_indicators_bottom" inherit_id="website_sale.carousel_product_indicators_bottom"
+              name="Gadgetflix – Carousel Product Indicators Bottom without overflow-hidden">
         <xpath expr="//t[@t-set='indicators_div_class']" position="attributes">
             <attribute name="t-value">'pt-2'</attribute>
         </xpath>
