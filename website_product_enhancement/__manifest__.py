@@ -15,7 +15,7 @@
         4. Weight Required: products cannot be saved with weight = 0
     """,
     'category': 'Website/eCommerce',
-    'author': '',
+    "author": "Gadgetflix",
     'website': '',
     'license': 'LGPL-3',
     'depends': [
