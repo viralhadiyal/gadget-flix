@@ -1195,122 +1195,6 @@
             }
         };
 
-        const refreshCartSummary = function () {
-            return jsonrpc("/gadgetflix/cart/summary_html", "call", {}).then(function (res) {
-                if (res && res.result && res.result.success) {
-                    const data = res.result;
-                    const desktopSummary = document.querySelector("div.o_total_card div.d-none.d-lg-block");
-                    if (desktopSummary) {
-                        desktopSummary.innerHTML = data.cart_summary_content + data.total;
-                    }
-                    const mobileSummary = document.querySelector("#o_cart_summary_offcanvas div.offcanvas-body");
-                    if (mobileSummary) {
-                        mobileSummary.innerHTML = data.cart_summary_content + data.total;
-                    }
-                    syncPaymentAmount(data);
-                    bindPromoForm();
-                }
-            }).catch(function (err) {
-                console.error("Failed to refresh cart summary:", err);
-            });
-        };
-
-        const handlePromoSubmit = function (event) {
-            event.preventDefault();
-            event.stopPropagation();
-            const form = event.currentTarget.closest('form[name="coupon_code"]');
-            if (!form) {
-                return;
-            }
-            const input = form.querySelector('input[name="promo"]');
-            const promoCode = input ? input.value.trim() : "";
-
-            if (!promoCode) {
-                return;
-            }
-
-            const getCurrentForm = function () {
-                if (form.isConnected) {
-                    return form;
-                }
-                const forms = Array.from(document.querySelectorAll('form[name="coupon_code"]'));
-                return forms.find(function (couponForm) {
-                    return !couponForm.closest(".gf-mobile-checkout-coupon");
-                }) || forms[0] || form;
-            };
-
-            const getMobileMessages = function (couponForm) {
-                const mobileCoupon = couponForm.closest(".gf-mobile-checkout-coupon");
-                return mobileCoupon ? mobileCoupon.querySelector("[data-gf-mobile-coupon-messages]") : null;
-            };
-
-            const showPromoMessage = function (type, message) {
-                const currentForm = getCurrentForm();
-                const mobileMessages = getMobileMessages(currentForm);
-                if (mobileMessages) {
-                    mobileMessages.innerHTML = "";
-                    const alert = document.createElement("div");
-                    alert.className = "alert alert-" + type + " text-start small mt-2 mb-0";
-                    alert.setAttribute("role", "alert");
-                    alert.textContent = message;
-                    mobileMessages.appendChild(alert);
-                    return;
-                }
-
-                let inlineAlert = currentForm.parentElement.querySelector(".js_promo_error_alert");
-                if (!inlineAlert) {
-                    inlineAlert = document.createElement("div");
-                    currentForm.parentElement.appendChild(inlineAlert);
-                }
-                inlineAlert.className = "alert alert-" + type + " text-start small mt-2 js_promo_error_alert";
-                inlineAlert.textContent = message;
-                inlineAlert.classList.remove("d-none");
-            };
-
-            const mobileMessages = getMobileMessages(form);
-            if (mobileMessages) {
-                mobileMessages.innerHTML = "";
-            } else {
-                const inlineAlert = form.parentElement.querySelector(".js_promo_error_alert");
-                if (inlineAlert) {
-                    inlineAlert.classList.add("d-none");
-                }
-            }
-
-            jsonrpc("/gadgetflix/cart/apply_promo", "call", {
-                promo: promoCode,
-            }).then(function (res) {
-                if (res && res.result) {
-                    if (res.result.success) {
-                        const successMessage = res.result.message || "Promo code applied successfully.";
-                        refreshCartSummary().then(function () {
-                            showPromoMessage("success", successMessage);
-                        });
-                    } else {
-                        const errorMessage = res.result.error || "Failed to apply promo code.";
-                        refreshCartSummary().then(function () {
-                            showPromoMessage("danger", errorMessage);
-                        });
-                    }
-                }
-            }).catch(function (err) {
-                console.error("Failed to apply promo code:", err);
-                showPromoMessage("danger", "An error occurred while applying the promo code.");
-            });
-        };
-
-        const bindPromoForm = function () {
-            document.querySelectorAll('form[name="coupon_code"]').forEach(function (form) {
-                form.removeEventListener("submit", handlePromoSubmit);
-                form.addEventListener("submit", handlePromoSubmit);
-
-                form.querySelectorAll(".a-submit").forEach(function (button) {
-                    button.removeEventListener("click", handlePromoSubmit);
-                    button.addEventListener("click", handlePromoSubmit);
-                });
-            });
-        };
-
         const updateCarrierIfNeeded = function (selectedRadio, isUserTriggered) {
             if (!selectedRadio || !isUserTriggered) {
                 return;
@@ -1328,8 +1212,7 @@
 
             if (currentCarrierId !== targetCarrierId) {
                 // Set the carrier on the backend and update cart totals inline only
-                // Do NOT call refreshCartSummary() — it replaces payment.form HTML
-                // and breaks Odoo's payment interaction context.
+                // Replacing payment.form HTML breaks Odoo's payment interaction context.
                 jsonrpc("/shop/set_delivery_method", "call", {
                     dm_id: targetCarrierId,
                 }).then(function (result) {
@@ -1353,9 +1236,6 @@
                 }
             }
         });
-
-        // Initial bind of the promo form submit
-        bindPromoForm();
     };
 
     const initPreCartAddressGate = function () {

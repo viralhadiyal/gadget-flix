@@ -1388,26 +1388,26 @@
                             <div class="gf-mobile-checkout-coupon d-lg-none mt-3">
                                 <div class="gf-mobile-checkout-coupon__title">Apply coupon code</div>
                                 <div class="coupon_form">
-                                    <t t-call="website_sale.coupon_form"/>
-                                </div>
-                                <div class="gf-mobile-checkout-coupon__messages" data-gf-mobile-coupon-messages="1">
-                                    <t t-if="request.params.get('code_not_available')">
-                                        <div class="alert alert-danger text-start small mt-2 mb-0" role="alert">
-                                            Invalid or expired promo code.
-                                        </div>
-                                    </t>
-                                    <t t-if="website_sale_order.get_promo_code_error(delete=False)">
-                                        <div class="alert alert-danger text-start small mt-2 mb-0" role="alert">
-                                            <t t-out="website_sale_order.get_promo_code_error()"/>
-                                        </div>
-                                    </t>
-                                    <t t-if="website_sale_order.get_promo_code_success_message(delete=False)">
-                                        <div class="alert alert-success text-start small mt-2 mb-0" role="alert">
-                                            You have successfully applied the following code:
-                                            <strong t-out="website_sale_order.get_promo_code_success_message()"/>
-                                        </div>
+                                    <t t-call="website_sale.coupon_form">
+                                        <t t-set="redirect" t-value="'/shop/checkout'"/>
                                     </t>
                                 </div>
+                                <t t-if="request.params.get('code_not_available')">
+                                    <div class="alert alert-danger text-start small mt-2 mb-0" role="alert">
+                                        Invalid or expired promo code.
+                                    </div>
+                                </t>
+                                <t t-if="website_sale_order.get_promo_code_error(delete=False)">
+                                    <div class="alert alert-danger text-start small mt-2 mb-0" role="alert">
+                                        <t t-out="website_sale_order.get_promo_code_error()"/>
+                                    </div>
+                                </t>
+                                <t t-if="website_sale_order.get_promo_code_success_message(delete=False)">
+                                    <div class="alert alert-success text-start small mt-2 mb-0" role="alert">
+                                        You have successfully applied the following code:
+                                        <strong t-out="website_sale_order.get_promo_code_success_message()"/>
+                                    </div>
+                                </t>
                             </div>
                         </t>
                         <t t-else="">
