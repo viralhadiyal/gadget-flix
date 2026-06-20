@@ -1164,6 +1164,10 @@
             );
             parentElements.forEach(el => updateCartSummary(result, el));
 
+            syncPaymentAmount(result);
+        };
+
+        const syncPaymentAmount = function (result) {
             // Sync the payment form dataset and interaction context with the updated raw amount_total
             const paymentFormEl = document.getElementById('o_payment_form');
             if (paymentFormEl && result.amount_total_raw !== undefined) {
@@ -1203,9 +1207,7 @@
                     if (mobileSummary) {
                         mobileSummary.innerHTML = data.cart_summary_content + data.total;
                     }
-                    if (data.amount_total_raw !== undefined) {
-                        updateCartSummaries(data);
-                    }
+                    syncPaymentAmount(data);
                     bindPromoForm();
                 }
             }).catch(function (err) {
