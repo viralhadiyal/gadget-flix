@@ -269,7 +269,8 @@
                  hidden="hidden"
                  aria-hidden="true"
                  data-gf-home-offer-popup="1"
-                 t-att-data-gf-home-offer-always="'true' if gf_current_path == '/shop/checkout' else None">
+                 t-att-data-gf-home-offer-storage-key="'gadgetflix_checkout_offer_popup_seen' if gf_current_path == '/shop/checkout' else None"
+                 t-att-data-gf-home-offer-mark-seen-on-open="'true' if gf_current_path == '/shop/checkout' else None">
                 <div class="gf-home-offer-popup__backdrop" data-gf-home-offer-close="1"/>
                 <div class="gf-home-offer-popup__dialog"
                      role="dialog"

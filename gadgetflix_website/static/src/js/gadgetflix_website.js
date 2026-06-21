@@ -1606,11 +1606,11 @@
         }
 
         popup.dataset.gfHomeOfferBound = "true";
-        const storageKey = "gadgetflix_offer_popup_seen";
-        const alwaysShow = popup.dataset.gfHomeOfferAlways === "true";
+        const storageKey = popup.dataset.gfHomeOfferStorageKey || "gadgetflix_offer_popup_seen";
+        const markSeenOnOpen = popup.dataset.gfHomeOfferMarkSeenOnOpen === "true";
 
         try {
-            if (!alwaysShow && window.localStorage.getItem(storageKey) === "1") {
+            if (window.localStorage.getItem(storageKey) === "1") {
                 return;
             }
         } catch (error) {
@@ -1618,9 +1618,6 @@
         }
 
         const markSeen = function () {
-            if (alwaysShow) {
-                return;
-            }
             try {
                 window.localStorage.setItem(storageKey, "1");
             } catch (error) {
@@ -1639,6 +1636,9 @@
             popup.hidden = false;
             popup.setAttribute("aria-hidden", "false");
             document.documentElement.classList.add("gf-home-offer-popup-open");
+            if (markSeenOnOpen) {
+                markSeen();
+            }
         };
 
         popup.querySelectorAll("[data-gf-home-offer-close]").forEach(function (button) {
