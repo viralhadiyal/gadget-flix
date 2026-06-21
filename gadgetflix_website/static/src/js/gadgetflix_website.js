@@ -1607,9 +1607,10 @@
 
         popup.dataset.gfHomeOfferBound = "true";
         const storageKey = "gadgetflix_offer_popup_seen";
+        const alwaysShow = popup.dataset.gfHomeOfferAlways === "true";
 
         try {
-            if (window.localStorage.getItem(storageKey) === "1") {
+            if (!alwaysShow && window.localStorage.getItem(storageKey) === "1") {
                 return;
             }
         } catch (error) {
@@ -1617,6 +1618,9 @@
         }
 
         const markSeen = function () {
+            if (alwaysShow) {
+                return;
+            }
             try {
                 window.localStorage.setItem(storageKey, "1");
             } catch (error) {
